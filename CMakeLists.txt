@@ -37,6 +37,8 @@ set(PROJECT_SOURCES
         src/diagramelement.h
         src/diagramscene.cpp
         src/diagramscene.h
+        resources/images.qrc
+        resources/libs.qrc
         ${TS_FILES}
 )
 
@@ -73,54 +75,6 @@ target_link_libraries(qdia PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::PrintSupport
 )
-
-# Resources:
-set(diagramscene_resource_files
-    "images/document-open.svg"
-    "images/document-print.svg"
-    "images/document-save.svg"
-    "images/document-save-as.svg"
-    "images/bold.svg"
-    "images/bringtofront.svg"
-    "images/floodfill.png"
-    "images/italic.svg"
-    "images/linecolor.png"
-    "images/linepointer.png"
-    "images/object-group.svg"
-    "images/object-rotate-right.svg"
-    "images/object-rotate-left.svg"
-    "images/object-ungroup.svg"
-    "images/sendtoback.svg"
-    "images/textpointer.png"
-    "images/tool-pointer.svg"
-    "images/underline.svg"
-    "images/view-grid.svg"
-    "images/zoom.svg"
-    "images/zoomin.svg"
-    "images/zoomout.svg"
-    "images/zoompage.svg"
-    "libs/analog/circle.json"
-    "libs/analog/res.json"
-    "libs/analog/cap.json"
-    "libs/analog/ind.json"
-    "libs/analog/nmos.json"
-    "libs/analog/pmos.json"
-    "libs/analog/vsource.json"
-    "libs/analog/isource.json"
-    "libs/analog/acsource.json"
-    "libs/analog/vdd.json"
-    "libs/analog/gnd.json"
-    "libs/gates/and.json"
-    "libs/gates/nand.json"
-)
-
-qt_add_resources(qdia "qdia"
-    PREFIX
-        "/"
-    FILES
-        ${diagramscene_resource_files}
-)
-
 
 set_target_properties(qdia PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

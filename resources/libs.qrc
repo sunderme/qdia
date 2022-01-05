@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>libs/analog/acsource.json</file>
+        <file>libs/analog/cap.json</file>
+        <file>libs/analog/circle.json</file>
+        <file>libs/analog/gnd.json</file>
+        <file>libs/analog/ind.json</file>
+        <file>libs/analog/isource.json</file>
+        <file>libs/analog/nmos.json</file>
+        <file>libs/analog/pmos.json</file>
+        <file>libs/analog/res.json</file>
+        <file>libs/analog/vdd.json</file>
+        <file>libs/analog/vsource.json</file>
+        <file>libs/gates/and.json</file>
+        <file>libs/gates/nand.json</file>
+    </qresource>
+</RCC>
