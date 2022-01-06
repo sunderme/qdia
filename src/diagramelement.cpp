@@ -134,6 +134,20 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
             mPainterPath.moveTo(lst.first());
             mPainterPath.addPolygon(polygon);
         }
+        if(type=="lines") {
+            QList<QPointF>lst;
+            QJsonArray jsonPoints=jsonObject["points"].toArray();
+            for(int i=0;i<jsonPoints.size();++i){
+                QJsonObject jsonElement=jsonPoints[i].toObject();
+                qreal x=jsonElement["x"].toDouble();
+                qreal y=jsonElement["y"].toDouble();
+                lst<<QPointF(x,y);
+            }
+            for(int i=1;i<lst.length();++i){
+                mPainterPath.moveTo(lst.at(i-1));
+                mPainterPath.lineTo(lst.at(i));
+            }
+        }
         if(type=="arc") {
             qreal x=jsonObject["x"].toDouble();
             qreal y=jsonObject["y"].toDouble();
