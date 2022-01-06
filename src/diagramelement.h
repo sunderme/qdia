@@ -28,6 +28,7 @@ public:
 protected:
     QString mFileName;
     QString mName;
+    bool mFilled;
     QPainterPath mPainterPath;
 
     bool importPathFromFile(const QString &fn);

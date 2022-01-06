@@ -262,7 +262,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 maxZ+=0.1;
                 addItem(insertedPathItem);
                 insertedPathItem->setPos(onGrid(mouseEvent->scenePos()));
-                //insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+                insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
             }
             insertedPathItem->append(onGrid(mouseEvent->scenePos()));
             break;
@@ -301,7 +301,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         case InsertElement:
             if(insertedItem==nullptr){
                 insertedItem = new DiagramElement(mItemFileName, myItemMenu);
-                insertedItem->setBrush(myItemColor);
+                //insertedItem->setBrush(myItemColor);
                 insertedItem->setPen(myLineColor);
                 insertedItem->setZValue(maxZ);
                 maxZ+=0.1;
@@ -465,8 +465,9 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         case InsertElement:
             if(insertedItem==nullptr){
                 insertedItem = new DiagramElement(mItemFileName, myItemMenu);
-                insertedItem->setBrush(myItemColor);
+                //insertedItem->setBrush(myItemColor);
                 insertedItem->setPen(myLineColor);
+                insertedItem->setSelected(true);
                 insertedItem->setZValue(maxZ);
                 maxZ+=0.1;
                 addItem(insertedItem);

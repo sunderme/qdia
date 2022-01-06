@@ -6,7 +6,7 @@
 #include <QJsonArray>
 
 
-DiagramElement::DiagramElement(const QString fileName, QMenu *contextMenu, QGraphicsItem *parent): DiagramItem(contextMenu,parent)
+DiagramElement::DiagramElement(const QString fileName, QMenu *contextMenu, QGraphicsItem *parent): DiagramItem(contextMenu,parent),mFilled(false)
 {
     mFileName=fileName;
     if(importPathFromFile(mFileName)){
@@ -14,6 +14,9 @@ DiagramElement::DiagramElement(const QString fileName, QMenu *contextMenu, QGrap
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+        if(mFilled){
+            setBrush(pen().color());
+        }
     }
 }
 
@@ -22,11 +25,15 @@ DiagramElement::DiagramElement(const DiagramElement& diagram)
 {
     mFileName=diagram.mFileName;
     mName=diagram.mName;
+    mFilled=diagram.mFilled;
     if(importPathFromFile(mFileName)){
         setPath(mPainterPath);
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+        if(mFilled){
+            setBrush(pen().color());
+        }
     }
 }
 
@@ -48,6 +55,9 @@ QPixmap DiagramElement::image() const
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
     painter.setPen(QPen(Qt::black, 1));
+    if(mFilled){
+        painter.setBrush(Qt::black);
+    }
     painter.translate(125, 125);
     painter.scale(4.,4.);
     painter.drawPath(mPainterPath);
@@ -73,6 +83,7 @@ bool DiagramElement::importPathFromFile(const QString &fn)
 bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
 {
     mName=json["name"].toString();
+    mFilled=json["filled"].toBool();
     QJsonArray array=json["elements"].toArray();
     for (int index = 0; index < array.size(); ++index) {
         QJsonObject jsonObject = array[index].toObject();
@@ -155,6 +166,15 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
             mPainterPath.moveTo(x0,y0);
             mPainterPath.cubicTo(cx0,cy0,cx1,cy1,x1,y1);
         }
+        if(type=="cubicTo") {
+            qreal x1=jsonObject["x1"].toDouble();
+            qreal y1=jsonObject["y1"].toDouble();
+            qreal cx0=jsonObject["cx0"].toDouble();
+            qreal cy0=jsonObject["cy0"].toDouble();
+            qreal cx1=jsonObject["cx1"].toDouble();
+            qreal cy1=jsonObject["cy1"].toDouble();
+            mPainterPath.cubicTo(cx0,cy0,cx1,cy1,x1,y1);
+        }
     }
     return true;
 }
@@ -168,5 +188,8 @@ DiagramElement::DiagramElement(const QJsonObject &json, QMenu *contextMenu):Diag
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+        if(mFilled){
+            setBrush(pen().color());
+        }
     }
 }

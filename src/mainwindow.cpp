@@ -365,6 +365,7 @@ void MainWindow::createToolBox()
     QString path=":/libs/analog/";
     QStringList files{
         "circle.json",
+        "arrow.json",
         "res.json",
         "cap.json",
         "ind.json",

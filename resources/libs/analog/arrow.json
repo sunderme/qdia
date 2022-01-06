@@ -1,0 +1,9 @@
+{
+  "name": "arrowhead",
+  "filled": true,
+  "elements":[
+    {"type":"cubic","x0":5,"y0":16,"x1":0,"y1":0,"cx0":3,"cy0":13,"cx1":1,"cy1":12},
+    {"type":"cubicTo","x0":0,"y0":0,"x1":-5,"y1":16,"cx0":-1,"cy0":12,"cx1":-3,"cy1":13},
+    {"type":"cubicTo","x0":-5,"y0":16,"x1":5,"y1":16,"cx0":-3,"cy0":13,"cx1":3,"cy1":13}
+  ]
+}
