@@ -84,5 +84,8 @@ if(QT_VERSION_MAJOR EQUAL 6)
 endif()
 
 install(TARGETS qdia DESTINATION bin)
+
+if(UNIX AND NOT APPLE)
 install(FILES resources/qdia.desktop DESTINATION share/applications)
 install(FILES resources/qdia.svg DESTINATION share/icons/hicolor/scalable/apps)
+endif()
