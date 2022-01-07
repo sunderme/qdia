@@ -24,7 +24,9 @@ jobs:
           cd build
           cmake ..
       - name: Build
-        run: cmake --build build
+        run: |
+          cd build
+          cmake --build .
       - name: Package
         id: package
         run: |
