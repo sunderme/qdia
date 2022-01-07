@@ -28,6 +28,7 @@ jobs:
       - name: Package
         id: package
         run: |
+          cd build
           ./.github/scripts/package_msys.sh
           echo "::set-output name=VERSION_NAME::${VERSION_NAME}"
 
@@ -36,7 +37,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: qdia-win-qt6-zip
-          path: ./package-zip/qdia-win-qt6-${{ steps.package.outputs.VERSION_NAME }}.zip
+          path: |
+            cd build
+            ./package-zip/qdia-win-qt6-${{ steps.package.outputs.VERSION_NAME }}.zip
           
       - name: Upload to GitHub Artifacts
         if: github.event_name == 'push'
@@ -88,7 +91,9 @@ jobs:
     - name: Package
       id: package
       run: |
+        cd build
         /usr/local/opt/qt6/bin/macdeployqt qdia.app -dmg
+        VESION_NAME=0.1
         cp qdia.dmg qdia-osx-${GIT_VERSION}.dmg
         echo "::set-output name=VERSION_NAME::${VERSION_NAME}"
         echo "::set-output name=TXS_VERSION::${TXS_VERSION}"
