@@ -31,6 +31,7 @@ jobs:
         id: package
         run: |
           cd build
+          VERSION_NAME=0.1
           ../.github/scripts/package_msys.sh
           echo "::set-output name=VERSION_NAME::${VERSION_NAME}"
 
