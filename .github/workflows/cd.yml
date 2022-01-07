@@ -31,7 +31,7 @@ jobs:
         id: package
         run: |
           cd build
-          ./.github/scripts/package_msys.sh
+          ../.github/scripts/package_msys.sh
           echo "::set-output name=VERSION_NAME::${VERSION_NAME}"
 
       - name: Upload zip to GitHub Artifacts
