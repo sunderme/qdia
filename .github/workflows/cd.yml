@@ -98,7 +98,7 @@ jobs:
       run: |
         cd build
         VERSION_NAME=0.1
-        . ./.github/scripts/package_linux.sh
+        . ../.github/scripts/package_linux.sh
         echo "::set-output name=VERSION_NAME::${VERSION_NAME}"
         
     - name: Upload to Github Artifacts
