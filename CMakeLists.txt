@@ -12,11 +12,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Gui)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS PrintSupport)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Core Gui LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS PrintSupport REQUIRED)
 
 
 set(TS_FILES translation/qdia_en_US.ts)
