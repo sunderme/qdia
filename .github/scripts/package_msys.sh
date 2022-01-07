@@ -9,6 +9,7 @@ mkdir -p package-zip
 cp qdia.exe package-zip/
 cd package-zip
 windeployqt-qt6 qdia.exe
+ldd qdia.exe | awk '{print $3}'| grep ming | xargs -I{} cp -u {} .
 zip -r ./qdia-win-qt6-${VERSION_NAME}.zip *
 
 cd ..
