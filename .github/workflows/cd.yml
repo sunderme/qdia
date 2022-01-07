@@ -61,6 +61,63 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
 
+###################################
+
+  build-linux-release:
+    name: linux appimage
+    if: github.event_name == 'push'
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Fetch tag annotations
+      run: git fetch --tags --force
+
+    - name: Updates
+      run: sudo apt-get update
+
+    - name: Dependencies
+      run: sudo apt-get install qtbase5-dev qt5-default cmake libqt5svg5-dev qttools5-dev
+
+    - name: Configure
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX=appdir ..
+
+    - name: Build
+      run: |
+        cd build
+        cmake --build . --target install
+      
+    - name: Package
+      id: package
+      run: |
+        cd build
+        VERSION_NAME=0.1
+        . ./.github/scripts/package_linux.sh
+        echo "::set-output name=VERSION_NAME::${VERSION_NAME}"
+        
+    - name: Upload to Github Artifacts
+      if: github.event_name == 'push'
+      uses: actions/upload-artifact@v2
+      with:
+        name: qdia-linux
+        path: qdia-linux-${{ steps.package.outputs.VERSION_NAME }}-x86_64.AppImage
+        
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
+        files: qdia-${{ steps.package.outputs.GIT_VERSION }}-x86_64.AppImage
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+   
+
    
 ############################
       
