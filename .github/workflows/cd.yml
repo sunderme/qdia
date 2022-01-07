@@ -24,7 +24,7 @@ jobs:
           cd build
           cmake ..
       - name: Build
-        run: cmake --build .
+        run: cmake --build build
       - name: Package
         id: package
         run: |
@@ -83,7 +83,7 @@ jobs:
         cmake ..
 
     - name: Build
-      run: cmake --build .
+      run: cmake --build build
 
     - name: Package
       id: package
