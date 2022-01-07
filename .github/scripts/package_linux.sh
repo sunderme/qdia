@@ -11,7 +11,7 @@ unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
 export VERSION=linux-${VERSION_NAME}
 ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -appimage
 # ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage
-cp qdia-${VERSION}-x86_64.AppImage texstudio-${VERSION}-x86_64.AppImage
+cp QDia-${VERSION}-x86_64.AppImage ../QDia-${VERSION}-x86_64.AppImage
 
 
 
