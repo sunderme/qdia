@@ -49,6 +49,7 @@
 ****************************************************************************/
 
 #include "diagramscene.h"
+#include <math.h>
 
 #include <QGraphicsSceneMouseEvent>
 #include <QTextCursor>

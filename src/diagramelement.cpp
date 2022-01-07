@@ -116,13 +116,13 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
             qreal x1=jsonObject["x1"].toDouble();
             qreal y0=jsonObject["y0"].toDouble();
             qreal y1=jsonObject["y1"].toDouble();
-            QList<QPointF>lst{QPointF(x0,y0),QPointF(x1,y1)};
+            QVector<QPointF>lst{QPointF(x0,y0),QPointF(x1,y1)};
             QPolygonF polygon{lst};
             mPainterPath.moveTo(lst.first());
             mPainterPath.addPolygon(polygon);
         }
         if(type=="polygon") {
-            QList<QPointF>lst;
+            QVector<QPointF>lst;
             QJsonArray jsonPoints=jsonObject["points"].toArray();
             for(int i=0;i<jsonPoints.size();++i){
                 QJsonObject jsonElement=jsonPoints[i].toObject();
