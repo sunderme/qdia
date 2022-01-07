@@ -85,3 +85,4 @@ endif()
 
 install(TARGETS qdia DESTINATION bin)
 install(FILES resources/qdia.desktop DESTINATION share/applications)
+install(FILES resources/qdia.svg DESTINATION share/icons/hicolor/scalable/apps)
