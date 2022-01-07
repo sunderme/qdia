@@ -84,3 +84,4 @@ if(QT_VERSION_MAJOR EQUAL 6)
 endif()
 
 install(TARGETS qdia DESTINATION bin)
+install(FILES resources/qdia.desktop DESTINATION share/applications)
