@@ -40,9 +40,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: qdia-win-qt6-zip
-          path: |
-            cd build
-            ./package-zip/qdia-win-qt6-${{ steps.package.outputs.VERSION_NAME }}.zip
+          path: ./build/package-zip/qdia-win-qt6-${{ steps.package.outputs.VERSION_NAME }}.zip
           
       - name: Upload to GitHub Artifacts
         if: github.event_name == 'push'
