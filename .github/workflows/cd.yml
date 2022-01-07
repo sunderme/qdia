@@ -86,7 +86,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -DCMAKE_INSTALL_PREFIX=appdir ..
+        cmake -DCMAKE_INSTALL_PREFIX=appdir/usr ..
 
     - name: Build
       run: |
@@ -106,7 +106,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: qdia-linux
-        path: qdia-linux-${{ steps.package.outputs.VERSION_NAME }}-x86_64.AppImage
+        path: QDia-linux-${{ steps.package.outputs.VERSION_NAME }}-x86_64.AppImage
         
     - name: Release
       uses: softprops/action-gh-release@v1
