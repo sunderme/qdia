@@ -510,6 +510,8 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         return;
     }
     if(myMode == InsertItem || myMode == InsertElement){
+        insertedItem->setSelected(false);
+        insertedItem->setEnabled(false);
         insertedItem=nullptr;
     }
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
