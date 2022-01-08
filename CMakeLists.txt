@@ -41,6 +41,7 @@ set(PROJECT_SOURCES
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(qdia
+        MACOSX_BUNDLE
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
@@ -59,6 +60,7 @@ else()
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(qdia
+            MACOSX_BUNDLE
             ${PROJECT_SOURCES}
         )
     endif()
