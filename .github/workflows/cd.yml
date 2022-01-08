@@ -153,7 +153,7 @@ jobs:
         cd build
         /usr/local/opt/qt6/bin/macdeployqt qdia.app -dmg
         VERSION_NAME=0.1
-        cp qdia.dmg qdia-osx-${GIT_VERSION}.dmg
+        cp qdia.dmg qdia-osx-${VERSION_NAME}.dmg
         echo "::set-output name=VERSION_NAME::${VERSION_NAME}"
         echo "::set-output name=TXS_VERSION::${TXS_VERSION}"
         echo "::set-output name=GIT_VERSION::${GIT_VERSION}"
