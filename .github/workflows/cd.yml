@@ -163,7 +163,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: qdia-osx
-        path: qdia-osx-${{ steps.package.outputs.VERSION_NAME }}.dmg
+        path: build/qdia-osx-${{ steps.package.outputs.VERSION_NAME }}.dmg
         
     - name: Release
       uses: softprops/action-gh-release@v1
