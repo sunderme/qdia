@@ -28,6 +28,8 @@ MainWindow::MainWindow()
     createToolBox();
     createMenus();
 
+    currentToolButton=nullptr; // none selected at start
+
     scene = new DiagramScene(itemMenu, this);
     scene->setSceneRect(QRectF(0, 0, 5000, 5000));
     connect(scene, &DiagramScene::itemSelected,
