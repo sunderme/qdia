@@ -34,6 +34,8 @@ MainWindow::MainWindow()
     scene->setSceneRect(QRectF(0, 0, 5000, 5000));
     connect(scene, &DiagramScene::itemSelected,
             this, &MainWindow::itemSelected);
+    connect(scene, &DiagramScene::forceCursor,
+            this, &MainWindow::moveCursor);
     // activate/deactivate shortcuts when text is edited in scene
     connect(scene, SIGNAL(editorHasReceivedFocus()),
             this, SLOT(deactivateShortcuts()));
@@ -1143,6 +1145,14 @@ void MainWindow::lineArrowButtonTriggered()
 {
     scene->setArrow(arrowAction->data().toInt());
     pointerTypeGroup->button(int(DiagramScene::MoveItem))->setChecked(false);
+}
+
+void MainWindow::moveCursor(QPointF p)
+{
+    QPoint np=view->mapFromScene(p.toPoint());
+    np=view->mapToGlobal(np);
+    QCursor c;
+    c.setPos(np);
 }
 
 void MainWindow::lineArrowChanged()

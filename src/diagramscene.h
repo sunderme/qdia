@@ -136,6 +136,7 @@ signals:
     void editorHasReceivedFocus();
     void zoomRect(QPointF p1,QPointF p2);
     void zoom(const qreal factor);
+    void forceCursor(QPointF p);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) override;

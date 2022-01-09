@@ -58,6 +58,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QPainter>
+#include <QtGui>
 
 //! [0]
 DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
@@ -291,6 +292,9 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         }else{
             insertedSplineItem->nextActive();
             insertedSplineItem->setSelected(true);
+            QPointF p=insertedSplineItem->getActivePoint();
+            p=insertedSplineItem->mapToScene(p);
+            emit forceCursor(p);
         }
         insertedSplineItem->updateActive(onGrid(mouseEvent->scenePos()));
         break;
