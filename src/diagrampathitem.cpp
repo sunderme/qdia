@@ -377,7 +377,8 @@ QPainterPath DiagramPathItem::shape() const {
              foreach (QPointF point, myPoints)
              {
                  // Rect around valid point
-                 myPath.addRect(QRectF(point-QPointF(myHandlerWidth,myHandlerWidth),point+QPointF(myHandlerWidth,myHandlerWidth)));
+                 QPointF pw(2*myHandlerWidth,2*myHandlerWidth);
+                 myPath.addRect(QRectF(point-pw,point+pw));
              }// foreach
          }// if
     return myPath;
@@ -385,10 +386,10 @@ QPainterPath DiagramPathItem::shape() const {
 
 bool DiagramPathItem::hasClickedOn(QPointF press_point, QPointF point) const {
     return (
-        press_point.x() >= point.x() - myHandlerWidth &&\
-        press_point.x() <  point.x() + myHandlerWidth &&\
-        press_point.y() >= point.y() - myHandlerWidth &&\
-        press_point.y() <  point.y() + myHandlerWidth
+        press_point.x() >= point.x() - 2*myHandlerWidth &&
+        press_point.x() <  point.x() + 2*myHandlerWidth &&
+        press_point.y() >= point.y() - 2*myHandlerWidth &&
+        press_point.y() <  point.y() + 2*myHandlerWidth
     );
 }
 
