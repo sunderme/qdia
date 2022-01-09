@@ -32,6 +32,8 @@ set(PROJECT_SOURCES
         src/diagramtextitem.h
         src/diagramelement.cpp
         src/diagramelement.h
+        src/diagramsplineitem.h
+        src/diagramsplineitem.cpp
         src/diagramscene.cpp
         src/diagramscene.h
         resources/images.qrc

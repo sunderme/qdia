@@ -70,6 +70,7 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     insertedItem = nullptr;
     insertedDrawItem = nullptr;
     insertedPathItem = nullptr;
+    insertedSplineItem = nullptr;
     copiedItems = nullptr;
     myDx=0.0;
     myDy=0.0;
@@ -241,112 +242,126 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     if (mouseEvent->button() != Qt::LeftButton)
         return;
     switch (myMode) {
-        case InsertItem:
-            if(insertedItem==nullptr){
-                insertedItem = new DiagramItem(myItemType, myItemMenu);
-                insertedItem->setBrush(myItemColor);
-                insertedItem->setPen(myLineColor);
-                insertedItem->setZValue(maxZ);
-                maxZ+=0.1;
-                addItem(insertedItem);
-            }
-            insertedItem->setPos(onGrid(mouseEvent->scenePos()));
-            emit itemInserted(insertedItem);
-            break;
-        case InsertLine:
-            if (insertedPathItem == 0){
-                insertedPathItem = new DiagramPathItem(myArrow,myItemMenu);
-                insertedPathItem->setPen(myLineColor);
-                insertedPathItem->setBrush(myLineColor);
-                insertedPathItem->setZValue(maxZ);
-                insertedPathItem->setRoutingType(myRouting);
-                maxZ+=0.1;
-                addItem(insertedPathItem);
-                insertedPathItem->setPos(onGrid(mouseEvent->scenePos()));
-                insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-            }
-            insertedPathItem->append(onGrid(mouseEvent->scenePos()));
-            break;
-        case InsertText:
-            textItem = new DiagramTextItem();
-            textItem->setFont(myFont);
-            textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-            textItem->setZValue(1000.0);
-            connect(textItem, &DiagramTextItem::lostFocus,
-                    this, &DiagramScene::editorLostFocus);
-            connect(textItem, &DiagramTextItem::selectedChange,
-                    this, &DiagramScene::itemSelected);
-            addItem(textItem);
-            textItem->setDefaultTextColor(myTextColor);
-            textItem->setPos(mouseEvent->scenePos());
-            emit textInserted(textItem);
-            break;
-        case InsertDrawItem:
-            if (insertedDrawItem == nullptr){
-                insertedDrawItem = new DiagramDrawItem(myDrawItemType, myItemMenu);
-                insertedDrawItem->setBrush(myItemColor);
-                insertedDrawItem->setPen(myLineColor);
-                insertedDrawItem->setZValue(maxZ);
-                maxZ+=0.1;
-                addItem(insertedDrawItem);
-                insertedDrawItem->setPos(onGrid(mouseEvent->scenePos()));
-            }
-            else
-            {
-                insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
-                insertedDrawItem->setEnabled(false);
-                insertedDrawItem = 0;
-            }
+    case InsertItem:
+        if(insertedItem==nullptr){
+            insertedItem = new DiagramItem(myItemType, myItemMenu);
+            insertedItem->setBrush(myItemColor);
+            insertedItem->setPen(myLineColor);
+            insertedItem->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedItem);
+        }
+        insertedItem->setPos(onGrid(mouseEvent->scenePos()));
+        emit itemInserted(insertedItem);
+        break;
+    case InsertLine:
+        if (insertedPathItem == 0){
+            insertedPathItem = new DiagramPathItem(myArrow,myItemMenu);
+            insertedPathItem->setPen(myLineColor);
+            insertedPathItem->setBrush(myLineColor);
+            insertedPathItem->setZValue(maxZ);
+            insertedPathItem->setRoutingType(myRouting);
+            maxZ+=0.1;
+            addItem(insertedPathItem);
+            insertedPathItem->setPos(onGrid(mouseEvent->scenePos()));
+            insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        }
+        insertedPathItem->append(onGrid(mouseEvent->scenePos()));
+        break;
+    case InsertSpline:
+        if (insertedSplineItem == nullptr){
+            insertedSplineItem = new DiagramSplineItem(myItemMenu);
+            insertedSplineItem->setPen(myLineColor);
+            insertedSplineItem->setBrush(myLineColor);
+            insertedSplineItem->setZValue(maxZ);
+            insertedSplineItem->setP0(onGrid(mouseEvent->scenePos()));
+            maxZ+=0.1;
+            addItem(insertedSplineItem);
+            insertedSplineItem->setPos(onGrid(mouseEvent->scenePos()));
+            insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        }
+        insertedSplineItem->updateLast(onGrid(mouseEvent->scenePos()));
+        break;
+    case InsertText:
+        textItem = new DiagramTextItem();
+        textItem->setFont(myFont);
+        textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+        textItem->setZValue(1000.0);
+        connect(textItem, &DiagramTextItem::lostFocus,
+                this, &DiagramScene::editorLostFocus);
+        connect(textItem, &DiagramTextItem::selectedChange,
+                this, &DiagramScene::itemSelected);
+        addItem(textItem);
+        textItem->setDefaultTextColor(myTextColor);
+        textItem->setPos(mouseEvent->scenePos());
+        emit textInserted(textItem);
+        break;
+    case InsertDrawItem:
+        if (insertedDrawItem == nullptr){
+            insertedDrawItem = new DiagramDrawItem(myDrawItemType, myItemMenu);
+            insertedDrawItem->setBrush(myItemColor);
+            insertedDrawItem->setPen(myLineColor);
+            insertedDrawItem->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedDrawItem);
+            insertedDrawItem->setPos(onGrid(mouseEvent->scenePos()));
+        }
+        else
+        {
+            insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
+            insertedDrawItem->setEnabled(false);
+            insertedDrawItem = 0;
+        }
 
-            break;
-        case InsertElement:
-            if(insertedItem==nullptr){
-                insertedItem = new DiagramElement(mItemFileName, myItemMenu);
-                //insertedItem->setBrush(myItemColor);
-                insertedItem->setPen(myLineColor);
-                insertedItem->setZValue(maxZ);
-                maxZ+=0.1;
-                addItem(insertedItem);
-            }
-            insertedItem->setPos(onGrid(mouseEvent->scenePos()));
-            emit itemInserted(insertedItem);
-            break;
-        case MoveItems:
-            {
-                QPointF point=onGrid(mouseEvent->scenePos());
-                if(!myMoveItems.isEmpty()){
-                    qreal dx=point.rx()-myDx;
-                    qreal dy=point.ry()-myDy;
-                    foreach(QGraphicsItem* item,myMoveItems){
-                        if(item->parentItem()!=0){
-                            if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
-                        }
-                        else {
-                            item->moveBy(dx,dy);
-                        }
-                    }
-                    myMoveItems.clear();
-                    myMode=MoveItem;
+        break;
+    case InsertElement:
+        if(insertedItem==nullptr){
+            insertedItem = new DiagramElement(mItemFileName, myItemMenu);
+            //insertedItem->setBrush(myItemColor);
+            insertedItem->setPen(myLineColor);
+            insertedItem->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedItem);
+        }
+        insertedItem->setPos(onGrid(mouseEvent->scenePos()));
+        emit itemInserted(insertedItem);
+        break;
+    case MoveItems:
+    {
+        QPointF point=onGrid(mouseEvent->scenePos());
+        if(!myMoveItems.isEmpty()){
+            qreal dx=point.rx()-myDx;
+            qreal dy=point.ry()-myDy;
+            foreach(QGraphicsItem* item,myMoveItems){
+                if(item->parentItem()!=0){
+                    if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
                 }
-                else
-                {
-                    if(!selectedItems().isEmpty()){
-                        // lösche doppelte Verweise (Child&selected)
-                        myMoveItems=selectedItems();
-                        foreach(QGraphicsItem* item,myMoveItems){
-                            if(item->parentItem())
-                                if(item->parentItem()->isSelected()) {
-                                    item->setSelected(false);
-                                    myMoveItems.removeOne(item);
-                                }
-                        }
-                        // speichere Referenzpunkt
-                        myDx=point.rx();
-                        myDy=point.ry();
-                    }
+                else {
+                    item->moveBy(dx,dy);
                 }
-                break;
             }
+            myMoveItems.clear();
+            myMode=MoveItem;
+        }
+        else
+        {
+            if(!selectedItems().isEmpty()){
+                // lösche doppelte Verweise (Child&selected)
+                myMoveItems=selectedItems();
+                foreach(QGraphicsItem* item,myMoveItems){
+                    if(item->parentItem())
+                        if(item->parentItem()->isSelected()) {
+                            item->setSelected(false);
+                            myMoveItems.removeOne(item);
+                        }
+                }
+                // speichere Referenzpunkt
+                myDx=point.rx();
+                myDy=point.ry();
+            }
+        }
+        break;
+    }
     case CopyItem:
         if (!selectedItems().empty()){
             copiedItems=new QList<QGraphicsItem*>;
@@ -425,81 +440,86 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     myCursor.setPos(onGrid(mouseEvent->scenePos()));
 
     switch (myMode){
-        case InsertLine:
-            if (insertedPathItem != nullptr) {
-                insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
+    case InsertLine:
+        if (insertedPathItem != nullptr) {
+            insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
+        }
+        break;
+    case InsertSpline:
+        if (insertedSplineItem != nullptr) {
+            insertedSplineItem->updateLast(onGrid(mouseEvent->scenePos()));
+        }
+        break;
+    case MoveItem:
+        QGraphicsScene::mouseMoveEvent(mouseEvent);
+        checkOnGrid();
+        break;
+    case MoveItems:
+    {
+        QPointF point=onGrid(mouseEvent->scenePos());
+        qreal dx=point.rx()-myDx;
+        qreal dy=point.ry()-myDy;
+        foreach(QGraphicsItem* item,myMoveItems){
+            if(item->parentItem()!=0){
+                if(!item->parentItem()->isSelected()) item->moveBy(dx,dy);
             }
-            break;
-        case MoveItem:
-            QGraphicsScene::mouseMoveEvent(mouseEvent);
-            checkOnGrid();
-            break;
-        case MoveItems:
-        {
+            else {
+                item->moveBy(dx,dy);
+            }
+        }
+        myDx=point.rx();
+        myDy=point.ry();
+        break;
+    }
+    case InsertItem:
+        if (insertedItem == nullptr){
+            insertedItem = new DiagramItem(myItemType, myItemMenu);
+            insertedItem->setBrush(myItemColor);
+            insertedItem->setPen(myLineColor);
+            insertedItem->setSelected(true);
+            insertedItem->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedItem);
+        }
+        insertedItem->setPos(onGrid(mouseEvent->scenePos()));
+        break;
+    case InsertElement:
+        if(insertedItem==nullptr){
+            insertedItem = new DiagramElement(mItemFileName, myItemMenu);
+            //insertedItem->setBrush(myItemColor);
+            insertedItem->setPen(myLineColor);
+            insertedItem->setSelected(true);
+            insertedItem->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedItem);
+        }
+        insertedItem->setPos(onGrid(mouseEvent->scenePos()));
+        break;
+    case InsertDrawItem:
+        if (insertedDrawItem){
+            insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
+        }
+        break;
+    case CopyingItem:
+        if (copiedItems->count() > 0){
+            //copiedItems->setPos(onGrid(mouseEvent->scenePos()));
+            insertedItem=static_cast<DiagramItem*>(copiedItems->first());
             QPointF point=onGrid(mouseEvent->scenePos());
-            qreal dx=point.rx()-myDx;
-            qreal dy=point.ry()-myDy;
-            foreach(QGraphicsItem* item,myMoveItems){
+            qreal dx=insertedItem->pos().rx()-point.rx()-myDx;
+            qreal dy=insertedItem->pos().ry()-point.ry()-myDy;
+            foreach(QGraphicsItem* item,*copiedItems){
                 if(item->parentItem()!=0){
-                    if(!item->parentItem()->isSelected()) item->moveBy(dx,dy);
+                    if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
                 }
                 else {
-                    item->moveBy(dx,dy);
+                    item->moveBy(-dx,-dy);
                 }
             }
-            myDx=point.rx();
-            myDy=point.ry();
-            break;
         }
-        case InsertItem:
-            if (insertedItem == nullptr){
-                insertedItem = new DiagramItem(myItemType, myItemMenu);
-                insertedItem->setBrush(myItemColor);
-                insertedItem->setPen(myLineColor);
-                insertedItem->setSelected(true);
-                insertedItem->setZValue(maxZ);
-                maxZ+=0.1;
-                addItem(insertedItem);
-            }
-            insertedItem->setPos(onGrid(mouseEvent->scenePos()));
-            break;
-        case InsertElement:
-            if(insertedItem==nullptr){
-                insertedItem = new DiagramElement(mItemFileName, myItemMenu);
-                //insertedItem->setBrush(myItemColor);
-                insertedItem->setPen(myLineColor);
-                insertedItem->setSelected(true);
-                insertedItem->setZValue(maxZ);
-                maxZ+=0.1;
-                addItem(insertedItem);
-            }
-            insertedItem->setPos(onGrid(mouseEvent->scenePos()));
-            break;
-        case InsertDrawItem:
-            if (insertedDrawItem){
-                insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
-            }
-            break;
-        case CopyingItem:
-            if (copiedItems->count() > 0){
-                //copiedItems->setPos(onGrid(mouseEvent->scenePos()));
-                insertedItem=static_cast<DiagramItem*>(copiedItems->first());
-                QPointF point=onGrid(mouseEvent->scenePos());
-                qreal dx=insertedItem->pos().rx()-point.rx()-myDx;
-                qreal dy=insertedItem->pos().ry()-point.ry()-myDy;
-                foreach(QGraphicsItem* item,*copiedItems){
-                    if(item->parentItem()!=0){
-                        if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
-                    }
-                    else {
-                        item->moveBy(-dx,-dy);
-                    }
-                }
-            }
-            break;
+        break;
 
-        default:
-            ;
+    default:
+        ;
     }
 }
 

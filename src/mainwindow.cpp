@@ -741,16 +741,22 @@ void MainWindow::createToolbars()
     connect(linePointerButton, SIGNAL(clicked()),
             this, SLOT(lineArrowButtonTriggered()));
 
+    QToolButton *splineButton = new QToolButton;
+    splineButton->setCheckable(true);
+    splineButton->setIcon(QIcon(":/images/linepointer.png"));
+
     pointerTypeGroup = new QButtonGroup(this);
     pointerTypeGroup->setExclusive(false);
     pointerTypeGroup->addButton(pointerButton, int(DiagramScene::MoveItem));
     pointerTypeGroup->addButton(linePointerButton, int(DiagramScene::InsertLine));
+    pointerTypeGroup->addButton(splineButton, int(DiagramScene::InsertSpline));
     connect(pointerTypeGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
             this, &MainWindow::pointerGroupClicked);
 
     pointerToolbar = addToolBar(tr("Pointer type"));
     pointerToolbar->addWidget(pointerButton);
     pointerToolbar->addWidget(linePointerButton);
+    pointerToolbar->addWidget(splineButton);
 
     zoomToolbar = addToolBar(tr("Zoom"));
     zoomToolbar->addAction(zoomInAction);
