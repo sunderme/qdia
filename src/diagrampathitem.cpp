@@ -327,7 +327,6 @@ QRectF DiagramPathItem::boundingRect() const
 
     QPolygonF poly(myPoints);
     QRectF r=poly.boundingRect();
-    qDebug()<<r<<r.adjusted(-extra, -extra, extra, extra);
 
     return r.adjusted(-extra, -extra, extra, extra);
 }
