@@ -681,12 +681,18 @@ void DiagramScene::abort(bool keepSelection)
         if(insertedPathItem)
             removeItem(insertedPathItem);
         break;
+    case InsertSpline:
+        if(insertedSplineItem)
+            removeItem(insertedSplineItem);
+        break;
     default:
         ;
     }
 
     insertedItem=nullptr;
     insertedDrawItem=nullptr;
+    insertedPathItem=nullptr;
+    insertedSplineItem=nullptr;
     copiedItems=nullptr;
     myMode=MoveItem;
     if(!keepSelection) clearSelection();

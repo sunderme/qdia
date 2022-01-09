@@ -66,7 +66,7 @@ private:
     DiagramType myDiagramType;
     routingType myRoutingType;
     QMenu *myContextMenu;
-    QList<QPointF> myPoints;
+    QVector<QPointF> myPoints;
     qreal len,breite;
     int mySelPoint,myHoverPoint;
     qreal myHandlerWidth;

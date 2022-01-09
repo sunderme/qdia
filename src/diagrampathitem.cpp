@@ -25,7 +25,7 @@ DiagramPathItem::DiagramPathItem(DiagramType diagramType, QMenu *contextMenu,
 
     setBrush(QBrush(Qt::black));
     setFlag(QGraphicsItem::ItemIsMovable, true);
-    setFlag(QGraphicsItem::ItemIsSelectable, false);
+    setFlag(QGraphicsItem::ItemIsSelectable, true);
     setAcceptHoverEvents(true);
 }
 
@@ -325,27 +325,11 @@ QRectF DiagramPathItem::boundingRect() const
 {
     qreal extra = (pen().width() + 20) / 2.0;
 
-    qreal minx,maxx,miny,maxy;
-    bool first=true;
-    foreach(QPointF point,myPoints){
-        if(first){
-            minx=point.x();
-            miny=point.y();
-            maxx=point.x();
-            maxy=point.y();
-            first=false;
-        }
-        else{
-            if(point.x()<minx) minx=point.x();
-            if(point.x()>maxx) maxx=point.x();
-            if(point.y()<miny) miny=point.y();
-            if(point.y()>maxy) maxy=point.y();
-        }
+    QPolygonF poly(myPoints);
+    QRectF r=poly.boundingRect();
+    qDebug()<<r<<r.adjusted(-extra, -extra, extra, extra);
 
-    }
-
-    return QRectF(minx,miny,maxx-minx,maxy-miny)
-        .adjusted(-extra, -extra, extra, extra);
+    return r.adjusted(-extra, -extra, extra, extra);
 }
 
 void DiagramPathItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
@@ -368,6 +352,9 @@ void DiagramPathItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
         QPointF mouse_point = onGrid(e -> pos());
         myPoints.replace(mySelPoint,onGrid(mouse_point));
         createPath();
+        e->accept();
+    }else{
+        QGraphicsPathItem::mouseMoveEvent(e);
     }
 }
 

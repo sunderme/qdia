@@ -355,6 +355,9 @@ void DiagramSplineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         }
 
         createPath();
+        e->accept();
+    }else{
+        QGraphicsPathItem::mouseMoveEvent(e);
     }
 }
 
