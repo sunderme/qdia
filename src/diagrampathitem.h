@@ -12,9 +12,9 @@ public:
     enum routingType { free, xy, yx, shortest };
 
     DiagramPathItem(DiagramType diagramType, QMenu *contextMenu,
-        QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+        QGraphicsItem *parent = 0);
     DiagramPathItem(QMenu *contextMenu,
-            QGraphicsItem *parent, QGraphicsScene *scene);//constructor fuer Vererbung
+            QGraphicsItem *parent);//constructor fuer Vererbung
     DiagramPathItem(const QJsonObject &json, QMenu *contextMenu);
     DiagramPathItem(const DiagramPathItem& diagram);//copy constructor
 

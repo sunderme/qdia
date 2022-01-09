@@ -272,15 +272,16 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         if (insertedSplineItem == nullptr){
             insertedSplineItem = new DiagramSplineItem(myItemMenu);
             insertedSplineItem->setPen(myLineColor);
-            insertedSplineItem->setBrush(myLineColor);
+            //insertedSplineItem->setBrush(myLineColor);
             insertedSplineItem->setZValue(maxZ);
-            insertedSplineItem->setP0(onGrid(mouseEvent->scenePos()));
             maxZ+=0.1;
             addItem(insertedSplineItem);
             insertedSplineItem->setPos(onGrid(mouseEvent->scenePos()));
             insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        }else{
+            insertedSplineItem->nextActive();
         }
-        insertedSplineItem->updateLast(onGrid(mouseEvent->scenePos()));
+        insertedSplineItem->updateActive(onGrid(mouseEvent->scenePos()));
         break;
     case InsertText:
         textItem = new DiagramTextItem();
@@ -447,7 +448,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         break;
     case InsertSpline:
         if (insertedSplineItem != nullptr) {
-            insertedSplineItem->updateLast(onGrid(mouseEvent->scenePos()));
+            insertedSplineItem->updateActive(onGrid(mouseEvent->scenePos()));
         }
         break;
     case MoveItem:
@@ -546,6 +547,11 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
         insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
         insertedPathItem->setEnabled(false);
         insertedPathItem=nullptr;
+        break;
+    case InsertSpline:
+        insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        insertedSplineItem->setEnabled(false);
+        insertedSplineItem=nullptr;
         break;
     default:
         QGraphicsScene::mouseDoubleClickEvent(mouseEvent);

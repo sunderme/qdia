@@ -7,7 +7,7 @@
 #include "diagramscene.h"
 
 DiagramPathItem::DiagramPathItem(DiagramType diagramType, QMenu *contextMenu,
-             QGraphicsItem *parent, QGraphicsScene *scene)
+             QGraphicsItem *parent)
     : QGraphicsPathItem(parent)
 {
     myDiagramType = diagramType;
@@ -30,7 +30,7 @@ DiagramPathItem::DiagramPathItem(DiagramType diagramType, QMenu *contextMenu,
 }
 
 DiagramPathItem::DiagramPathItem(QMenu *contextMenu,
-             QGraphicsItem *parent, QGraphicsScene *scene)
+             QGraphicsItem *parent)
     : QGraphicsPathItem(parent)
 {
     myDiagramType = Path;
