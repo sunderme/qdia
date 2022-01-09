@@ -5,13 +5,14 @@
 #include "diagramscene.h"
 
 
-DiagramSplineItem::DiagramSplineItem(QMenu *, QGraphicsItem *parent):QGraphicsPathItem(parent)
+DiagramSplineItem::DiagramSplineItem(DiagramType diagramType,QMenu *, QGraphicsItem *parent):QGraphicsPathItem(parent)
 {
     // standard initialize
     mySelPoint=-1;
     myHandlerWidth = 2.0;
     myHoverPoint=-1;
     myActivePoint=1;
+    myDiagramType=diagramType;
 
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -20,6 +21,7 @@ DiagramSplineItem::DiagramSplineItem(QMenu *, QGraphicsItem *parent):QGraphicsPa
 
 DiagramSplineItem::DiagramSplineItem(const QJsonObject &json, QMenu *)
 {
+    myDiagramType=static_cast<DiagramType>(json["diagramtype"].toInt());
     QPointF p;
     p.setX(json["x"].toDouble());
     p.setY(json["y"].toDouble());
@@ -72,6 +74,7 @@ DiagramSplineItem::DiagramSplineItem(const DiagramSplineItem &diagram)
     p1=diagram.p1;
     c0=diagram.c0;
     c1=diagram.c1;
+    myDiagramType = diagram.myDiagramType;
     createPath();
 
     setBrush(diagram.brush());
@@ -215,7 +218,13 @@ void DiagramSplineItem::createPath()
 {
     QPainterPath path;
     path.moveTo(p0);
-    path.cubicTo(c0,c1,p1);
+    switch (myDiagramType) {
+    case quad:
+        path.quadTo(c0,p1);
+        break;
+    default:
+        path.cubicTo(c0,c1,p1);
+    }
     setPath(path);
 }
 

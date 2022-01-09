@@ -11,14 +11,14 @@ class DiagramSplineItem : public QGraphicsPathItem
 {
 public:
     enum { Type = UserType + 6 };
-    DiagramSplineItem(QMenu *contextMenu, QGraphicsItem *parent=nullptr);
+    enum DiagramType { cubic,quad };
+    DiagramSplineItem(DiagramType diagramType, QMenu *contextMenu, QGraphicsItem *parent=nullptr);
     DiagramSplineItem(const QJsonObject &json, QMenu *contextMenu);
     DiagramSplineItem(const DiagramSplineItem& diagram);//copy constructor
 
     int type() const
         { return Type;}
 
-    void setP0(const QPointF point);
     void updateActive(const QPointF point, int currentActive=-1);
     void nextActive();
 
@@ -45,6 +45,7 @@ protected:
     bool hasClickedOn(QPointF press_point, QPointF point) const;
 
 private:
+    DiagramType myDiagramType;
     QPointF p0,p1,c0,c1;
 
     int mySelPoint,myHoverPoint;

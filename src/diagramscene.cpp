@@ -233,6 +233,13 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 insertedPathItem = nullptr;
             }
             break;
+        case InsertSpline:
+            if(insertedSplineItem){
+                insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+                insertedSplineItem->setEnabled(false);
+                insertedSplineItem=nullptr;
+            }
+            break;
         default:
             ;
         }
@@ -270,16 +277,20 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         break;
     case InsertSpline:
         if (insertedSplineItem == nullptr){
-            insertedSplineItem = new DiagramSplineItem(myItemMenu);
+            insertedSplineItem = new DiagramSplineItem(DiagramSplineItem::cubic,myItemMenu);
             insertedSplineItem->setPen(myLineColor);
             //insertedSplineItem->setBrush(myLineColor);
             insertedSplineItem->setZValue(maxZ);
             maxZ+=0.1;
+            insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            insertedSplineItem->setEnabled(true);
+            insertedSplineItem->setSelected(true);
             addItem(insertedSplineItem);
             insertedSplineItem->setPos(onGrid(mouseEvent->scenePos()));
-            insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+
         }else{
             insertedSplineItem->nextActive();
+            insertedSplineItem->setSelected(true);
         }
         insertedSplineItem->updateActive(onGrid(mouseEvent->scenePos()));
         break;
@@ -547,11 +558,6 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
         insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
         insertedPathItem->setEnabled(false);
         insertedPathItem=nullptr;
-        break;
-    case InsertSpline:
-        insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        insertedSplineItem->setEnabled(false);
-        insertedSplineItem=nullptr;
         break;
     default:
         QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
