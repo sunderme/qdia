@@ -203,6 +203,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     if (mouseEvent->button() == Qt::RightButton){
         switch (myMode) {
         case InsertItem:
+        case InsertElement:
             if (insertedItem){
                 QTransform trans=insertedItem->transform();
                 insertedItem->setTransform(trans*QTransform().rotate(90),false);
@@ -545,7 +546,7 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         emit zoomRect(mouseEvent->scenePos(),startPoint);
         return;
     }
-    if(myMode == InsertItem || myMode == InsertElement){
+    if(insertedItem && (myMode == InsertItem || myMode == InsertElement)){
         insertedItem->setSelected(false);
         insertedItem->setEnabled(false);
         insertedItem=nullptr;
