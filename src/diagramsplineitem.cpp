@@ -93,6 +93,8 @@ void DiagramSplineItem::nextActive()
     ++myActivePoint;
     if(myActivePoint>3)
         myActivePoint=0;
+    if(myDiagramType==quad && myActivePoint==2) // c1 is not used here
+        myActivePoint=3;
 }
 
 QPointF DiagramSplineItem::getActivePoint(const int currentActive)
@@ -241,7 +243,7 @@ void DiagramSplineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         painter->setPen(connectPen);
         painter->drawLine(p0,c0);
         if(myDiagramType==quad){
-            painter->drawLine(p0,c1);
+            painter->drawLine(p1,c0);
         }else{
             painter->drawLine(p1,c1);
         }
