@@ -240,7 +240,11 @@ void DiagramSplineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         connectPen.setStyle(Qt::DashLine);
         painter->setPen(connectPen);
         painter->drawLine(p0,c0);
-        painter->drawLine(p1,c1);
+        if(myDiagramType==quad){
+            painter->drawLine(p0,c1);
+        }else{
+            painter->drawLine(p1,c1);
+        }
         QBrush selBrush=QBrush(Qt::cyan);
         QPen selPen=QPen(Qt::cyan);
         painter->setBrush(selBrush);
@@ -260,12 +264,15 @@ void DiagramSplineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         painter->drawRect(QRectF(p1-QPointF(2,2),p1+QPointF(2,2)));
         painter->setBrush(selBrush);
 
-        if(myHoverPoint==2){
-            painter->setBrush(QBrush(Qt::red));
+        if(myDiagramType==cubic){
+            if(myHoverPoint==2){
+                painter->setBrush(QBrush(Qt::red));
+            }
+            // Rect around valid point
+
+            painter->drawRect(QRectF(c1-QPointF(2,2),c1+QPointF(2,2)));
+            painter->setBrush(selBrush);
         }
-        // Rect around valid point
-        painter->drawRect(QRectF(c1-QPointF(2,2),c1+QPointF(2,2)));
-        painter->setBrush(selBrush);
 
         if(myHoverPoint==3){
             painter->setBrush(QBrush(Qt::red));
@@ -298,7 +305,6 @@ void DiagramSplineItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
         if(hasClickedOn(hover_point,p1)) myHoverPoint=1;
         if(hasClickedOn(hover_point,c1)) myHoverPoint=2;
         if(hasClickedOn(hover_point,c0)) myHoverPoint=3;
-        qDebug()<<myHoverPoint;
         update();
     }
     QGraphicsPathItem::hoverEnterEvent(e);
