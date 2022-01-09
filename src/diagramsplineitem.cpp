@@ -208,7 +208,8 @@ QPixmap DiagramSplineItem::icon() const
 
 QRectF DiagramSplineItem::boundingRect() const
 {
-    QPolygonF p{p0,p1,c0,c1};
+    QVector<QPointF> pts{p0,p1,c0,c1};
+    QPolygonF p(pts);
     QRectF r=p.boundingRect();
     r.adjust(-myHandlerWidth,-myHandlerWidth,+myHandlerWidth,+myHandlerWidth);
     return r;
