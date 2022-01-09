@@ -445,7 +445,7 @@ DiagramPathItem::DiagramPathItem(const QJsonObject &json, QMenu *contextMenu)
     color.setAlpha(json["brush_alpha"].toInt());
     setBrush(color);
 
-    QList<QPointF> lst;
+    QVector<QPointF> lst;
     QJsonArray array=json["points"].toArray();
     for(int i=0;i<array.size();++i){
         QJsonObject o=array[i].toObject();

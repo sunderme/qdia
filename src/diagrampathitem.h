@@ -34,7 +34,7 @@ public:
     QPixmap image() const;
     QPixmap icon();
     QPainterPath getPath() const;
-    QList<QPointF> getPoints()
+    QVector<QPointF> getPoints()
         { return myPoints; }
     int type() const
         { return Type;}
