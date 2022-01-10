@@ -20,7 +20,9 @@
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="318"/>
-        <source>Version %1Written by Jan Sundermeyer (C) 2022Simple schematic/diagram entry editor.</source>
+        <source>Version %1
+Written by Jan Sundermeyer (C) 2022
+Simple schematic/diagram entry editor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

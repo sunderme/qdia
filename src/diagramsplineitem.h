@@ -10,7 +10,7 @@ QT_END_NAMESPACE
 class DiagramSplineItem : public QGraphicsPathItem
 {
 public:
-    enum { Type = UserType + 6 };
+    enum { Type = UserType + 7 };
     enum DiagramType { cubic,quad };
     DiagramSplineItem(DiagramType diagramType, QMenu *contextMenu, QGraphicsItem *parent=nullptr);
     DiagramSplineItem(const QJsonObject &json, QMenu *contextMenu);

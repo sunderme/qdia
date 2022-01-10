@@ -718,6 +718,12 @@ bool DiagramScene::save_json(QFile *file)
                 mItem->write(json);
             }
                 break;
+            case QGraphicsItem::UserType+7:
+            {
+                DiagramSplineItem *mItem = dynamic_cast<DiagramSplineItem *>(item);
+                mItem->write(json);
+            }
+                break;
             default:
             {
                 DiagramItem *mItem = dynamic_cast<DiagramItem *>(item);
@@ -761,6 +767,12 @@ bool DiagramScene::load_json(QFile *file)
             insertedPathItem->setFlag(QGraphicsItem::ItemIsMovable, true);
             insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
             break;
+        case QGraphicsItem::UserType+7:
+            insertedSplineItem = new DiagramSplineItem(json,myItemMenu);
+            addItem(insertedSplineItem);
+            insertedSplineItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+            insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            break;
         case QGraphicsItem::UserType+3:
             textItem = new DiagramTextItem(json);
             textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
@@ -777,10 +789,11 @@ bool DiagramScene::load_json(QFile *file)
         }
     }
     // Aufräumen
-    insertedItem = 0;
-    insertedDrawItem = 0;
-    insertedPathItem = 0;
-    textItem = 0;
+    insertedItem = nullptr;
+    insertedDrawItem = nullptr;
+    insertedPathItem = nullptr;
+    insertedSplineItem = nullptr;
+    textItem = nullptr;
     myMode = MoveItem;
 
     return true;

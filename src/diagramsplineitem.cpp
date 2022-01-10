@@ -31,9 +31,9 @@ DiagramSplineItem::DiagramSplineItem(const QJsonObject &json, QMenu *)
     color.setNamedColor(json["pen"].toString());
     color.setAlpha(json["pen_alpha"].toInt());
     setPen(color);
-    color.setNamedColor(json["bruch"].toString());
-    color.setAlpha(json["brush_alpha"].toInt());
-    setBrush(color);
+    //color.setNamedColor(json["brush"].toString());
+    //color.setAlpha(json["brush_alpha"].toInt());
+    //setBrush(color);
 
     p.setX(json["x0"].toDouble());
     p.setY(json["y0"].toDouble());
