@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: qdia-win-qt6-exe
-          path: qdia-win-qt6-${{ steps.package.outputs.VERSION_NAME }}.exe
+          path: ./build/qdia-win-qt6-${{ steps.package.outputs.VERSION_NAME }}.exe
         
       - name: Release exe
         uses: softprops/action-gh-release@v1
@@ -55,8 +55,8 @@ jobs:
         with:
           prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
           files: |
-            qdia-${{ steps.package.outputs.GIT_VERSION }}-win-qt6.exe
-            qdia-${{ steps.package.outputs.GIT_VERSION }}-win-portable-qt6.zip
+            ./build/qdia-${{ steps.package.outputs.GIT_VERSION }}-win-qt6.exe
+            ./build/qdia-${{ steps.package.outputs.GIT_VERSION }}-win-portable-qt6.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
 
@@ -170,7 +170,7 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       with:
         prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
-        files: qdia-${{ steps.package.outputs.GIT_VERSION }}-osx.dmg
+        files: build/qdia-${{ steps.package.outputs.GIT_VERSION }}-osx.dmg
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         
