@@ -99,9 +99,9 @@ SetOutPath $INSTDIR\styles
 
 File package-zip\styles\*
 
-SetOutPath $INSTDIR\translations
+#SetOutPath $INSTDIR\translations
 
-File translation\*.qm
+#File translations\*.qm
 
 # Store installation folder
 WriteRegStr HKCU "Software\${APPNAME}" "" $INSTDIR
