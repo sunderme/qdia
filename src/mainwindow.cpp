@@ -315,8 +315,9 @@ void MainWindow::itemSelected(QGraphicsItem *item)
 void MainWindow::about()
 {
     QMessageBox::about(this, tr("About QDia"),
-                       tr("Written by Jan Sundermeyer (C) 20222"
-                          "Simple schematic/diagram entry editor."));
+                       tr("Version %1\n"
+                           "Written by Jan Sundermeyer (C) 2022\n"
+                          "Simple schematic/diagram entry editor.").arg(QDIA_VERSION));
 }
 
 void MainWindow::createToolBox()
