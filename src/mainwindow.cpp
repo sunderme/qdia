@@ -101,7 +101,7 @@ void MainWindow::deleteItem()
     QList<QGraphicsItem *> selectedItems = scene->selectedItems();
 
     for (QGraphicsItem *item : qAsConst(selectedItems)) {
-         scene->removeItem(item);
+         scene->deleteItem(item);
          delete item;
      }
 }

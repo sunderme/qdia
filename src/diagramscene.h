@@ -116,6 +116,8 @@ public:
     QPointF onGrid(QPointF pos);
     void setCursorVisible(bool t);
 
+    void deleteItem(QGraphicsItem *item);
+
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);
     void abort(bool keepSelection=false);

@@ -201,27 +201,8 @@ void DiagramScene::wheelEvent(QGraphicsSceneWheelEvent *mouseEvent)
 void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (mouseEvent->button() == Qt::RightButton){
-        switch (myMode) {
-        case InsertItem:
-        case InsertElement:
-            if (insertedItem){
-                QTransform trans=insertedItem->transform();
-                insertedItem->setTransform(trans*QTransform().rotate(90),false);
-                mouseEvent->setAccepted(true);
-            }
-            break;
-        case InsertLine:
-            if (insertedPathItem != 0){
-                int i = int(insertedPathItem->getRoutingType());
-                if(i>1) i=0;
-                else i++;
-                insertedPathItem->setRoutingType(DiagramPathItem::routingType(i));
-                mouseEvent->setAccepted(true);
-            }
-            break;
-        default:
-            ;
-        }
+        abort();
+        mouseEvent->accept();
         return;
     }
 
@@ -234,12 +215,22 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 insertedPathItem->setEnabled(false);
                 insertedPathItem = nullptr;
             }
+            myMode=MoveItem;
             break;
         case InsertSpline:
             if(insertedSplineItem){
                 insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
                 insertedSplineItem->setEnabled(false);
                 insertedSplineItem=nullptr;
+            }
+            myMode=MoveItem;
+            break;
+        case InsertItem:
+        case InsertElement:
+            if (insertedItem){
+                insertedItem=nullptr;
+                mouseEvent->setAccepted(true);
+                myMode=MoveItem;
             }
             break;
         default:
@@ -654,6 +645,17 @@ void DiagramScene::setCursorVisible(bool vis)
     {
         if(myCursor.scene()) removeItem(&myCursor);
     }
+}
+
+void DiagramScene::deleteItem(QGraphicsItem *item)
+{
+    if(item==insertedItem){
+        insertedItem=nullptr;
+    }
+    if(item==insertedDrawItem){
+        insertedDrawItem=nullptr;
+    }
+    this->removeItem(item);
 }
 
 void DiagramScene::editorReceivedFocus(DiagramTextItem *item)
