@@ -170,7 +170,7 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       with:
         prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
-        files: build/qdia-${{ steps.package.outputs.VERSION_NAME }}-osx.dmg
+        files: build/qdia-osx-${{ steps.package.outputs.VERSION_NAME }}.dmg
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         
