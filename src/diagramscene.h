@@ -152,7 +152,6 @@ protected:
     void enableAllItems(bool enable=true);
 
 private:
-    bool isItemChange(int type) const;
 
     DiagramItem::DiagramType myItemType;
     DiagramDrawItem::DiagramType myDrawItemType;
