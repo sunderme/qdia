@@ -98,23 +98,32 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
 void DiagramScene::setLineColor(const QColor &color)
 {
     myLineColor = color;
+    foreach(QGraphicsItem *elem,selectedItems()){
+        DiagramItem *item = dynamic_cast<DiagramItem *>(elem);
+        if(item)
+            item->setPen(myLineColor);
+    }
 }
 
 void DiagramScene::setTextColor(const QColor &color)
 {
     myTextColor = color;
-    if (isItemChange(DiagramTextItem::Type)) {
-        DiagramTextItem *item = qgraphicsitem_cast<DiagramTextItem *>(selectedItems().first());
-        item->setDefaultTextColor(myTextColor);
+    foreach(QGraphicsItem *elem,selectedItems()){
+        DiagramTextItem *item = dynamic_cast<DiagramTextItem *>(elem);
+        if(item)
+            item->setDefaultTextColor(myTextColor);
     }
 }
 
 void DiagramScene::setItemColor(const QColor &color)
 {
     myItemColor = color;
-    if (isItemChange(DiagramItem::Type)) {
-        DiagramItem *item = qgraphicsitem_cast<DiagramItem *>(selectedItems().first());
-        item->setBrush(myItemColor);
+    foreach(QGraphicsItem *elem,selectedItems()){
+        DiagramItem *item = dynamic_cast<DiagramItem *>(elem);
+        if(item){
+            item->setBrush(myItemColor);
+            return;
+        }
     }
 }
 
@@ -122,9 +131,8 @@ void DiagramScene::setFont(const QFont &font)
 {
     myFont = font;
 
-    if (isItemChange(DiagramTextItem::Type)) {
-        QGraphicsTextItem *item = qgraphicsitem_cast<DiagramTextItem *>(selectedItems().first());
-        //At this point the selection can change so the first selected item might not be a DiagramTextItem
+    foreach(QGraphicsItem *elem,selectedItems()){
+        QGraphicsTextItem *item = qgraphicsitem_cast<DiagramTextItem *>(elem);
         if (item)
             item->setFont(myFont);
     }

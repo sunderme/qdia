@@ -490,7 +490,7 @@ void MainWindow::createActions()
     sendBackAction->setStatusTip(tr("Send item to back"));
     connect(sendBackAction, &QAction::triggered, this, &MainWindow::sendToBack);
 
-    rotateRightAction = new QAction(QIcon(":/images/object_rotate_right.svg"),
+    rotateRightAction = new QAction(QIcon(":/images/object-rotate-right.svg"),
                                     tr("rotate &Right"), this);
     rotateRightAction->setShortcut(tr("R"));
     rotateRightAction->setStatusTip(tr("rotate item 90 degrees right"));
@@ -498,7 +498,7 @@ void MainWindow::createActions()
             this, SLOT(rotateRight()));
     listOfActions.append(rotateRightAction);
 
-    rotateLeftAction = new QAction(QIcon(":/images/object_rotate_left.svg"),
+    rotateLeftAction = new QAction(QIcon(":/images/object-rotate-left.svg"),
                                    tr("rotate &Left"), this);
     rotateLeftAction->setShortcut(tr("Shift+R"));
     rotateLeftAction->setStatusTip(tr("rotate item 90 degrees left"));
@@ -506,14 +506,14 @@ void MainWindow::createActions()
             this, SLOT(rotateLeft()));
     listOfActions.append(rotateLeftAction);
 
-    groupAction = new QAction(QIcon(":/images/object_group.svg"),
+    groupAction = new QAction(QIcon(":/images/object-group.svg"),
                               tr("&group Items"), this);
     groupAction->setShortcut(tr("Ctrl+G"));
     groupAction->setStatusTip(tr("group Items"));
     connect(groupAction, SIGNAL(triggered()),
             this, SLOT(groupItems()));
 
-    ungroupAction = new QAction(QIcon(":/images/object_ungroup.svg"),
+    ungroupAction = new QAction(QIcon(":/images/object-ungroup.svg"),
                                 tr("&ungroup Item"), this);
     ungroupAction->setShortcut(tr("Shift+Ctrl+G"));
     ungroupAction->setStatusTip(tr("ungroup Items"));
