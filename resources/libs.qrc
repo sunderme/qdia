@@ -15,5 +15,9 @@
         <file>libs/analog/vsource.json</file>
         <file>libs/gates/and.json</file>
         <file>libs/gates/nand.json</file>
+        <file>libs/gates/buffer.json</file>
+        <file>libs/gates/inverter.json</file>
+        <file>libs/gates/or.json</file>
+        <file>libs/gates/nor.json</file>
     </qresource>
 </RCC>

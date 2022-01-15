@@ -412,7 +412,11 @@ void MainWindow::createToolBox()
     QString path2=":/libs/gates/";
     QStringList files2{
         "and.json",
-        "nand.json"
+        "nand.json",
+        "or.json",
+        "nor.json",
+        "buffer.json",
+        "inverter.json"
     };
     row=0;
     col=0;
