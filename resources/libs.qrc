@@ -9,6 +9,7 @@
         <file>libs/analog/isource.json</file>
         <file>libs/analog/nmos.json</file>
         <file>libs/analog/pmos.json</file>
+        <file>libs/analog/diode.json</file>
         <file>libs/analog/res.json</file>
         <file>libs/analog/vdd.json</file>
         <file>libs/analog/vsource.json</file>

@@ -376,6 +376,7 @@ void MainWindow::createToolBox()
         "ind.json",
         "nmos.json",
         "pmos.json",
+        "diode.json",
         "vsource.json",
         "isource.json",
         "acsource.json",
