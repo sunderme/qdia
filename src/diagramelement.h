@@ -26,13 +26,19 @@ public:
         return mFileName;
     }
 protected:
+    struct Path {
+        QPainterPath path;
+        bool filled=false;
+        QTransform t;
+    };
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     QString mFileName;
     QString mName;
     bool mFilled;
-    QPainterPath mPainterPath;
+    QList<Path> lstPaths;
 
-    QPainterPath importPathFromFile(const QString &fn);
-    QPainterPath createPainterPathFromJSON(QJsonObject json);
+    QList<Path> importPathFromFile(const QString &fn);
+    QList<Path> createPainterPathFromJSON(QJsonObject json);
 };
 
 #endif // DIAGRAMELEMENT_H

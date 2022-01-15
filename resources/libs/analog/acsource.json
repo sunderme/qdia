@@ -1,11 +1,8 @@
 {
-  "name": "vsource",
+  "name": "acsource",
   "elements":[
     {"type":"line","x0":0,"y0":-40,"x1":0,"y1":-20},
     {"type":"circle","x0":0,"y0":0,"r":20},
-    {"type":"line","x0":-6,"y0":10,"x1":6,"y1":10},
-    {"type":"line","x0":0,"y0":-16,"x1":0,"y1":-4},
-    {"type":"line","x0":-6,"y0":-10,"x1":6,"y1":-10},
     {"type":"line","x0":0,"y0":20,"x1":0,"y1":40}
   ]
 }

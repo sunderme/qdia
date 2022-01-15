@@ -9,15 +9,12 @@
 DiagramElement::DiagramElement(const QString fileName, QMenu *contextMenu, QGraphicsItem *parent): DiagramItem(contextMenu,parent),mFilled(false)
 {
     mFileName=fileName;
-    mPainterPath=importPathFromFile(mFileName);
-    if(!mPainterPath.isEmpty()){
-        setPath(mPainterPath);
+    lstPaths=importPathFromFile(mFileName);
+    if(!lstPaths.isEmpty()){
+        setPath(lstPaths.first().path);
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
-        if(mFilled){
-            setBrush(pen().color());
-        }
     }
 }
 
@@ -27,15 +24,12 @@ DiagramElement::DiagramElement(const DiagramElement& diagram)
     mFileName=diagram.mFileName;
     mName=diagram.mName;
     mFilled=diagram.mFilled;
-    mPainterPath=importPathFromFile(mFileName);
-    if(!mPainterPath.isEmpty()){
-        setPath(mPainterPath);
+    lstPaths=importPathFromFile(mFileName);
+    if(!lstPaths.isEmpty()){
+        setPath(lstPaths.first().path);
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
-        if(mFilled){
-            setBrush(pen().color());
-        }
     }
 }
 
@@ -62,18 +56,52 @@ QPixmap DiagramElement::image() const
     }
     painter.translate(125, 125);
     painter.scale(4.,4.);
-    painter.drawPath(mPainterPath);
+    foreach(Path lPath,lstPaths){
+        painter.save();
+        if(lPath.filled){
+            painter.setBrush(pen().color());
+        }
+        painter.setTransform(lPath.t,true);
+        painter.drawPath(lPath.path);
+        painter.restore();
+    }
 
     return pixmap;
 }
 
-QPainterPath DiagramElement::importPathFromFile(const QString &fn)
+void DiagramElement::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+{
+    painter->setPen(pen());
+    painter->setBrush(brush());
+    foreach(Path lPath,lstPaths){
+        painter->save();
+        if(lPath.filled){
+            painter->setBrush(pen().color());
+        }
+        painter->setTransform(lPath.t,true);
+        painter->drawPath(lPath.path);
+        painter->restore();
+    }
+    // selected
+    if(isSelected()){
+        // Rect
+        QPen selPen=QPen(Qt::DotLine);
+        selPen.setWidth(0);
+        selPen.setColor(Qt::black);
+        QBrush selBrush=QBrush(Qt::NoBrush);
+        painter->setBrush(selBrush);
+        painter->setPen(selPen);
+        painter->drawRect(boundingRect());
+    }// if
+}
+
+QList<DiagramElement::Path> DiagramElement::importPathFromFile(const QString &fn)
 {
     // open and read in text file
     QFile loadFile(fn);
     if (!loadFile.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open save file.");
-        return QPainterPath();
+        return QList<Path>();
     }
     QByteArray data = loadFile.readAll();
 
@@ -82,10 +110,11 @@ QPainterPath DiagramElement::importPathFromFile(const QString &fn)
     return createPainterPathFromJSON(loadDoc.object());
 }
 
-QPainterPath DiagramElement::createPainterPathFromJSON(QJsonObject json)
+QList<DiagramElement::Path> DiagramElement::createPainterPathFromJSON(QJsonObject json)
 {
-    mName=json["name"].toString();
-    mFilled=json["filled"].toBool();
+    QString elementName=json["name"].toString();
+    bool filled=json["filled"].toBool();
+    QList<DiagramElement::Path> result;
     QPainterPath path;
     QJsonArray array=json["elements"].toArray();
     for (int index = 0; index < array.size(); ++index) {
@@ -192,23 +221,42 @@ QPainterPath DiagramElement::createPainterPathFromJSON(QJsonObject json)
             qreal cy1=jsonObject["cy1"].toDouble();
             path.cubicTo(cx0,cy0,cx1,cy1,x1,y1);
         }
+        if(type=="element"){
+            qreal x=jsonObject["x"].toDouble();
+            qreal y=jsonObject["y"].toDouble();
+            qreal scale=jsonObject["scale"].toDouble(1.);
+            qreal rotate=jsonObject["rotate"].toDouble(0.);
+            QString fn=jsonObject["name"].toString();
+            fn=":/libs/"+fn;
+            if(!fn.endsWith(".json")){
+                fn+=".json";
+            }
+            QList<Path> local=importPathFromFile(fn);
+            for(Path &elem:local){
+                elem.t.translate(x,y);
+                elem.t.scale(scale,scale);
+                elem.t.rotate(rotate);
+            }
+            result<<local;
+        }
     }
-    return path;
+    Path p;
+    p.path=path;
+    p.filled=filled;
+    result.prepend(p);
+    mName=elementName;
+    return result;
 }
 
 DiagramElement::DiagramElement(const QJsonObject &json, QMenu *contextMenu):DiagramItem(json,contextMenu)
 {
     mFileName=json["filename"].toString();
     mName=json["name"].toString();
-    mPainterPath.clear();
-    mPainterPath=importPathFromFile(mFileName);
-    if(!mPainterPath.isEmpty()){
-        setPath(mPainterPath);
+    lstPaths=importPathFromFile(mFileName);
+    if(!lstPaths.isEmpty()){
+        setPath(lstPaths.first().path);
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
-        if(mFilled){
-            setBrush(pen().color());
-        }
     }
 }
