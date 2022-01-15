@@ -9,7 +9,8 @@
 DiagramElement::DiagramElement(const QString fileName, QMenu *contextMenu, QGraphicsItem *parent): DiagramItem(contextMenu,parent),mFilled(false)
 {
     mFileName=fileName;
-    if(importPathFromFile(mFileName)){
+    mPainterPath=importPathFromFile(mFileName);
+    if(!mPainterPath.isEmpty()){
         setPath(mPainterPath);
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -26,7 +27,8 @@ DiagramElement::DiagramElement(const DiagramElement& diagram)
     mFileName=diagram.mFileName;
     mName=diagram.mName;
     mFilled=diagram.mFilled;
-    if(importPathFromFile(mFileName)){
+    mPainterPath=importPathFromFile(mFileName);
+    if(!mPainterPath.isEmpty()){
         setPath(mPainterPath);
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -65,13 +67,13 @@ QPixmap DiagramElement::image() const
     return pixmap;
 }
 
-bool DiagramElement::importPathFromFile(const QString &fn)
+QPainterPath DiagramElement::importPathFromFile(const QString &fn)
 {
     // open and read in text file
     QFile loadFile(fn);
     if (!loadFile.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open save file.");
-        return false;
+        return QPainterPath();
     }
     QByteArray data = loadFile.readAll();
 
@@ -80,10 +82,11 @@ bool DiagramElement::importPathFromFile(const QString &fn)
     return createPainterPathFromJSON(loadDoc.object());
 }
 
-bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
+QPainterPath DiagramElement::createPainterPathFromJSON(QJsonObject json)
 {
     mName=json["name"].toString();
     mFilled=json["filled"].toBool();
+    QPainterPath path;
     QJsonArray array=json["elements"].toArray();
     for (int index = 0; index < array.size(); ++index) {
         QJsonObject jsonObject = array[index].toObject();
@@ -93,8 +96,8 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
             qreal x1=jsonObject["x1"].toDouble();
             qreal y0=jsonObject["y0"].toDouble();
             qreal y1=jsonObject["y1"].toDouble();
-            mPainterPath.moveTo(QPointF(x0,y0));
-            mPainterPath.addRect(x0,y0,x1-x0,y1-y0);
+            path.moveTo(QPointF(x0,y0));
+            path.addRect(x0,y0,x1-x0,y1-y0);
         }
         if(type=="circle") {
             qreal x0=jsonObject["x0"].toDouble();
@@ -108,8 +111,8 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
                 ry=jsonObject["ry"].toDouble();
             }
             QPointF p_center(x0,y0);
-            mPainterPath.moveTo(p_center);
-            mPainterPath.addEllipse(p_center,rx,ry);
+            path.moveTo(p_center);
+            path.addEllipse(p_center,rx,ry);
         }
         if(type=="line") {
             qreal x0=jsonObject["x0"].toDouble();
@@ -118,8 +121,8 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
             qreal y1=jsonObject["y1"].toDouble();
             QVector<QPointF>lst{QPointF(x0,y0),QPointF(x1,y1)};
             QPolygonF polygon{lst};
-            mPainterPath.moveTo(lst.first());
-            mPainterPath.addPolygon(polygon);
+            path.moveTo(lst.first());
+            path.addPolygon(polygon);
         }
         if(type=="polygon") {
             QVector<QPointF>lst;
@@ -131,8 +134,8 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
                 lst<<QPointF(x,y);
             }
             QPolygonF polygon{lst};
-            mPainterPath.moveTo(lst.first());
-            mPainterPath.addPolygon(polygon);
+            path.moveTo(lst.first());
+            path.addPolygon(polygon);
         }
         if(type=="lines") {
             QList<QPointF>lst;
@@ -144,8 +147,8 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
                 lst<<QPointF(x,y);
             }
             for(int i=1;i<lst.length();++i){
-                mPainterPath.moveTo(lst.at(i-1));
-                mPainterPath.lineTo(lst.at(i));
+                path.moveTo(lst.at(i-1));
+                path.lineTo(lst.at(i));
             }
         }
         if(type=="arc") {
@@ -155,8 +158,8 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
             qreal ry=jsonObject["ry"].toDouble();
             qreal angle=jsonObject["angle"].toDouble();
             qreal length=jsonObject["length"].toDouble();
-            mPainterPath.arcMoveTo(x-rx,y-ry,2*rx,2*ry,angle);
-            mPainterPath.arcTo(x-rx,y-ry,2*rx,2*ry,angle,length);
+            path.arcMoveTo(x-rx,y-ry,2*rx,2*ry,angle);
+            path.arcTo(x-rx,y-ry,2*rx,2*ry,angle,length);
         }
         if(type=="quad") {
             qreal x0=jsonObject["x0"].toDouble();
@@ -165,8 +168,8 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
             qreal y1=jsonObject["y1"].toDouble();
             qreal cx=jsonObject["cx"].toDouble();
             qreal cy=jsonObject["cy"].toDouble();
-            mPainterPath.moveTo(x0,y0);
-            mPainterPath.quadTo(cx,cy,x1,y1);
+            path.moveTo(x0,y0);
+            path.quadTo(cx,cy,x1,y1);
         }
         if(type=="cubic") {
             qreal x0=jsonObject["x0"].toDouble();
@@ -177,8 +180,8 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
             qreal cy0=jsonObject["cy0"].toDouble();
             qreal cx1=jsonObject["cx1"].toDouble();
             qreal cy1=jsonObject["cy1"].toDouble();
-            mPainterPath.moveTo(x0,y0);
-            mPainterPath.cubicTo(cx0,cy0,cx1,cy1,x1,y1);
+            path.moveTo(x0,y0);
+            path.cubicTo(cx0,cy0,cx1,cy1,x1,y1);
         }
         if(type=="cubicTo") {
             qreal x1=jsonObject["x1"].toDouble();
@@ -187,17 +190,19 @@ bool DiagramElement::createPainterPathFromJSON(QJsonObject json)
             qreal cy0=jsonObject["cy0"].toDouble();
             qreal cx1=jsonObject["cx1"].toDouble();
             qreal cy1=jsonObject["cy1"].toDouble();
-            mPainterPath.cubicTo(cx0,cy0,cx1,cy1,x1,y1);
+            path.cubicTo(cx0,cy0,cx1,cy1,x1,y1);
         }
     }
-    return true;
+    return path;
 }
 
 DiagramElement::DiagramElement(const QJsonObject &json, QMenu *contextMenu):DiagramItem(json,contextMenu)
 {
     mFileName=json["filename"].toString();
     mName=json["name"].toString();
-    if(importPathFromFile(mFileName)){
+    mPainterPath.clear();
+    mPainterPath=importPathFromFile(mFileName);
+    if(!mPainterPath.isEmpty()){
         setPath(mPainterPath);
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);

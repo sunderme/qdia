@@ -31,8 +31,8 @@ protected:
     bool mFilled;
     QPainterPath mPainterPath;
 
-    bool importPathFromFile(const QString &fn);
-    bool createPainterPathFromJSON(QJsonObject json);
+    QPainterPath importPathFromFile(const QString &fn);
+    QPainterPath createPainterPathFromJSON(QJsonObject json);
 };
 
 #endif // DIAGRAMELEMENT_H
