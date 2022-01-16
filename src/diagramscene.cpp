@@ -122,7 +122,6 @@ void DiagramScene::setItemColor(const QColor &color)
         DiagramItem *item = dynamic_cast<DiagramItem *>(elem);
         if(item){
             item->setBrush(myItemColor);
-            return;
         }
     }
 }
