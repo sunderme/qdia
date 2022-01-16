@@ -21,5 +21,6 @@
         <file>libs/gates/nor.json</file>
         <file>libs/gates/xor.json</file>
         <file>libs/gates/xnor.json</file>
+        <file>libs/gates/dff.json</file>
     </qresource>
 </RCC>

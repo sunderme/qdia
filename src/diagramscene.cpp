@@ -333,7 +333,9 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         if(insertedItem==nullptr){
             insertedItem = new DiagramElement(mItemFileName, myItemMenu);
             //insertedItem->setBrush(myItemColor);
-            insertedItem->setPen(myLineColor);
+            QPen p(myLineColor);
+            p.setCapStyle(Qt::RoundCap);
+            insertedItem->setPen(p);
             insertedItem->setZValue(maxZ);
             maxZ+=0.1;
             addItem(insertedItem);
@@ -502,7 +504,9 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         if(insertedItem==nullptr){
             insertedItem = new DiagramElement(mItemFileName, myItemMenu);
             //insertedItem->setBrush(myItemColor);
-            insertedItem->setPen(myLineColor);
+            QPen p(myLineColor);
+            p.setCapStyle(Qt::RoundCap);
+            insertedItem->setPen(p);
             insertedItem->setSelected(true);
             insertedItem->setZValue(maxZ);
             maxZ+=0.1;

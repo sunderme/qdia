@@ -230,6 +230,16 @@ QList<DiagramElement::Path> DiagramElement::createPainterPathFromJSON(QJsonObjec
             qreal cy1=jsonObject["cy1"].toDouble();
             path.cubicTo(cx0,cy0,cx1,cy1,x1,y1);
         }
+        if(type=="text"){
+            Path localPath;
+            qreal x=jsonObject["x"].toDouble();
+            qreal y=jsonObject["y"].toDouble();
+            QString text=jsonObject["text"].toString();
+            QFont serifFont("Helvetica", 10);
+            localPath.path.addText(x,y,serifFont,text);
+            localPath.filled=true;
+            result<<localPath;
+        }
         if(type=="element"){
             qreal x=jsonObject["x"].toDouble();
             qreal y=jsonObject["y"].toDouble();
