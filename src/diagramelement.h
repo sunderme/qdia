@@ -32,6 +32,7 @@ protected:
         QTransform t;
     };
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
+    QRectF boundingRect() const;
     QString mFileName;
     QString mName;
     bool mFilled;

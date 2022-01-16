@@ -95,6 +95,17 @@ void DiagramElement::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
     }// if
 }
 
+QRectF DiagramElement::boundingRect() const
+{
+    QRectF rect;
+    foreach(const Path &elem,lstPaths){
+        QPainterPath path=elem.t.map(elem.path);
+        QRectF localRect=path.boundingRect();
+        rect=rect.united(localRect);
+    }
+    return rect;
+}
+
 QList<DiagramElement::Path> DiagramElement::importPathFromFile(const QString &fn)
 {
     // open and read in text file
