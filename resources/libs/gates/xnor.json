@@ -1,0 +1,7 @@
+{
+  "name": "xnor",
+  "elements":[
+    {"type":"element","x":0,"y":0,"rotate":0,"name":"gates/xor"},
+    {"type":"circle","x0":35,"y0":0,"r":5}
+  ]
+}

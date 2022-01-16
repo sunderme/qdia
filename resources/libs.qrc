@@ -19,5 +19,7 @@
         <file>libs/gates/inverter.json</file>
         <file>libs/gates/or.json</file>
         <file>libs/gates/nor.json</file>
+        <file>libs/gates/xor.json</file>
+        <file>libs/gates/xnor.json</file>
     </qresource>
 </RCC>

@@ -415,6 +415,8 @@ void MainWindow::createToolBox()
         "nand.json",
         "or.json",
         "nor.json",
+        "xor.json",
+        "xnor.json",
         "buffer.json",
         "inverter.json"
     };
