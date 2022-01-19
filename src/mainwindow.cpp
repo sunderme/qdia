@@ -640,6 +640,12 @@ void MainWindow::createActions()
     saveAsAction->setShortcut(tr("Ctrl+s"));
     connect(saveAsAction, SIGNAL(triggered()),
             this, SLOT(saveAs()));
+
+    copyToClipboardAction=new QAction(tr("&Copy to clipboard"), this);
+    copyToClipboardAction->setShortcut(tr("Ctrl+c"));
+    connect(copyToClipboardAction,&QAction::triggered,
+            this, &MainWindow::copyToClipboard);
+
 }
 
 void MainWindow::createMenus()
@@ -648,6 +654,7 @@ void MainWindow::createMenus()
     fileMenu->addAction(loadAction);
     fileMenu->addAction(saveAction);
     fileMenu->addAction(saveAsAction);
+    fileMenu->addAction(copyToClipboardAction);
     fileMenu->addAction(printAction);
     fileMenu->addAction(exportAction);
     fileMenu->addAction(exitAction);
@@ -864,6 +871,21 @@ void MainWindow::copyItems()
 {
     scene->setMode(DiagramScene::CopyItem);
     view->setDragMode(QGraphicsView::RubberBandDrag);
+}
+
+void MainWindow::copyToClipboard()
+{
+    scene->setCursorVisible(false);
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QRectF rect=scene->itemsBoundingRect();
+    QPixmap pixmap(rect.width(),rect.height());
+    pixmap.fill();
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+    scene->render(&painter,QRectF(),rect);
+    painter.end();
+    clipboard->setPixmap(pixmap);
+    scene->setCursorVisible(true);
 }
 
 void MainWindow::groupItems()
