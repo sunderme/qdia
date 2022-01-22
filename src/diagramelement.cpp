@@ -56,13 +56,14 @@ QPixmap DiagramElement::image() const
         w=rect.height();
     }
     qreal scale=qMin(4.,240/w);
+    QPointF center=-rect.center()*scale+QPointF(125,125);
 
     QPainter painter(&pixmap);
     painter.setPen(QPen(Qt::black, 1));
     if(mFilled){
         painter.setBrush(Qt::black);
     }
-    painter.translate(125, 125);
+    painter.translate(center);
     painter.scale(scale,scale);
     foreach(Path lPath,lstPaths){
         painter.save();
