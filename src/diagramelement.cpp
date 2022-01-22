@@ -49,13 +49,21 @@ QPixmap DiagramElement::image() const
 {
     QPixmap pixmap(250, 250);
     pixmap.fill(Qt::transparent);
+
+    QRectF rect=boundingRect();
+    qreal w=rect.width();
+    if(w<rect.height()){
+        w=rect.height();
+    }
+    qreal scale=qMin(4.,240/w);
+
     QPainter painter(&pixmap);
     painter.setPen(QPen(Qt::black, 1));
     if(mFilled){
         painter.setBrush(Qt::black);
     }
     painter.translate(125, 125);
-    painter.scale(4.,4.);
+    painter.scale(scale,scale);
     foreach(Path lPath,lstPaths){
         painter.save();
         if(lPath.filled){
