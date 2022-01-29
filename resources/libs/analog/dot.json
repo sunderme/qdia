@@ -1,0 +1,7 @@
+{
+  "name": "dot",
+  "filled":true,
+  "elements":[
+    {"type":"circle","x0":0,"y0":0,"r":3}
+  ]
+}

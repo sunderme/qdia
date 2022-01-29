@@ -3,6 +3,7 @@
         <file>libs/analog/acsource.json</file>
         <file>libs/analog/cap.json</file>
         <file>libs/analog/circle.json</file>
+	<file>libs/analog/dot.json</file>
         <file>libs/analog/arrow.json</file>
         <file>libs/analog/gnd.json</file>
         <file>libs/analog/ind.json</file>

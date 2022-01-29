@@ -371,6 +371,7 @@ void MainWindow::createToolBox()
     QStringList files{
         "circle.json",
         "arrow.json",
+        "dot.json",
         "res.json",
         "cap.json",
         "ind.json",
