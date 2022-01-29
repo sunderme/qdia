@@ -661,6 +661,19 @@ void DiagramScene::deleteItem(QGraphicsItem *item)
     this->removeItem(item);
 }
 
+void DiagramScene::insertElementDirectly(const QString element)
+{
+    DiagramElement *item = new DiagramElement(element,nullptr);
+    QPen p(myLineColor);
+    p.setCapStyle(Qt::RoundCap);
+    item->setPen(p);
+    item->setZValue(maxZ);
+    maxZ+=0.1;
+    addItem(item);
+    QPointF pos=myCursor.pos();
+    item->setPos(onGrid(pos));
+}
+
 void DiagramScene::editorReceivedFocus(DiagramTextItem *item)
 {
     emit editorHasReceivedFocus();

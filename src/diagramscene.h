@@ -117,6 +117,7 @@ public:
     void setCursorVisible(bool t);
 
     void deleteItem(QGraphicsItem *item);
+    void insertElementDirectly(const QString element);
 
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);

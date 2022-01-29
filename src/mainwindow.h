@@ -131,6 +131,8 @@ private slots:
    void load();
    void moveItems();
    void abort();
+   void insertDot();
+   void switchToWire();
 
 private:
    void createToolBox();
@@ -175,6 +177,8 @@ private:
    QAction *exportAction;
 
    QShortcut *escShortcut;
+   QShortcut *dotShortcut;
+   QShortcut *wireShortcut;
 
    QMenu *fileMenu;
    QMenu *viewMenu;

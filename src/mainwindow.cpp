@@ -597,6 +597,14 @@ void MainWindow::createActions()
                                 this);
     connect(escShortcut,&QShortcut::activated,this,&MainWindow::abort);
 
+    dotShortcut = new QShortcut(QKeySequence("."),
+                                this);
+    connect(dotShortcut,&QShortcut::activated,this,&MainWindow::insertDot);
+
+    wireShortcut = new QShortcut(QKeySequence("w"),
+                                this);
+    connect(wireShortcut,&QShortcut::activated,this,&MainWindow::switchToWire);
+
     // Zoom in/out
     zoomInAction = new QAction(QIcon(":/images/zoomin.svg"),tr("Zoom &in"), this);
     zoomInAction->setShortcut(tr("Shift+z"));
@@ -957,6 +965,23 @@ void MainWindow::abort()
     pointerButton->setChecked(true);
     pointerGroupClicked(pointerButton);
 }
+/*!
+ * \brief insert dot a current cursor position
+ */
+void MainWindow::insertDot()
+{
+    QString fn=":/libs/analog/dot.json";
+    scene->insertElementDirectly(fn);
+}
+
+void MainWindow::switchToWire()
+{
+    scene->setArrow(0);
+    pointerTypeGroup->button(int(DiagramScene::MoveItem))->setChecked(false);
+    linePointerButton->setIcon(createArrowIcon(0));
+    linePointerButton->setChecked(true);
+    scene->setMode(DiagramScene::InsertLine);
+}
 
 void MainWindow::exportImage()
 {
@@ -1177,6 +1202,7 @@ void MainWindow::lineArrowButtonTriggered()
 {
     scene->setArrow(arrowAction->data().toInt());
     pointerTypeGroup->button(int(DiagramScene::MoveItem))->setChecked(false);
+    scene->setMode(DiagramScene::InsertLine);
 }
 
 void MainWindow::moveCursor(QPointF p)
