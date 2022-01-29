@@ -1,5 +1,5 @@
 {
-  "name": "vdd",
+  "name": "diode",
   "filled": true,
   "elements":[
     {"type":"line","x0":0,"y0":-30,"x1":0,"y1":30},
