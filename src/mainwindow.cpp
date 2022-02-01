@@ -632,8 +632,8 @@ void MainWindow::createActions()
     showGridAction = new QAction(QIcon(":/images/view-grid.svg"),tr("Show &Grid"), this);
     showGridAction->setCheckable(true);
     showGridAction->setChecked(false);
-    connect(showGridAction, SIGNAL(toggled(bool)),
-            this, SLOT(toggleGrid(bool)));
+    connect(showGridAction, &QAction::toggled,
+            this, &MainWindow::toggleGrid);
 
     loadAction = new QAction(QIcon(":/images/document-open.svg"),tr("L&oad ..."), this);
     loadAction->setShortcut(tr("Ctrl+o"));
@@ -986,6 +986,8 @@ void MainWindow::switchToWire()
 void MainWindow::exportImage()
 {
     scene->setCursorVisible(false);
+    bool gridVisible=scene->isGridVisible();
+    scene->setGridVisible(false);
     QFileDialog::Options options;
     QString selectedFilter;
     QString fileName = QFileDialog::getSaveFileName(this,
@@ -995,6 +997,7 @@ void MainWindow::exportImage()
             &selectedFilter,
             options);
     if (!fileName.isEmpty()){
+
         if((selectedFilter=="Pdf (*.pdf)")or(selectedFilter=="Postscript (*.ps)")) {
             QRectF rect=scene->itemsBoundingRect(); // Bonding der Elemente in scene
             QPrinter printer;
@@ -1008,11 +1011,24 @@ void MainWindow::exportImage()
             scene->render(&painter,QRectF(),rect);
         }
         else {
-            QPixmap pixmap(1000,1000);
+            QRectF rect=scene->itemsBoundingRect(); // Bonding der Elemente in scene
+            qreal w=rect.width();
+            qreal h=rect.height();
+            if(w>h){
+                qreal target=w<1000 ? 1000 : w;
+                h=target/w*h;
+                w=1000;
+            }else{
+                qreal target=h<1000 ? 1000 : h;
+                w=target/h*w;
+                h=1000;
+            }
+            int width=int(w);
+            int height=int(h);
+            QPixmap pixmap(width,height);
             pixmap.fill();
             QPainter painter(&pixmap);
             painter.setRenderHint(QPainter::Antialiasing);
-            QRectF rect=scene->itemsBoundingRect();
             scene->render(&painter,QRectF(),rect);
             painter.end();
 
@@ -1021,6 +1037,7 @@ void MainWindow::exportImage()
 
     }
     scene->setCursorVisible(true);
+    scene->setGridVisible(gridVisible);
 }
 
 void MainWindow::zoomIn()
