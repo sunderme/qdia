@@ -986,6 +986,7 @@ void MainWindow::switchToWire()
 void MainWindow::exportImage()
 {
     scene->setCursorVisible(false);
+    scene->abort();
     bool gridVisible=scene->isGridVisible();
     scene->setGridVisible(false);
     QFileDialog::Options options;
