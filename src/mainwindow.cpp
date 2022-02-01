@@ -885,6 +885,9 @@ void MainWindow::copyItems()
 void MainWindow::copyToClipboard()
 {
     scene->setCursorVisible(false);
+    scene->abort();
+    bool gridVisible=scene->isGridVisible();
+    scene->setGridVisible(false);
     QClipboard *clipboard = QGuiApplication::clipboard();
     QRectF rect=scene->itemsBoundingRect();
     QPixmap pixmap(rect.width(),rect.height());
@@ -895,6 +898,7 @@ void MainWindow::copyToClipboard()
     painter.end();
     clipboard->setPixmap(pixmap);
     scene->setCursorVisible(true);
+    scene->setGridVisible(gridVisible);
 }
 
 void MainWindow::groupItems()
