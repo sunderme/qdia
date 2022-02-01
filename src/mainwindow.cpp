@@ -655,6 +655,10 @@ void MainWindow::createActions()
     connect(copyToClipboardAction,&QAction::triggered,
             this, &MainWindow::copyToClipboard);
 
+    pasteFromClipboardAction=new QAction(tr("&Paste from clipboard"), this);
+    pasteFromClipboardAction->setShortcut(tr("Ctrl+v"));
+    connect(pasteFromClipboardAction,&QAction::triggered,
+            this, &MainWindow::pasteFromClipboard);
 }
 
 void MainWindow::createMenus()
@@ -664,6 +668,7 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveAction);
     fileMenu->addAction(saveAsAction);
     fileMenu->addAction(copyToClipboardAction);
+    fileMenu->addAction(pasteFromClipboardAction);
     fileMenu->addAction(printAction);
     fileMenu->addAction(exportAction);
     fileMenu->addAction(exitAction);
@@ -887,6 +892,7 @@ void MainWindow::copyToClipboard()
     // TODO: only selected whould be exported to clipboard
     // furthermore an internal paster buffer for pasting here again is neededs
     scene->setCursorVisible(false);
+    scene->copyToBuffer();
     scene->abort();
     bool gridVisible=scene->isGridVisible();
     scene->setGridVisible(false);
@@ -901,6 +907,11 @@ void MainWindow::copyToClipboard()
     clipboard->setPixmap(pixmap);
     scene->setCursorVisible(true);
     scene->setGridVisible(gridVisible);
+}
+
+void MainWindow::pasteFromClipboard()
+{
+    scene->pasteFromBuffer();
 }
 
 void MainWindow::groupItems()

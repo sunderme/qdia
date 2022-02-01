@@ -637,6 +637,17 @@ void DiagramScene::clear()
     }
 }
 
+void DiagramScene::copyToBuffer()
+{
+    bufferedItems=selectedItems();
+}
+
+void DiagramScene::pasteFromBuffer()
+{
+    copiedItems=&bufferedItems;
+    myMode=CopyingItem;
+}
+
 void DiagramScene::setCursorVisible(bool vis)
 {
     if(vis){

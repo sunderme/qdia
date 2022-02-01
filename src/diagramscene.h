@@ -130,6 +130,8 @@ public slots:
     void editorReceivedFocus(DiagramTextItem *item);
     void checkOnGrid();
     void clear();
+    void copyToBuffer();
+    void pasteFromBuffer();
 
 signals:
     void itemInserted(DiagramItem *item);
@@ -172,6 +174,7 @@ private:
     DiagramPathItem *insertedPathItem;
     DiagramSplineItem *insertedSplineItem;
     QList<QGraphicsItem *> *copiedItems;
+    QList<QGraphicsItem *> bufferedItems;
     qreal myDx,myDy;
     DiagramPathItem::DiagramType myArrow;
     DiagramPathItem::routingType myRouting;
@@ -182,6 +185,8 @@ private:
     int myGridScale;
     QList<QGraphicsItem*> myMoveItems;
     qreal maxZ;
+
+
 };
 //! [0]
 

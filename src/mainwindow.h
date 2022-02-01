@@ -99,6 +99,7 @@ private slots:
    void exportImage();
    void copyItems();
    void copyToClipboard();
+   void pasteFromClipboard();
    void groupItems();
    void ungroupItems();
    void currentFontChanged(const QFont &font);
@@ -216,6 +217,7 @@ private:
    QAction *saveAction;
    QAction *saveAsAction;
    QAction *copyToClipboardAction;
+   QAction *pasteFromClipboardAction;
 
    QList<QAction*> listOfActions;
    QList<QShortcut*> listOfShortcuts;
