@@ -16,6 +16,7 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     myPos2=pos();
     myDiagramType = diagramType;
     myContextMenu = contextMenu;
+    myRadius=5.0;
 
     mPainterPath=createPath();
     setPath(mPainterPath);
@@ -33,6 +34,7 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
 {
 
     myDiagramType=diagram.myDiagramType;
+    myRadius=diagram.myRadius;
     // copy from general GraphcsItem
     setBrush(diagram.brush());
     setPen(diagram.pen());
@@ -55,6 +57,7 @@ DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):Di
     qreal width=json["width"].toDouble();
     qreal height=json["height"].toDouble();
     myPos2=QPointF(width,height);
+    myRadius=5.0;
 
     mPainterPath=createPath();
     setPath(mPainterPath);
@@ -64,7 +67,7 @@ DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):Di
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
-    myRadius=5.0;
+
 }
 //! [1]
 QPainterPath DiagramDrawItem::createPath()
