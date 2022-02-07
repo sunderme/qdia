@@ -639,11 +639,20 @@ void DiagramScene::clear()
 
 void DiagramScene::copyToBuffer()
 {
-    bufferedItems=selectedItems();
+    // copy
+    qDeleteAll(bufferedItems);
+    bufferedItems.clear();
+    foreach(QGraphicsItem* item,selectedItems()){
+        QGraphicsItem *insItem=copy(item);
+        bufferedItems.append(insItem);
+    }
 }
 
 void DiagramScene::pasteFromBuffer()
 {
+    foreach(QGraphicsItem* item,bufferedItems){
+        addItem(item);
+    }
     copiedItems=&bufferedItems;
     myMode=CopyingItem;
 }
