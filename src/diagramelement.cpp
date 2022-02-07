@@ -31,6 +31,7 @@ DiagramElement::DiagramElement(const DiagramElement& diagram)
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     }
+    setPos(diagram.pos());
 }
 
 DiagramItem* DiagramElement::copy()

@@ -72,6 +72,7 @@ DiagramPathItem::DiagramPathItem(const DiagramPathItem& diagram)
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setAcceptHoverEvents(true);
+    setPos(diagram.pos());
 
     // standard initialize
     mySelPoint=-1;

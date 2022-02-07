@@ -72,7 +72,6 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     insertedDrawItem = nullptr;
     insertedPathItem = nullptr;
     insertedSplineItem = nullptr;
-    copiedItems = nullptr;
     myDx=0.0;
     myDy=0.0;
     maxZ=0;
@@ -381,8 +380,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
     case CopyItem:
         if (!selectedItems().empty()){
-            copiedItems=new QList<QGraphicsItem*>;
-            copiedItems->clear();
+            copiedItems.clear();
             // remove duplicated references (child&selected)
             QList<QGraphicsItem*> myList=selectedItems();
             foreach(QGraphicsItem* item,myList){
@@ -403,7 +401,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 insItem=copy(item);
                 addItem(insItem);
                 insItem->setPos(item->pos());
-                copiedItems->append(item);
+                copiedItems.append(item);
                 item->setZValue(maxZ);
                 maxZ+=0.1;
                 //check for children
@@ -422,12 +420,12 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         }
         break;
     case CopyingItem:
-        if (copiedItems->count() > 0){
-            insertedItem=static_cast<DiagramItem*>(copiedItems->first());
+        if (copiedItems.count() > 0){
+            insertedItem=static_cast<DiagramItem*>(copiedItems.first());
             QPointF point=onGrid(mouseEvent->scenePos());
             qreal dx=insertedItem->pos().rx()-point.rx()-myDx;
             qreal dy=insertedItem->pos().ry()-point.ry()-myDy;
-            foreach(QGraphicsItem* item,*copiedItems){
+            foreach(QGraphicsItem* item,copiedItems){
                 if(item->parentItem()!=0){
                     if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
                 }
@@ -440,6 +438,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             myDx=0.0;
             myDy=0.0;
             myMode=MoveItem;
+            copiedItems.clear();
         }
         break;
     case Zoom:
@@ -520,13 +519,13 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         }
         break;
     case CopyingItem:
-        if (copiedItems->count() > 0){
+        if (copiedItems.count() > 0){
             //copiedItems->setPos(onGrid(mouseEvent->scenePos()));
-            insertedItem=static_cast<DiagramItem*>(copiedItems->first());
+            insertedItem=static_cast<DiagramItem*>(copiedItems.first());
             QPointF point=onGrid(mouseEvent->scenePos());
             qreal dx=insertedItem->pos().rx()-point.rx()-myDx;
             qreal dy=insertedItem->pos().ry()-point.ry()-myDy;
-            foreach(QGraphicsItem* item,*copiedItems){
+            foreach(QGraphicsItem* item,copiedItems){
                 if(item->parentItem()!=0){
                     if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
                 }
@@ -650,10 +649,12 @@ void DiagramScene::copyToBuffer()
 
 void DiagramScene::pasteFromBuffer()
 {
+    copiedItems.clear();
     foreach(QGraphicsItem* item,bufferedItems){
-        addItem(item);
+        QGraphicsItem *newItem=copy(item);
+        addItem(newItem);
+        copiedItems.append(newItem);
     }
-    copiedItems=&bufferedItems;
     myMode=CopyingItem;
 }
 
@@ -732,7 +733,7 @@ void DiagramScene::abort(bool keepSelection)
     insertedDrawItem=nullptr;
     insertedPathItem=nullptr;
     insertedSplineItem=nullptr;
-    copiedItems=nullptr;
+    copiedItems.clear();
     myMode=MoveItem;
     if(!keepSelection) clearSelection();
 }

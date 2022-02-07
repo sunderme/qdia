@@ -173,7 +173,7 @@ private:
     DiagramDrawItem *insertedDrawItem;
     DiagramPathItem *insertedPathItem;
     DiagramSplineItem *insertedSplineItem;
-    QList<QGraphicsItem *> *copiedItems;
+    QList<QGraphicsItem *> copiedItems;
     QList<QGraphicsItem *> bufferedItems;
     qreal myDx,myDy;
     DiagramPathItem::DiagramType myArrow;

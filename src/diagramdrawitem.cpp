@@ -43,6 +43,7 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setAcceptHoverEvents(true);
+    setPos(diagram.pos());
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
