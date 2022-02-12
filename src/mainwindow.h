@@ -148,6 +148,7 @@ private:
 
    QMenu *createArrowMenu(const char *slot, const int def);
    QIcon createArrowIcon(const int i);
+   QRectF getTotalBoundary(const QList<QGraphicsItem*> items) const;
 
    DiagramScene *scene;
    QGraphicsView *view;
