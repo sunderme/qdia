@@ -890,7 +890,6 @@ void MainWindow::copyItems()
 void MainWindow::copyToClipboard()
 {
     // TODO: only selected whould be exported to clipboard
-    // furthermore an internal paster buffer for pasting here again is neededs
     scene->setCursorVisible(false);
     scene->copyToBuffer();
     scene->abort();
