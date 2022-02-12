@@ -168,7 +168,7 @@ void MainWindow::rotateRight()
     if (scene->selectedItems().isEmpty())
         return;
 
-    transformSelected(QTransform().rotate(90),scene->selectedItems());
+    transformSelected(QTransform().rotate(90),scene->selectedItems(),true);
 }
 
 void MainWindow::rotateLeft()
@@ -176,7 +176,7 @@ void MainWindow::rotateLeft()
     if (scene->selectedItems().isEmpty())
         return;
 
-    transformSelected(QTransform().rotate(-90),scene->selectedItems());
+    transformSelected(QTransform().rotate(-90),scene->selectedItems(),true);
 }
 
 void MainWindow::flipX()
@@ -1221,10 +1221,13 @@ QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
     return result;
 }
 
-void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsItem *> items)
+void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsItem *> items, bool forceOnGrid)
 {
     QRectF bound = getTotalBoundary(items);
     QPointF pt=bound.center();
+    if(forceOnGrid){
+        pt=scene->onGrid(pt);
+    }
 
     foreach( QGraphicsItem *item, items){
         if(item->childItems().isEmpty()){

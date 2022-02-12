@@ -149,7 +149,7 @@ private:
    QMenu *createArrowMenu(const char *slot, const int def);
    QIcon createArrowIcon(const int i);
    QRectF getTotalBoundary(const QList<QGraphicsItem*> items) const;
-   void transformSelected(const QTransform transform,QList<QGraphicsItem*> items);
+   void transformSelected(const QTransform transform,QList<QGraphicsItem*> items,bool forceOnGrid=false);
 
    DiagramScene *scene;
    QGraphicsView *view;
