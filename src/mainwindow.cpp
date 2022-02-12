@@ -1235,7 +1235,7 @@ void MainWindow::rotate(qreal degrees)
 void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsItem *> items)
 {
     QRectF bound = getTotalBoundary(items);
-    QPointF pt=scene->onGrid(bound.center());
+    QPointF pt=bound.center();
 
     foreach( QGraphicsItem *item, items){
         if(item->childItems().isEmpty()){
