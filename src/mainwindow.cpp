@@ -188,8 +188,8 @@ void MainWindow::flipX()
     if (scene->selectedItems().isEmpty())
         return;
     QRectF bound = getTotalBoundary(scene->selectedItems());
-    QPointF pt=scene->onGrid(bound.center());
-    qreal xc=pt.x();
+    //QPointF pt=scene->onGrid(bound.center());
+    qreal xc=bound.center().x();//pt.x();
     foreach( QGraphicsItem *item, scene->selectedItems()){
         if(item->childItems().isEmpty()){
             QTransform trans=item->transform();
@@ -212,17 +212,20 @@ void MainWindow::flipY()
     if (scene->selectedItems().isEmpty())
         return;
 
-    QGraphicsItem *selectedItem = scene->selectedItems().first();
-    if(selectedItem->childItems().isEmpty()){
-        QTransform trans=selectedItem->transform();
-        selectedItem->setTransform(trans*QTransform(1,0,0,-1,0,0),false);
-    }else{
-        QRectF rect=selectedItem->boundingRect();
-        qreal yc=rect.center().y();
-        foreach(QGraphicsItem *item,selectedItem->childItems()){
+    QRectF bound = getTotalBoundary(scene->selectedItems());
+    //QPointF pt=scene->onGrid(bound.center());
+    qreal yc=bound.center().y();//pt.y();
+    foreach( QGraphicsItem *item, scene->selectedItems()){
+        if(item->childItems().isEmpty()){
             QTransform trans=item->transform();
             qreal dy=item->y()-yc;
             item->setTransform(trans*QTransform(1,0,0,1,0,dy)*QTransform(1,0,0,-1,0,0)*QTransform(1,0,0,1,0,-dy),false);
+        }else{
+            foreach(QGraphicsItem *child,item->childItems()){
+                QTransform trans=child->transform();
+                qreal dy=child->y()-yc;
+                child->setTransform(trans*QTransform(1,0,0,1,0,dy)*QTransform(1,0,0,-1,0,0)*QTransform(1,0,0,1,0,-dy),false);
+            }
         }
     }
 }
