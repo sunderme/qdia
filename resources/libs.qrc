@@ -23,5 +23,6 @@
         <file>libs/gates/xor.json</file>
         <file>libs/gates/xnor.json</file>
         <file>libs/gates/dff.json</file>
+        <file>libs/gates/not.json</file>
     </qresource>
 </RCC>

@@ -1,0 +1,6 @@
+{
+  "name": "not",
+  "elements":[
+    {"type":"circle","x0":5,"y0":0,"r":5}
+  ]
+}

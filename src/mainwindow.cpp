@@ -397,7 +397,8 @@ void MainWindow::createToolBox()
         "xnor.json",
         "buffer.json",
         "inverter.json",
-        "dff.json"
+        "dff.json",
+        "not.json"
     };
     row=0;
     col=0;
