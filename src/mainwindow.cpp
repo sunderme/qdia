@@ -188,16 +188,13 @@ void MainWindow::flipX()
     if (scene->selectedItems().isEmpty())
         return;
     QRectF bound = getTotalBoundary(scene->selectedItems());
-    //QPointF pt=scene->onGrid(bound.center());
-    qreal xc=bound.center().x();//pt.x();
+    qreal xc=bound.center().x();
     foreach( QGraphicsItem *item, scene->selectedItems()){
         if(item->childItems().isEmpty()){
             QTransform trans=item->transform();
             qreal dx=item->x()-xc;
             item->setTransform(trans*QTransform(1,0,0,1,dx,0)*QTransform(-1,0,0,1,0,0)*QTransform(1,0,0,1,-dx,0),false);
         }else{
-            //QRectF rect=item->boundingRect();
-            //qreal xc=rect.center().x();
             foreach(QGraphicsItem *child,item->childItems()){
                 QTransform trans=child->transform();
                 qreal dx=child->x()-xc;
@@ -213,8 +210,7 @@ void MainWindow::flipY()
         return;
 
     QRectF bound = getTotalBoundary(scene->selectedItems());
-    //QPointF pt=scene->onGrid(bound.center());
-    qreal yc=bound.center().y();//pt.y();
+    qreal yc=bound.center().y();
     foreach( QGraphicsItem *item, scene->selectedItems()){
         if(item->childItems().isEmpty()){
             QTransform trans=item->transform();
