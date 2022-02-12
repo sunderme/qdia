@@ -433,12 +433,23 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     item->moveBy(-dx,-dy);
                 }
             }
-            clearSelection();
-            insertedItem=0;
-            myDx=0.0;
-            myDy=0.0;
-            myMode=MoveItem;
-            copiedItems.clear();
+            // place copy of the items and keep the currents items in copyList
+            foreach(QGraphicsItem* item,copiedItems){
+                QGraphicsItem *insItem=copy(item);
+                addItem(insItem);
+                insItem->setPos(item->pos());
+                item->setZValue(maxZ);
+                maxZ+=0.1;
+                //check for children
+                if(item->childItems().count()>0){
+                    foreach(QGraphicsItem* item_l1,item->childItems()){
+                        QGraphicsItem* addedItem=copy(item_l1);
+                        addItem(addedItem);
+                        addedItem->setParentItem(insItem);
+                        addedItem->setPos(item_l1->pos());
+                    }
+                }
+            }
         }
         break;
     case Zoom:
@@ -704,9 +715,10 @@ void DiagramScene::abort(bool keepSelection)
 {
     switch(myMode){
     case CopyingItem:
-        //removeItem(copiedItems);
-        //destroyItemGroup(copiedItems);
-        //removeItem(insertedItem);
+        foreach(QGraphicsItem* item,copiedItems){
+            removeItem(item);
+        }
+        copiedItems.clear();
         break;
     case InsertItem:
     case InsertElement:
