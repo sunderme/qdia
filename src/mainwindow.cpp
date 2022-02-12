@@ -168,9 +168,7 @@ void MainWindow::rotateRight()
     if (scene->selectedItems().isEmpty())
         return;
 
-    QGraphicsItem *selectedItem = scene->selectedItems().first();
-    QTransform trans=selectedItem->transform();
-    selectedItem->setTransform(trans*QTransform().rotate(90),false);
+    rotate(90);
 }
 
 void MainWindow::rotateLeft()
@@ -178,9 +176,7 @@ void MainWindow::rotateLeft()
     if (scene->selectedItems().isEmpty())
         return;
 
-    QGraphicsItem *selectedItem = scene->selectedItems().first();
-    QTransform trans=selectedItem->transform();
-    selectedItem->setTransform(trans*QTransform().rotate(-90),false);
+    rotate(-90);
 }
 
 void MainWindow::flipX()
@@ -1249,6 +1245,18 @@ QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
         result=result.united(rect);
     }
     return result;
+}
+
+void MainWindow::rotate(qreal degrees)
+{
+    QRectF bound = getTotalBoundary(scene->selectedItems());
+    QPointF pt=scene->onGrid(bound.center());
+
+    foreach( QGraphicsItem *item, scene->selectedItems()){
+        QTransform trans=item->transform();
+        QPointF shift=item->pos()-pt;
+        item->setTransform(trans*QTransform(1,0,0,1,shift.x(),shift.y())*QTransform().rotate(degrees)*QTransform(1,0,0,1,-shift.x(),-shift.y()),false);
+    }
 }
 
 void MainWindow::lineArrowButtonTriggered()
