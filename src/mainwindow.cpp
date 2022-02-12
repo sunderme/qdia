@@ -35,6 +35,7 @@ MainWindow::MainWindow()
 
     scene = new DiagramScene(itemMenu, this);
     scene->setSceneRect(QRectF(0, 0, 5000, 5000));
+    scene->setGridVisible(configuration.showGrid);
     connect(scene, &DiagramScene::itemSelected,
             this, &MainWindow::itemSelected);
     connect(scene, &DiagramScene::forceCursor,
@@ -1115,6 +1116,7 @@ void MainWindow::toggleGrid(bool grid)
     QPointF topLeft     = view->mapToScene( 0, 0 );
     QPointF bottomRight = view->mapToScene( view->viewport()->width() - 1, view->viewport()->height() - 1 );
     scene->invalidate(topLeft.x(),topLeft.y(),bottomRight.x()-topLeft.x(),bottomRight.y()-topLeft.y());
+    configuration.showGrid=grid;
 }
 
 void MainWindow::setGrid()

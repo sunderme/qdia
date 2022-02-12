@@ -9,6 +9,6 @@ Config::Config()
 
 Config::~Config()
 {
-    QSettings settings("JS","QDia");
+    QSettings settings("QDia","QDia");
     settings.setValue("view/showGrid", showGrid);
 }
