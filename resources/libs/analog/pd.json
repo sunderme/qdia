@@ -1,0 +1,21 @@
+{
+  "name": "pd",
+  "filled": true,
+  "elements":[
+    {"type":"element","x":0,"y":0,"rotate":0,"name":"analog/diode"},
+    {"type":"line","x0":10,"y0":-5,"x1":20,"y1":-10},
+    {"type":"line","x0":15,"y0":5,"x1":25,"y1":0},
+    {"type":"lines",
+     "points":[ {"x":14,"y":-5},
+       {"x":10,"y":-5},
+       {"x":12.4,"y":-8.2}
+     ]
+    },
+    {"type":"lines",
+     "points":[ {"x":19,"y":5},
+       {"x":15,"y":5},
+       {"x":17.4,"y":1.8}
+     ]
+    }
+  ]
+}

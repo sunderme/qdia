@@ -14,6 +14,8 @@
         <file>libs/analog/res.json</file>
         <file>libs/analog/vdd.json</file>
         <file>libs/analog/vsource.json</file>
+        <file>libs/analog/pd.json</file>
+        <file>libs/analog/led.json</file>
         <file>libs/gates/and.json</file>
         <file>libs/gates/nand.json</file>
         <file>libs/gates/buffer.json</file>

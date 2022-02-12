@@ -355,6 +355,8 @@ void MainWindow::createToolBox()
         "nmos.json",
         "pmos.json",
         "diode.json",
+        "led.json",
+        "pd.json",
         "vsource.json",
         "isource.json",
         "acsource.json",
