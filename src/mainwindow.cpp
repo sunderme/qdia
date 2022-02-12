@@ -13,6 +13,7 @@
 #include "diagramelement.h"
 #include "diagrampathitem.h"
 #include "mainwindow.h"
+#include "config.h"
 
 #include <QtWidgets>
 #include <QtPrintSupport/QPrinter>
@@ -20,6 +21,8 @@
 
 const int InsertTextButton = 10;
 const int InsertDrawItemButton = 64;
+
+Config configuration;
 
 //! [0]
 MainWindow::MainWindow()
@@ -631,7 +634,7 @@ void MainWindow::createActions()
 
     showGridAction = new QAction(QIcon(":/images/view-grid.svg"),tr("Show &Grid"), this);
     showGridAction->setCheckable(true);
-    showGridAction->setChecked(false);
+    showGridAction->setChecked(configuration.showGrid);
     connect(showGridAction, &QAction::toggled,
             this, &MainWindow::toggleGrid);
 

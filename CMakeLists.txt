@@ -36,6 +36,7 @@ set(PROJECT_SOURCES
         src/diagramsplineitem.cpp
         src/diagramscene.cpp
         src/diagramscene.h
+        src/config.h src/config.cpp
         resources/images.qrc
         resources/libs.qrc
         ${TS_FILES}
