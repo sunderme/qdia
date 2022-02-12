@@ -1220,18 +1220,6 @@ QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
     return result;
 }
 
-void MainWindow::rotate(qreal degrees)
-{
-    QRectF bound = getTotalBoundary(scene->selectedItems());
-    QPointF pt=scene->onGrid(bound.center());
-
-    foreach( QGraphicsItem *item, scene->selectedItems()){
-        QTransform trans=item->transform();
-        QPointF shift=item->pos()-pt;
-        item->setTransform(trans*QTransform(1,0,0,1,shift.x(),shift.y())*QTransform().rotate(degrees)*QTransform(1,0,0,1,-shift.x(),-shift.y()),false);
-    }
-}
-
 void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsItem *> items)
 {
     QRectF bound = getTotalBoundary(items);
