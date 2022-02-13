@@ -422,6 +422,39 @@ void MainWindow::createToolBox()
 
     toolBox->addItem(itemWidget, tr("Basic Digital Gates"));
 
+    bG = new QButtonGroup(this);
+    bG->setExclusive(false);
+    connect(bG, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
+            this, &MainWindow::buttonGroupClicked);
+    layout = new QGridLayout;
+    // added DrawItem
+    QString path3=":/libs/rf/";
+    QStringList files3{
+        "mixer.json",
+        "lpf.json",
+        "bpf.json",
+        "hpf.json"
+    };
+    row=0;
+    col=0;
+    for (const QString &fn: files3) {
+        QWidget *bt=createCellWidget(path3+fn,128,bG);
+        layout->addWidget(bt, row, col);
+        ++col;
+        if(col>1){
+            col=0;
+            ++row;
+        }
+    }
+
+    layout->setRowStretch(row, 10);
+    layout->setColumnStretch(2, 10);
+
+    itemWidget = new QWidget;
+    itemWidget->setLayout(layout);
+
+    toolBox->addItem(itemWidget, tr("RF"));
+
     QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->setExclusive(false);
     connect(buttonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
