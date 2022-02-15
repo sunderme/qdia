@@ -338,122 +338,80 @@ void MainWindow::createToolBox()
 
     toolBox->addItem(itemWidget, tr("Basic Shapes"));
 
-    bG = new QButtonGroup(this);
-    bG->setExclusive(false);
-    connect(bG, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
-            this, &MainWindow::buttonGroupClicked);
-    layout = new QGridLayout;
-    // added DrawItem
-    QString path=":/libs/analog/";
-    QStringList files{
-        "circle.json",
-        "arrow.json",
-        "dot.json",
-        "res.json",
-        "cap.json",
-        "ind.json",
-        "nmos.json",
-        "pmos.json",
-        "diode.json",
-        "led.json",
-        "pd.json",
-        "vsource.json",
-        "isource.json",
-        "acsource.json",
-        "gnd.json",
-        "vdd.json"
+    QStringList paths,names;
+    QList<QStringList> lstOfElements;
+    paths<<":/libs/analog/";
+    names<<tr("Basic Electronic Elements");
+    lstOfElements<<QStringList{
+                   "circle.json",
+                   "arrow.json",
+                   "dot.json",
+                   "res.json",
+                   "cap.json",
+                   "ind.json",
+                   "nmos.json",
+                   "pmos.json",
+                   "diode.json",
+                   "led.json",
+                   "pd.json",
+                   "vsource.json",
+                   "isource.json",
+                   "acsource.json",
+                   "gnd.json",
+                   "vdd.json"
     };
-    row=0;
-    col=0;
-    for (const QString &fn: files) {
-        QWidget *bt=createCellWidget(path+fn,128,bG);
-        layout->addWidget(bt, row, col);
-        ++col;
-        if(col>1){
-            col=0;
-            ++row;
-        }
-    }
-
-    layout->setRowStretch(row, 10);
-    layout->setColumnStretch(2, 10);
-
-    itemWidget = new QWidget;
-    itemWidget->setLayout(layout);
-
-    toolBox->addItem(itemWidget, tr("Basic Electronic Elements"));
-
-    bG = new QButtonGroup(this);
-    bG->setExclusive(false);
-    connect(bG, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
-            this, &MainWindow::buttonGroupClicked);
-    layout = new QGridLayout;
-    // added DrawItem
-    QString path2=":/libs/gates/";
-    QStringList files2{
-        "and.json",
-        "nand.json",
-        "or.json",
-        "nor.json",
-        "xor.json",
-        "xnor.json",
-        "buffer.json",
-        "inverter.json",
-        "dff.json",
-        "not.json"
+    paths<<":/libs/gates/";
+    names<<tr("Basic Digital Gates");
+    lstOfElements<<QStringList{
+                   "and.json",
+                   "nand.json",
+                   "or.json",
+                   "nor.json",
+                   "xor.json",
+                   "xnor.json",
+                   "buffer.json",
+                   "inverter.json",
+                   "dff.json",
+                   "not.json"
     };
-    row=0;
-    col=0;
-    for (const QString &fn: files2) {
-        QWidget *bt=createCellWidget(path2+fn,128,bG);
-        layout->addWidget(bt, row, col);
-        ++col;
-        if(col>1){
-            col=0;
-            ++row;
-        }
-    }
-
-    layout->setRowStretch(row, 10);
-    layout->setColumnStretch(2, 10);
-
-    itemWidget = new QWidget;
-    itemWidget->setLayout(layout);
-
-    toolBox->addItem(itemWidget, tr("Basic Digital Gates"));
-
-    bG = new QButtonGroup(this);
-    bG->setExclusive(false);
-    connect(bG, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
-            this, &MainWindow::buttonGroupClicked);
-    layout = new QGridLayout;
-    // added DrawItem
-    QString path3=":/libs/rf/";
-    QStringList files3{
-        "mixer.json",
-        "lpf.json",
-        "bpf.json",
-        "hpf.json"
+    paths<<":/libs/rf/";
+    names<<tr("RF");
+    lstOfElements<<QStringList{
+                   "mixer.json",
+                   "lpf.json",
+                   "bpf.json",
+                   "hpf.json"
     };
-    row=0;
-    col=0;
-    for (const QString &fn: files3) {
-        QWidget *bt=createCellWidget(path3+fn,128,bG);
-        layout->addWidget(bt, row, col);
-        ++col;
-        if(col>1){
-            col=0;
-            ++row;
+
+    for(int i=0;i<paths.size();++i){
+        bG = new QButtonGroup(this);
+        bG->setExclusive(false);
+        connect(bG, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
+                this, &MainWindow::buttonGroupClicked);
+        layout = new QGridLayout;
+        // added DrawItem
+        QString path=paths.value(i);
+
+        row=0;
+        col=0;
+        for (const QString &fn: lstOfElements.value(i)) {
+            QWidget *bt=createCellWidget(path+fn,128,bG);
+            layout->addWidget(bt, row, col);
+            ++col;
+            if(col>1){
+                col=0;
+                ++row;
+            }
         }
+
+        layout->setRowStretch(row, 10);
+        layout->setColumnStretch(2, 10);
+
+        itemWidget = new QWidget;
+        itemWidget->setLayout(layout);
+
+        toolBox->addItem(itemWidget, names.value(i));
     }
-
-    layout->setRowStretch(row, 10);
-    layout->setColumnStretch(2, 10);
-
-    itemWidget = new QWidget;
-    itemWidget->setLayout(layout);
-
-    toolBox->addItem(itemWidget, tr("RF"));
 
     QButtonGroup *buttonGroup = new QButtonGroup(this);
     buttonGroup->setExclusive(false);
