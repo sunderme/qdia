@@ -324,7 +324,7 @@ void MainWindow::createToolBox()
         QWidget *bt=createCellWidget(element.name,element.type+InsertDrawItemButton,bG);
         layout->addWidget(bt, row, col);
         ++col;
-        if(col>1){
+        if(col>2){
             col=0;
             ++row;
         }
@@ -401,7 +401,7 @@ void MainWindow::createToolBox()
             QWidget *bt=createCellWidget(path+fn,128,bG);
             layout->addWidget(bt, row, col);
             ++col;
-            if(col>1){
+            if(col>2){
                 col=0;
                 ++row;
             }
@@ -432,7 +432,7 @@ void MainWindow::createToolBox()
         QWidget *bt=createCellWidget(element.name,element.type,buttonGroup);
         layout->addWidget(bt, row, col);
         ++col;
-        if(col>1){
+        if(col>2){
             col=0;
             ++row;
         }
