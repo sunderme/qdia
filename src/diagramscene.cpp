@@ -629,6 +629,8 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
     case QGraphicsItem::UserType+6:
         return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramPathItem*>(item)->copy());
         break;
+    case QGraphicsItemGroup::Type:
+        break;
     default:
         DiagramItem* newItem=dynamic_cast<DiagramItem*>(item)->copy();
         return dynamic_cast<QGraphicsItem*>(newItem);
