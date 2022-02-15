@@ -358,7 +358,10 @@ void MainWindow::createToolBox()
                    "isource.json",
                    "acsource.json",
                    "gnd.json",
-                   "vdd.json"
+                   "vdd.json",
+                   "switch_open.json",
+                   "switch_closed.json",
+                   "switch_2t.json"
     };
     paths<<":/libs/gates/";
     names<<tr("Basic Digital Gates");

@@ -15,6 +15,7 @@
 <file>libs/gates/nor.json</file>
 <file>libs/gates/inverter.json</file>
 <file>libs/analog/vdd.json</file>
+<file>libs/analog/switch_2t.json</file>
 <file>libs/analog/res.json</file>
 <file>libs/analog/pd.json</file>
 <file>libs/analog/isource.json</file>
@@ -22,10 +23,12 @@
 <file>libs/analog/arrow.json</file>
 <file>libs/analog/circle.json</file>
 <file>libs/analog/diode.json</file>
+<file>libs/analog/switch_open.json</file>
 <file>libs/analog/gnd.json</file>
 <file>libs/analog/ind.json</file>
 <file>libs/analog/nmos.json</file>
 <file>libs/analog/dot.json</file>
+<file>libs/analog/switch_closed.json</file>
 <file>libs/analog/led.json</file>
 <file>libs/analog/vsource.json</file>
 <file>libs/analog/acsource.json</file>
