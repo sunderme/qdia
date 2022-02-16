@@ -630,6 +630,7 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
         return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramPathItem*>(item)->copy());
         break;
     case QGraphicsItemGroup::Type:
+        return nullptr; // TODO: fix
         break;
     default:
         DiagramItem* newItem=dynamic_cast<DiagramItem*>(item)->copy();
