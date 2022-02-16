@@ -210,11 +210,11 @@ QPixmap DiagramSplineItem::icon()
     QPainter painter(&pixmap);
     painter.setPen(QPen(Qt::black, 8));
     p0=QPointF(5,40);
-    c0=QPointF(25.,40.);
-    c1=QPointF(5.,40.);
+    c0=QPointF(25.,30.);
+    c1=QPointF(40.,40.);
     p1=QPointF(45.,60.);
     len=20.;
-    breite=12.;
+    breite=20.;
     createPath();
     painter.drawPath(path());
     return pixmap;

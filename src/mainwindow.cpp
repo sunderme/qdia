@@ -1205,7 +1205,7 @@ QIcon MainWindow::createArrowIcon(const int i)
         pixmap=item->icon();
         delete item;
     }else{
-        DiagramSplineItem* item=new DiagramSplineItem(DiagramSplineItem::DiagramType(i),0,0);
+        DiagramSplineItem* item=new DiagramSplineItem(DiagramSplineItem::DiagramType(i%4),0,0);
         pixmap=item->icon();
         delete item;
     }
