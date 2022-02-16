@@ -443,12 +443,12 @@ QPainterPath DiagramSplineItem::createArrow(QPointF p1, QPointF p2, qreal scale)
 void DiagramSplineItem::drawArrows(QPainterPath  &path)
 {
     // draw start arrow
-    QList<DiagramType> lst{cubicStart,cubicStartEnd,quadStart,quadStartEnd};
+    QList<DiagramSplineItem::DiagramType> lst{cubicStart,cubicStartEnd,quadStart,quadStartEnd};
     if(lst.contains(myDiagramType)){
         path.addPath(createArrow(c0,p0));
     }
     // draw end arrow
-    QList<DiagramType> lst2{cubicEnd,cubicStartEnd,cubicEnd,cubicStartEnd};
+    QList<DiagramSplineItem::DiagramType> lst2{cubicEnd,cubicStartEnd,cubicEnd,cubicStartEnd};
     if(lst2.contains(myDiagramType)){
         path.addPath(createArrow(c1,p1));
     }
