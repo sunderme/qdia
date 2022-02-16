@@ -260,11 +260,11 @@ void DiagramSplineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         path.quadTo(c0,p1);
     }
     painter->drawPath(path);
-    path.clear();
-    drawArrows(path);
+    QPainterPath arrows;
+    drawArrows(arrows);
     painter->save();
     painter->setBrush(pen().color());
-    painter->drawPath(path);
+    painter->drawPath(arrows);
     painter->restore();
     // selected
     if(isSelected()){
