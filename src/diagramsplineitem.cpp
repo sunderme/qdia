@@ -448,8 +448,8 @@ void DiagramSplineItem::drawArrows(QPainterPath  &path)
         path.addPath(createArrow(c0,p0));
     }
     // draw end arrow
-    DiagramType lst2[] = {cubicEnd,cubicStartEnd,cubicEnd,cubicStartEnd};
-    if(std::find(std::begin(lst2),std::end(lst2),myDiagramType)!=std::end(lst2)){
+    DiagramType lstb[] = {cubicEnd,cubicStartEnd,quadEnd,quadStartEnd};
+    if(std::find(std::begin(lstb),std::end(lstb),myDiagramType)!=std::end(lstb)){
         path.addPath(createArrow(c1,p1));
     }
 }
