@@ -262,7 +262,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         break;
     case InsertLine:
         if (insertedPathItem == 0){
-            insertedPathItem = new DiagramPathItem(myArrow,myItemMenu);
+            insertedPathItem = new DiagramPathItem(DiagramPathItem::DiagramType(myArrow),myItemMenu);
             insertedPathItem->setPen(myLineColor);
             insertedPathItem->setBrush(myLineColor);
             insertedPathItem->setZValue(maxZ);
@@ -276,7 +276,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         break;
     case InsertSpline:
         if (insertedSplineItem == nullptr){
-            insertedSplineItem = new DiagramSplineItem(DiagramSplineItem::cubic,myItemMenu);
+            insertedSplineItem = new DiagramSplineItem(DiagramSplineItem::DiagramType(myArrow),myItemMenu);
             insertedSplineItem->setPen(myLineColor);
             //insertedSplineItem->setBrush(myLineColor);
             insertedSplineItem->setZValue(maxZ);
@@ -905,9 +905,12 @@ void DiagramScene::drawBackground(QPainter *p, const QRectF &r) {
 
 void DiagramScene::setArrow(const int i)
 {
-    myArrow=DiagramPathItem::DiagramType(i);
+    myArrow=i;
     if(insertedPathItem!=0){
-        insertedPathItem->setDiagramType(myArrow);
+        insertedPathItem->setDiagramType(DiagramPathItem::DiagramType(myArrow));
+    }
+    if(insertedSplineItem!=0){
+        insertedSplineItem->setDiagramType(DiagramSplineItem::DiagramType(myArrow));
     }
     if (!selectedItems().empty()){
         foreach(QGraphicsItem* item,selectedItems()){
@@ -916,7 +919,10 @@ void DiagramScene::setArrow(const int i)
                 // Textitem does not possess Linecolor !
                 break;
             case QGraphicsItem::UserType+6:
-                qgraphicsitem_cast<DiagramPathItem*>(item)->setDiagramType(myArrow);
+                qgraphicsitem_cast<DiagramPathItem*>(item)->setDiagramType(DiagramPathItem::DiagramType(myArrow));
+                break;
+            case QGraphicsItem::UserType+7:
+                qgraphicsitem_cast<DiagramSplineItem*>(item)->setDiagramType(DiagramSplineItem::DiagramType(myArrow));
                 break;
             default:
                 // nothing to do

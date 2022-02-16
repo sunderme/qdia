@@ -14,6 +14,9 @@ DiagramSplineItem::DiagramSplineItem(DiagramType diagramType,QMenu *, QGraphicsI
     myActivePoint=1;
     myDiagramType=diagramType;
 
+    len = 10.0; // arrow length
+    breite = 4.0; // Divisor arrow width
+
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setAcceptHoverEvents(true);
@@ -34,6 +37,8 @@ DiagramSplineItem::DiagramSplineItem(const QJsonObject &json, QMenu *)
     //color.setNamedColor(json["brush"].toString());
     //color.setAlpha(json["brush_alpha"].toInt());
     //setBrush(color);
+    len = 10.0; // arrow length
+    breite = 4.0; // Divisor arrow width
 
     p.setX(json["x0"].toDouble());
     p.setY(json["y0"].toDouble());
@@ -80,6 +85,9 @@ DiagramSplineItem::DiagramSplineItem(const DiagramSplineItem &diagram)
     setBrush(diagram.brush());
     setPen(diagram.pen());
     setTransform(diagram.transform());
+
+    len = diagram.len; // arrow length
+    breite = diagram.breite; // Divisor arrow width
 
     // standard initialize
     mySelPoint=-1;
@@ -195,16 +203,20 @@ QPixmap DiagramSplineItem::image() const
     return pixmap;
 }
 
-QPixmap DiagramSplineItem::icon() const
+QPixmap DiagramSplineItem::icon()
 {
     QPixmap pixmap(50, 80);
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
     painter.setPen(QPen(Qt::black, 8));
-    QPainterPath path;
-    path.moveTo(5,70);
-    path.cubicTo(45,70,25,0,25,0);
-    painter.drawPath(path);
+    p0=QPointF(5,40);
+    c0=QPointF(25.,40.);
+    c1=QPointF(5.,40.);
+    p1=QPointF(45.,60.);
+    len=20.;
+    breite=12.;
+    createPath();
+    painter.drawPath(path());
     return pixmap;
 }
 
@@ -223,11 +235,16 @@ void DiagramSplineItem::createPath()
     path.moveTo(p0);
     switch (myDiagramType) {
     case quad:
+    case quadStart:
+    case quadEnd:
+    case quadStartEnd:
         path.quadTo(c0,p1);
+        c1=c0;
         break;
     default:
         path.cubicTo(c0,c1,p1);
     }
+    drawArrows(path);
     setPath(path);
 }
 
@@ -235,7 +252,20 @@ void DiagramSplineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 {
     painter->setPen(pen());
     painter->setBrush(brush());
-    painter->drawPath(path());
+    QPainterPath path;
+    path.moveTo(p0);
+    if(int(myDiagramType)<4){
+        path.cubicTo(c0,c1,p1);
+    }else{
+        path.quadTo(c0,p1);
+    }
+    painter->drawPath(path);
+    path.clear();
+    drawArrows(path);
+    painter->save();
+    painter->setBrush(pen().color());
+    painter->drawPath(path);
+    painter->restore();
     // selected
     if(isSelected()){
         QPen connectPen=QPen(Qt::green);
@@ -266,7 +296,7 @@ void DiagramSplineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         painter->drawRect(QRectF(p1-QPointF(2,2),p1+QPointF(2,2)));
         painter->setBrush(selBrush);
 
-        if(myDiagramType==cubic){
+        if(int(myDiagramType)<4){ // cubic
             if(myHoverPoint==2){
                 painter->setBrush(QBrush(Qt::red));
             }
@@ -383,7 +413,45 @@ bool DiagramSplineItem::hasClickedOn(QPointF press_point, QPointF point) const
         press_point.x() <  point.x() + 2*myHandlerWidth &&
         press_point.y() >= point.y() - 2*myHandlerWidth &&
         press_point.y() <  point.y() + 2*myHandlerWidth
-    );
+                );
+}
+/*!
+ * \brief create arrow tip as painterpath
+ * \param p1 direction from which path is coming
+ * \param p2 tip point
+ * \return arrow tip as closed painterpath
+ */
+QPainterPath DiagramSplineItem::createArrow(QPointF p1, QPointF p2, qreal scale) const
+{
+    QPainterPath arrow;
+    qreal dx=p1.x()-p2.x();
+    qreal dy=p1.y()-p2.y();
+    qreal m=sqrt(dx*dx+dy*dy);
+    if(m>1){
+        arrow.moveTo(p2);
+        arrow.lineTo(-len/breite*scale*dy/m+len*scale*dx/m+p2.x(),len/breite*scale*dx/m+len*scale*dy/m+p2.y());
+        arrow.lineTo(len/breite*scale*dy/m+len*scale*dx/m+p2.x(),-len/breite*scale*dx/m+len*scale*dy/m+p2.y());
+        arrow.closeSubpath();
+    }
+    return arrow;
+}
+/*!
+ * \brief draws the arrow tips where necessary
+ * This is called from paint Event
+ * \param painter
+ */
+void DiagramSplineItem::drawArrows(QPainterPath  &path)
+{
+    // draw start arrow
+    QList<DiagramType> lst{cubicStart,cubicStartEnd,quadStart,quadStartEnd};
+    if(lst.contains(myDiagramType)){
+        path.addPath(createArrow(c0,p0));
+    }
+    // draw end arrow
+    QList<DiagramType> lst2{cubicEnd,cubicStartEnd,cubicEnd,cubicStartEnd};
+    if(lst2.contains(myDiagramType)){
+        path.addPath(createArrow(c1,p1));
+    }
 }
 
 

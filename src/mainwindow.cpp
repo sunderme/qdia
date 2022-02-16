@@ -747,22 +747,22 @@ void MainWindow::createToolbars()
     connect(linePointerButton, SIGNAL(clicked()),
             this, SLOT(lineArrowButtonTriggered()));
 
-    QToolButton *splineButton = new QToolButton;
+    /*QToolButton *splineButton = new QToolButton;
     splineButton->setCheckable(true);
-    splineButton->setIcon(QIcon(":/images/linepointer.png"));
+    splineButton->setIcon(QIcon(":/images/linepointer.png"));*/
 
     pointerTypeGroup = new QButtonGroup(this);
     pointerTypeGroup->setExclusive(false);
     pointerTypeGroup->addButton(pointerButton, int(DiagramScene::MoveItem));
     pointerTypeGroup->addButton(linePointerButton, int(DiagramScene::InsertLine));
-    pointerTypeGroup->addButton(splineButton, int(DiagramScene::InsertSpline));
+    //pointerTypeGroup->addButton(splineButton, int(DiagramScene::InsertSpline));
     connect(pointerTypeGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
             this, &MainWindow::pointerGroupClicked);
 
     pointerToolbar = addToolBar(tr("Pointer type"));
     pointerToolbar->addWidget(pointerButton);
     pointerToolbar->addWidget(linePointerButton);
-    pointerToolbar->addWidget(splineButton);
+    //pointerToolbar->addWidget(splineButton);
 
     zoomToolbar = addToolBar(tr("Zoom"));
     zoomToolbar->addAction(zoomInAction);
@@ -1181,7 +1181,7 @@ void MainWindow::load()
 QMenu *MainWindow::createArrowMenu(const char *slot, const int def)
 {
     QStringList names;
-        names << tr("Path") << tr("Start") << tr("End") << tr("StartEnd");
+        names << tr("Path") << tr("Start") << tr("End") << tr("StartEnd") << tr("Spline") << tr("Spline Start") << tr("Spline End") << tr("Spline StartEnd");
     QMenu *arrowMenu = new QMenu;
     for (int i = 0; i < names.count(); ++i) {
         QAction *action = new QAction(names.at(i), this);
@@ -1200,9 +1200,15 @@ QMenu *MainWindow::createArrowMenu(const char *slot, const int def)
 QIcon MainWindow::createArrowIcon(const int i)
 {
     QPixmap pixmap(50, 80);
-    DiagramPathItem* item=new DiagramPathItem(DiagramPathItem::DiagramType(i),0,0);
-    pixmap=item->icon();
-    delete item;
+    if(i<4){
+        DiagramPathItem* item=new DiagramPathItem(DiagramPathItem::DiagramType(i),0,0);
+        pixmap=item->icon();
+        delete item;
+    }else{
+        DiagramSplineItem* item=new DiagramSplineItem(DiagramSplineItem::DiagramType(i),0,0);
+        pixmap=item->icon();
+        delete item;
+    }
 
     return QIcon(pixmap);
 }
@@ -1238,9 +1244,14 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
 
 void MainWindow::lineArrowButtonTriggered()
 {
-    scene->setArrow(arrowAction->data().toInt());
+    int tp=arrowAction->data().toInt();
+    scene->setArrow(tp%4);
     pointerTypeGroup->button(int(DiagramScene::MoveItem))->setChecked(false);
-    scene->setMode(DiagramScene::InsertLine);
+    if(tp<4){
+        scene->setMode(DiagramScene::InsertLine);
+    }else{
+        scene->setMode(DiagramScene::InsertSpline);
+    }
 }
 
 void MainWindow::moveCursor(QPointF p)

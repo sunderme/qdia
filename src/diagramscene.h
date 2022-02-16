@@ -176,7 +176,7 @@ private:
     QList<QGraphicsItem *> copiedItems;
     QList<QGraphicsItem *> bufferedItems;
     qreal myDx,myDy;
-    DiagramPathItem::DiagramType myArrow;
+    int myArrow;
     DiagramPathItem::routingType myRouting;
     qreal myGrid;
     QGraphicsRectItem myCursor;
