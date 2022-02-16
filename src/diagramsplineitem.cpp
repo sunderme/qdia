@@ -443,13 +443,13 @@ QPainterPath DiagramSplineItem::createArrow(QPointF p1, QPointF p2, qreal scale)
 void DiagramSplineItem::drawArrows(QPainterPath  &path)
 {
     // draw start arrow
-    std::list<DiagramSplineItem::DiagramType> lst{cubicStart,cubicStartEnd,quadStart,quadStartEnd};
-    if(std::find(lst.cbegin(),lst.cend(),myDiagramType)!=lst.cend()){
+    DiagramType lst[] = {cubicStart,cubicStartEnd,quadStart,quadStartEnd};
+    if(std::find(std::begin(lst),std::end(lst),myDiagramType)!=std::end(lst)){
         path.addPath(createArrow(c0,p0));
     }
     // draw end arrow
-    std::list<DiagramSplineItem::DiagramType> lst2{cubicEnd,cubicStartEnd,cubicEnd,cubicStartEnd};
-    if(std::find(lst2.cbegin(),lst2.cend(),myDiagramType)!=lst2.cend()){
+    DiagramType lst2[] = {cubicEnd,cubicStartEnd,cubicEnd,cubicStartEnd};
+    if(std::find(std::begin(lst2),std::end(lst2),myDiagramType)!=std::end(lst2)){
         path.addPath(createArrow(c1,p1));
     }
 }
