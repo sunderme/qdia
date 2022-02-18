@@ -115,6 +115,7 @@ private slots:
    void handleFontChange();
    void itemSelected(QGraphicsItem *item);
    void lineArrowButtonTriggered();
+   void textAddButtonTriggered();
    void moveCursor(QPointF p);
    void about();
    void activateShortcuts();

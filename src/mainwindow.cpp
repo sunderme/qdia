@@ -301,7 +301,7 @@ void MainWindow::createToolBox()
 {
     struct Element {QString name; int type; };
     toolBox = new QToolBox;
-    toolBox->setSizePolicy(QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Ignored));
+    toolBox->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Ignored));
 
     QButtonGroup *bG = new QButtonGroup(this);
     bG->setExclusive(false);
@@ -744,25 +744,25 @@ void MainWindow::createToolbars()
     linePointerButton->setMenu(createArrowMenu(SLOT(lineArrowChanged()),
                                                0));
     arrowAction = linePointerButton->menu()->defaultAction();
-    connect(linePointerButton, SIGNAL(clicked()),
-            this, SLOT(lineArrowButtonTriggered()));
+    connect(linePointerButton, &QToolButton::clicked,
+            this, &MainWindow::lineArrowButtonTriggered);
 
-    /*QToolButton *splineButton = new QToolButton;
-    splineButton->setCheckable(true);
-    splineButton->setIcon(QIcon(":/images/linepointer.png"));*/
+    QToolButton *textButton = new QToolButton;
+    textButton->setCheckable(true);
+    textButton->setIcon(QIcon(":/images/kdenlive-add-text-clip.svg"));
 
     pointerTypeGroup = new QButtonGroup(this);
     pointerTypeGroup->setExclusive(false);
     pointerTypeGroup->addButton(pointerButton, int(DiagramScene::MoveItem));
     pointerTypeGroup->addButton(linePointerButton, int(DiagramScene::InsertLine));
-    //pointerTypeGroup->addButton(splineButton, int(DiagramScene::InsertSpline));
+    pointerTypeGroup->addButton(textButton, int(DiagramScene::InsertText));
     connect(pointerTypeGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
             this, &MainWindow::pointerGroupClicked);
 
     pointerToolbar = addToolBar(tr("Pointer type"));
     pointerToolbar->addWidget(pointerButton);
     pointerToolbar->addWidget(linePointerButton);
-    //pointerToolbar->addWidget(splineButton);
+    pointerToolbar->addWidget(textButton);
 
     zoomToolbar = addToolBar(tr("Zoom"));
     zoomToolbar->addAction(zoomInAction);
@@ -1252,6 +1252,11 @@ void MainWindow::lineArrowButtonTriggered()
     }else{
         scene->setMode(DiagramScene::InsertSpline);
     }
+}
+
+void MainWindow::textAddButtonTriggered()
+{
+    scene->setMode(DiagramScene::InsertText);
 }
 
 void MainWindow::moveCursor(QPointF p)
