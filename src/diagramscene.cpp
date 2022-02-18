@@ -259,6 +259,9 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         }
         insertedItem->setPos(onGrid(mouseEvent->scenePos()));
         emit itemInserted(insertedItem);
+        insertedItem->setSelected(false);
+        insertedItem->setEnabled(false);
+        insertedItem=nullptr;
         break;
     case InsertLine:
         if (insertedPathItem == 0){
@@ -341,6 +344,9 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         }
         insertedItem->setPos(onGrid(mouseEvent->scenePos()));
         emit itemInserted(insertedItem);
+        insertedItem->setSelected(false);
+        insertedItem->setEnabled(false);
+        insertedItem=nullptr;
         break;
     case MoveItems:
     {
@@ -557,11 +563,6 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     if (myMode == Zoom) {
         emit zoomRect(mouseEvent->scenePos(),startPoint);
         return;
-    }
-    if(insertedItem && (myMode == InsertItem || myMode == InsertElement)){
-        insertedItem->setSelected(false);
-        insertedItem->setEnabled(false);
-        insertedItem=nullptr;
     }
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
