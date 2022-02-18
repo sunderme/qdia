@@ -406,6 +406,7 @@ void MainWindow::createToolBox()
                 ++row;
             }
         }
+        if(col>0) ++row;
 
         layout->setRowStretch(row, 10);
         layout->setColumnStretch(2, 10);
@@ -416,48 +417,6 @@ void MainWindow::createToolBox()
         toolBox->addItem(itemWidget, names.value(i));
     }
 
-    QButtonGroup *buttonGroup = new QButtonGroup(this);
-    buttonGroup->setExclusive(false);
-    connect(buttonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
-            this, &MainWindow::buttonGroupClicked);
-    layout = new QGridLayout;
-    elements={
-        {tr("Conditional"), DiagramItem::Conditional},
-        {tr("Process"), DiagramItem::Step},
-        {tr("Input/Output"), DiagramItem::Io},
-    };
-    row=0;
-    col=0;
-    for (const Element &element: elements) {
-        QWidget *bt=createCellWidget(element.name,element.type,buttonGroup);
-        layout->addWidget(bt, row, col);
-        ++col;
-        if(col>2){
-            col=0;
-            ++row;
-        }
-    }
-
-    QToolButton *textButton = new QToolButton;
-    textButton->setCheckable(true);
-    buttonGroup->addButton(textButton, InsertTextButton);
-    textButton->setIcon(QIcon(QPixmap(":/images/textpointer.png")));
-    textButton->setIconSize(QSize(50, 50));
-    QGridLayout *textLayout = new QGridLayout;
-    textLayout->addWidget(textButton, 0, 0, Qt::AlignHCenter);
-    textLayout->addWidget(new QLabel(tr("Text")), 1, 0, Qt::AlignCenter);
-    QWidget *textWidget = new QWidget;
-    textWidget->setLayout(textLayout);
-    layout->addWidget(textWidget, 1, 1);
-
-    layout->setRowStretch(row+1, 10);
-    layout->setColumnStretch(2, 10);
-
-    itemWidget = new QWidget;
-    itemWidget->setLayout(layout);
-
-    toolBox->setMinimumWidth(itemWidget->sizeHint().width());
-    toolBox->addItem(itemWidget, tr("Basic Flowchart Shapes"));
 }
 
 void MainWindow::createActions()
