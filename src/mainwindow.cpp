@@ -57,6 +57,7 @@ MainWindow::MainWindow()
     view->setDragMode(QGraphicsView::RubberBandDrag);
     view->setCacheMode(QGraphicsView::CacheBackground);
     view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    view->setMouseTracking(true);
     layout->addWidget(view);
 
     QWidget *widget = new QWidget;
