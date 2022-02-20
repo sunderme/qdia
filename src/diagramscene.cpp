@@ -90,7 +90,6 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     myCursor.setRect(QRectF(-myCursorWidth/2,-myCursorWidth/2,myCursorWidth,myCursorWidth));
     myCursor.setPen(QPen(Qt::gray));
     myCursor.setZValue(10.0);
-    //myCursor.setAcceptHoverEvents(true);
     addItem(&myCursor);
 }
 
@@ -310,8 +309,12 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 this, &DiagramScene::itemSelected);
         addItem(textItem);
         textItem->setDefaultTextColor(myTextColor);
-        textItem->setPos(mouseEvent->scenePos());
+        textItem->setPos(onGrid(mouseEvent->scenePos()));
+        textItem->setSelected(true);
+        textItem->setFocus();
         emit textInserted(textItem);
+        mouseEvent->accept();
+        return;
         break;
     case InsertDrawItem:
         if (insertedDrawItem == nullptr){
@@ -562,6 +565,10 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (myMode == Zoom) {
         emit zoomRect(mouseEvent->scenePos(),startPoint);
+        return;
+    }
+    if (myMode == InsertText) {
+        mouseEvent->accept();
         return;
     }
     QGraphicsScene::mouseReleaseEvent(mouseEvent);

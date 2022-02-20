@@ -82,7 +82,7 @@ signals:
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     void focusOutEvent(QFocusEvent *event) override;
-    void focusInEvent(QFocusEvent *event);
+    void focusInEvent(QFocusEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
