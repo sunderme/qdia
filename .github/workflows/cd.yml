@@ -13,6 +13,8 @@ jobs:
         shell: msys2 {0}
     steps:
       - uses: actions/checkout@v2
+      - name: Fetch tag annotations
+        run: git fetch --tags --force
       - uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
