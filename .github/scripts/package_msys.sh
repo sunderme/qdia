@@ -2,7 +2,7 @@
 
 # Exit on errors
 set -e
-VERSION_NAME=0.1
+VERSION_NAME=`git describe`
 echo "package build into zip for win"
 # workaround for botched qt6 installation
 mkdir -p package-zip
