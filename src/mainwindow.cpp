@@ -166,34 +166,34 @@ void MainWindow::sendToBack()
 
 void MainWindow::rotateRight()
 {
-    if (scene->selectedItems().isEmpty())
+    if (scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform().rotate(90),scene->selectedItems(),true);
+    transformSelected(QTransform().rotate(90),scene->activeItems(),true);
 }
 
 void MainWindow::rotateLeft()
 {
-    if (scene->selectedItems().isEmpty())
+    if (scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform().rotate(-90),scene->selectedItems(),true);
+    transformSelected(QTransform().rotate(-90),scene->activeItems(),true);
 }
 
 void MainWindow::flipX()
 {
-    if (scene->selectedItems().isEmpty())
+    if (scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform(-1,0,0,1,0,0),scene->selectedItems());
+    transformSelected(QTransform(-1,0,0,1,0,0),scene->activeItems());
 }
 
 void MainWindow::flipY()
 {
-    if (scene->selectedItems().isEmpty())
+    if (scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform(1,0,0,-1,0,0),scene->selectedItems());
+    transformSelected(QTransform(1,0,0,-1,0,0),scene->activeItems());
 }
 
 //! [9]

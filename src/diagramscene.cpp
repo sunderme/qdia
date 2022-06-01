@@ -219,16 +219,16 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
                 insertedPathItem->setEnabled(false);
                 insertedPathItem = nullptr;
+                mouseEvent->accept();
             }
-            myMode=MoveItem;
             break;
         case InsertSpline:
             if(insertedSplineItem){
                 insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
                 insertedSplineItem->setEnabled(false);
                 insertedSplineItem=nullptr;
+                mouseEvent->accept();
             }
-            myMode=MoveItem;
             break;
         case InsertItem:
         case InsertElement:
@@ -236,6 +236,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 insertedItem=nullptr;
                 mouseEvent->setAccepted(true);
                 myMode=MoveItem;
+                mouseEvent->accept();
+                // switch toolbar !!
             }
             break;
         default:
@@ -349,7 +351,19 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         emit itemInserted(insertedItem);
         insertedItem->setSelected(false);
         insertedItem->setEnabled(false);
-        insertedItem=nullptr;
+        // add next item, same orientation if rotated/flipped
+        {
+            DiagramItem *item=new DiagramElement(mItemFileName, myItemMenu);
+            QPen p{myLineColor};
+            p.setCapStyle(Qt::RoundCap);
+            item->setPen(p);
+            item->setZValue(maxZ);
+            item->setTransform(insertedItem->transform());
+            item->setSelected(true);
+            maxZ+=0.1;
+            addItem(item);
+            insertedItem=item;
+        }
         break;
     case MoveItems:
     {
@@ -716,12 +730,28 @@ void DiagramScene::insertElementDirectly(const QString element)
     QPointF pos=myCursor.pos();
     item->setPos(onGrid(pos));
 }
+/*!
+ * \brief return active items
+ * active items are selected items or insertItem
+ * \return
+ */
+QList<QGraphicsItem *> DiagramScene::activeItems() const
+{
+    if(!selectedItems().isEmpty()){
+        return selectedItems();
+    }
+    return (QList<QGraphicsItem*>()<<insertedItem);
+}
 
 void DiagramScene::editorReceivedFocus(DiagramTextItem *item)
 {
     emit editorHasReceivedFocus();
 }
-
+/*!
+ * \brief abort current operation
+ * esc or right mouse click
+ * \param keepSelection
+ */
 void DiagramScene::abort(bool keepSelection)
 {
     switch(myMode){
