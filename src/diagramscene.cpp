@@ -742,6 +742,20 @@ QList<QGraphicsItem *> DiagramScene::activeItems() const
     }
     return (QList<QGraphicsItem*>()<<insertedItem);
 }
+/*!
+ * \brief duplicate selected items
+ */
+void DiagramScene::duplicateItems()
+{
+    if(!selectedItems().isEmpty()){
+        for(auto *item:selectedItems()){
+            //TODO !
+            // copy item
+            qDebug()<<"todo";
+            // move to side/down
+        }
+    }
+}
 
 void DiagramScene::editorReceivedFocus(DiagramTextItem *item)
 {

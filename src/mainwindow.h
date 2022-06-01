@@ -98,6 +98,7 @@ private slots:
    void print();
    void exportImage();
    void copyItems();
+   void duplicateItems();
    void copyToClipboard();
    void pasteFromClipboard();
    void groupItems();
@@ -167,6 +168,7 @@ private:
    QAction *flipXAction;
    QAction *flipYAction;
    QAction *copyAction;
+   QAction *duplicateAction;
    QAction *moveAction;
    QAction *groupAction;
    QAction *ungroupAction;

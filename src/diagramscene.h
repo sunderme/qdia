@@ -119,6 +119,7 @@ public:
     void deleteItem(QGraphicsItem *item);
     void insertElementDirectly(const QString element);
     QList<QGraphicsItem *> activeItems() const;
+    void duplicateItems();
 
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);

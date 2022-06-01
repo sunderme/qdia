@@ -508,6 +508,12 @@ void MainWindow::createActions()
             this, SLOT(copyItems()));
     listOfActions.append(copyAction);
 
+    duplicateAction = new QAction(tr("&Duplicate"), this);
+    duplicateAction->setShortcut(tr("ctrl+d"));
+    connect(duplicateAction, SIGNAL(triggered()),
+            this, SLOT(duplicateItems()));
+    listOfActions.append(duplicateAction);
+
     moveAction = new QAction(tr("&Move"), this);
     moveAction->setShortcut(tr("m"));
     connect(moveAction, SIGNAL(triggered()),
@@ -618,6 +624,7 @@ void MainWindow::createMenus()
     itemMenu = menuBar()->addMenu(tr("&Item"));
     itemMenu->addAction(deleteAction);
     itemMenu->addAction(copyAction);
+    itemMenu->addAction(duplicateAction);
     itemMenu->addAction(moveAction);
     itemMenu->addSeparator();
     itemMenu->addAction(toFrontAction);
@@ -813,12 +820,23 @@ QIcon MainWindow::createColorIcon(QColor color)
 
     return QIcon(pixmap);
 }
-//! [32]
 
+/*!
+ * \brief copy selected items
+ */
 void MainWindow::copyItems()
 {
     scene->setMode(DiagramScene::CopyItem);
     view->setDragMode(QGraphicsView::RubberBandDrag);
+}
+
+/*!
+ * \brief duplicate items
+ * copy and shift a bit to right/down
+ */
+void MainWindow::duplicateItems()
+{
+    scene->duplicateItems();
 }
 
 void MainWindow::copyToClipboard()
