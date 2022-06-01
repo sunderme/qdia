@@ -781,13 +781,15 @@ void DiagramScene::abort(bool keepSelection)
     default:
         ;
     }
-
+    if(myMode!=InsertLine && myMode==InsertSpline){
+        myMode=MoveItem;
+    }
     insertedItem=nullptr;
     insertedDrawItem=nullptr;
     insertedPathItem=nullptr;
     insertedSplineItem=nullptr;
     copiedItems.clear();
-    myMode=MoveItem;
+
     if(!keepSelection) clearSelection();
 }
 
