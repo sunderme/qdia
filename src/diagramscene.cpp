@@ -781,7 +781,7 @@ void DiagramScene::abort(bool keepSelection)
     default:
         ;
     }
-    if(myMode!=InsertLine && myMode==InsertSpline){
+    if(myMode!=InsertLine && myMode!=InsertSpline){
         myMode=MoveItem;
     }
     insertedItem=nullptr;
