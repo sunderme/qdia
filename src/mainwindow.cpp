@@ -574,7 +574,7 @@ void MainWindow::createActions()
     connect(showGridAction, &QAction::toggled,
             this, &MainWindow::toggleGrid);
 
-    loadAction = new QAction(QIcon(":/images/document-open.svg"),tr("L&oad ..."), this);
+    loadAction = new QAction(QIcon(":/images/document-open.svg"),tr("&Open ..."), this);
     loadAction->setShortcut(tr("Ctrl+o"));
     connect(loadAction, SIGNAL(triggered()),
             this, SLOT(load()));
