@@ -64,7 +64,6 @@ MainWindow::MainWindow()
     widget->setLayout(layout);
 
     setCentralWidget(widget);
-    setWindowTitle(tr("QDia"));
     setUnifiedTitleAndToolBarOnMac(true);
 }
 
@@ -1112,6 +1111,8 @@ void MainWindow::saveAs()
                 qDebug() << "Error: cannot write file "
                 << file.fileName()
                 << file.errorString();
+            }else{
+                setWindowFilePath(myFileName);
             }
         }
     }
@@ -1151,6 +1152,7 @@ void MainWindow::load()
             scene->clear();
             scene->load_json(&file);
             myFileName=fileName;
+            setWindowFilePath(myFileName);
         }
 
     }
