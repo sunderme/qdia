@@ -751,8 +751,14 @@ void DiagramScene::duplicateItems()
         for(auto *item:selectedItems()){
             //TODO !
             // copy item
-            qDebug()<<"todo";
+            item->setSelected(false);
+            QGraphicsItem *newItem=copy(item);
+            addItem(newItem);
+            newItem->setZValue(maxZ);
+            maxZ+=0.1;
             // move to side/down
+            newItem->moveBy(10,10);
+            newItem->setSelected(true);
         }
     }
 }
