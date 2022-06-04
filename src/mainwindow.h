@@ -83,7 +83,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-   MainWindow();
+   MainWindow(int argc, char *argv[],QWidget *parent = nullptr);
 
 private slots:
    void buttonGroupClicked(QAbstractButton *button);
@@ -131,17 +131,23 @@ private slots:
    void setGrid();
    void save();
    void saveAs();
-   void load();
+   void fileOpen();
+   bool openFile(QString fileName);
+   void openRecentFile();
    void moveItems();
    void abort();
    void insertDot();
    void switchToWire();
+
+protected:
+   void closeEvent(QCloseEvent *event);
 
 private:
    void createToolBox();
    void createActions();
    void createMenus();
    void createToolbars();
+   void populateRecentFiles();
    QWidget *createCellWidget(const QString &text,
                              int type, QButtonGroup *buttonGroup);
    QMenu *createColorMenu(const char *slot, QColor defaultColor);
@@ -187,6 +193,7 @@ private:
    QShortcut *wireShortcut;
 
    QMenu *fileMenu;
+   QMenu *m_recentFilesMenu;
    QMenu *viewMenu;
    QMenu *itemMenu;
    QMenu *aboutMenu;
@@ -230,6 +237,7 @@ private:
    bool myShowGrid; // Grid visible ?
 
    QString myFileName; // aktueller Filename
+   QStringList m_recentFiles;
 };
 
 #endif // MAINWINDOW_H

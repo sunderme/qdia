@@ -24,9 +24,21 @@ const int InsertDrawItemButton = 64;
 
 Config configuration;
 
-//! [0]
-MainWindow::MainWindow()
+/*!
+ * \brief construct GUI
+ * Read in settings, build menu&GUI
+ * Interpret CLI options
+ * \param argc
+ * \param argv
+ * \param parent
+ */
+MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
+    : QMainWindow(parent)
 {
+    // read config
+    QSettings settings("QDia","QDia");
+    m_recentFiles=settings.value("recentFiles").toStringList();
+    // setup GUI
     createActions();
     createToolBox();
     createMenus();
@@ -65,6 +77,31 @@ MainWindow::MainWindow()
 
     setCentralWidget(widget);
     setUnifiedTitleAndToolBarOnMac(true);
+
+    // restore geometry
+    if(settings.contains("geometry")){
+        restoreGeometry(settings.value("geometry").toByteArray());
+        restoreState(settings.value("windowState").toByteArray());
+    }
+
+    if(argc>1){
+        // assume last argument as filename
+        // maybe more elaborate later
+        QString fn=QString(argv[argc-1]);
+        openFile(fn);
+    }
+}
+/*!
+ * \brief write settings on closeEvent
+ * \param event
+ */
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    QSettings settings("QDia", "QDia");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("windowState", saveState());
+    settings.setValue("recentFiles",m_recentFiles);
+    event->accept();
 }
 
 void MainWindow::buttonGroupClicked(QAbstractButton *button)
@@ -547,25 +584,25 @@ void MainWindow::createActions()
     // Zoom in/out
     zoomInAction = new QAction(QIcon(":/images/zoomin.svg"),tr("Zoom &in"), this);
     zoomInAction->setShortcut(tr("Shift+z"));
-    connect(zoomInAction, SIGNAL(triggered()),
-            this, SLOT(zoomIn()));
+    connect(zoomInAction, &QAction::triggered,
+            this, &MainWindow::zoomIn);
     listOfActions.append(zoomInAction);
 
     zoomOutAction = new QAction(QIcon(":/images/zoomout.svg"),tr("Zoom &out"), this);
     zoomOutAction->setShortcut(tr("Ctrl+z"));
-    connect(zoomOutAction, SIGNAL(triggered()),
-            this, SLOT(zoomOut()));
+    connect(zoomOutAction, &QAction::triggered,
+            this, &MainWindow::zoomOut);
 
     zoomAction = new QAction(QIcon(":/images/zoom.svg"),tr("&Zoom area"), this);
     zoomAction->setShortcut(tr("z"));
-    connect(zoomAction, SIGNAL(triggered()),
-            this, SLOT(zoomRect()));
+    connect(zoomAction, &QAction::triggered,
+            this, &MainWindow::zoomRect);
     listOfActions.append(zoomAction);
 
     zoomFitAction = new QAction(QIcon(":/images/zoompage.svg"),tr("Zoom &Fit"), this);
     zoomFitAction->setShortcut(tr("v"));
-    connect(zoomFitAction, SIGNAL(triggered()),
-            this, SLOT(zoomFit()));
+    connect(zoomFitAction, &QAction::triggered,
+            this, &MainWindow::zoomFit);
     listOfActions.append(zoomFitAction);
 
     showGridAction = new QAction(QIcon(":/images/view-grid.svg"),tr("Show &Grid"), this);
@@ -576,18 +613,18 @@ void MainWindow::createActions()
 
     loadAction = new QAction(QIcon(":/images/document-open.svg"),tr("&Open ..."), this);
     loadAction->setShortcut(tr("Ctrl+o"));
-    connect(loadAction, SIGNAL(triggered()),
-            this, SLOT(load()));
+    connect(loadAction, &QAction::triggered,
+            this, &MainWindow::fileOpen);
 
     saveAction = new QAction(QIcon(":/images/document-save.svg"),tr("&Save ..."), this);
     saveAction->setShortcut(tr("Ctrl+s"));
-    connect(saveAction, SIGNAL(triggered()),
-            this, SLOT(save()));
+    connect(saveAction, &QAction::triggered,
+            this, &MainWindow::save);
 
     saveAsAction = new QAction(QIcon(":/images/document-save-as.svg"),tr("Save &As ..."), this);
     saveAsAction->setShortcut(tr("Ctrl+s"));
-    connect(saveAsAction, SIGNAL(triggered()),
-            this, SLOT(saveAs()));
+    connect(saveAsAction, &QAction::triggered,
+            this, &MainWindow::saveAs);
 
     copyToClipboardAction=new QAction(tr("&Copy to clipboard"), this);
     copyToClipboardAction->setShortcut(tr("Ctrl+c"));
@@ -602,8 +639,12 @@ void MainWindow::createActions()
 
 void MainWindow::createMenus()
 {
+    m_recentFilesMenu=new QMenu(tr("Open recent files..."));
+    populateRecentFiles();
+
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(loadAction);
+    fileMenu->addMenu(m_recentFilesMenu);
     fileMenu->addAction(saveAction);
     fileMenu->addAction(saveAsAction);
     fileMenu->addAction(copyToClipboardAction);
@@ -735,6 +776,18 @@ void MainWindow::createToolbars()
     zoomToolbar->addAction(zoomOutAction);
     zoomToolbar->addAction(zoomAction);
     zoomToolbar->addAction(zoomFitAction);
+}
+/*!
+ * \brief populate RecentFiles menu
+ */
+void MainWindow::populateRecentFiles()
+{
+    m_recentFilesMenu->clear();
+    for(const QString &elem:m_recentFiles){
+        QAction *act=new QAction(elem);
+        connect(act,&QAction::triggered,this,&MainWindow::openRecentFile);
+        m_recentFilesMenu->addAction(act);
+    }
 }
 
 QWidget *MainWindow::createCellWidget(const QString &text,
@@ -1128,11 +1181,14 @@ void MainWindow::save()
         else
         {
             scene->save_json(&file);
+            m_recentFiles.removeOne(myFileName);
+            m_recentFiles.prepend(myFileName);
+            populateRecentFiles();
         }
     }
 }
 
-void MainWindow::load()
+void MainWindow::fileOpen()
 {
     QFileDialog::Options options;
     QString selectedFilter;
@@ -1143,19 +1199,44 @@ void MainWindow::load()
             &selectedFilter,
             options);
     if (!fileName.isEmpty()){
-        QFile file(fileName);
-        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-            QMessageBox::warning(this,tr("File operation error"),file.errorString());
-        }
-        else
-        {
-            scene->clear();
-            scene->load_json(&file);
-            myFileName=fileName;
-            setWindowFilePath(myFileName);
-        }
-
+        openFile(fileName);
+        m_recentFiles.removeOne(fileName);
+        m_recentFiles.prepend(fileName);
+        populateRecentFiles();
     }
+}
+/*!
+ * \brief open file
+ * \param fileName
+ * \return success
+ */
+bool MainWindow::openFile(QString fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        return false;
+    }
+    scene->clear();
+    scene->load_json(&file);
+    myFileName=fileName;
+    setWindowFilePath(myFileName);
+    return true;
+}
+/*!
+ * \brief open recent file
+ * triggered from openrecent files menu
+ */
+
+void MainWindow::openRecentFile()
+{
+    QAction *act=qobject_cast<QAction*>(sender());
+    QString fn=act->text();
+    m_recentFiles.removeOne(fn);
+    if(QFileInfo::exists(fn)){
+        openFile(fn);
+        m_recentFiles.prepend(fn);
+    }
+    populateRecentFiles();
 }
 
 QMenu *MainWindow::createArrowMenu(const char *slot, const int def)
