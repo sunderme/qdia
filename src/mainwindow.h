@@ -136,6 +136,7 @@ private slots:
    void openRecentFile();
    void moveItems();
    void abort();
+   void abortFromScene();
    void insertDot();
    void switchToWire();
 

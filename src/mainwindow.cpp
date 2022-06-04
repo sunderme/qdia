@@ -61,6 +61,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
             this, &MainWindow::doZoomRect);
     connect(scene, &DiagramScene::zoom,
             this, &MainWindow::zoom);
+    connect(scene, &DiagramScene::abortSignal,
+            this, &MainWindow::abortFromScene);
     createToolbars();
 
     QHBoxLayout *layout = new QHBoxLayout;
@@ -982,6 +984,15 @@ void MainWindow::moveItems()
 void MainWindow::abort()
 {
     scene->abort();
+    pointerButton->setChecked(true);
+    pointerGroupClicked(pointerButton);
+}
+/*!
+ * \brief abort triggered from scene
+ * Basically activate the move button
+ */
+void MainWindow::abortFromScene()
+{
     pointerButton->setChecked(true);
     pointerGroupClicked(pointerButton);
 }

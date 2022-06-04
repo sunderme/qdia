@@ -238,6 +238,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 myMode=MoveItem;
                 mouseEvent->accept();
                 // switch toolbar !!
+                emit abortSignal();
             }
             break;
         default:
@@ -811,6 +812,9 @@ void DiagramScene::abort(bool keepSelection)
     copiedItems.clear();
 
     if(!keepSelection) clearSelection();
+    if(!keepSelection && myMode==MoveItem){
+        emit abortSignal();
+    }
 }
 
 bool DiagramScene::save_json(QFile *file)
