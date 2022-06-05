@@ -33,5 +33,6 @@
 <file>libs/analog/vsource.json</file>
 <file>libs/analog/acsource.json</file>
 <file>libs/analog/cap.json</file>
+<file>libs/agates/ota.json</file>
 </qresource>
 </RCC>

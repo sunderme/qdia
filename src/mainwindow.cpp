@@ -402,6 +402,11 @@ void MainWindow::createToolBox()
                    "switch_closed.json",
                    "switch_2t.json"
     };
+    paths<<":/libs/agates/";
+    names<<tr("Analog Blocks");
+    lstOfElements<<QStringList{
+                   "ota.json"
+    };
     paths<<":/libs/gates/";
     names<<tr("Basic Digital Gates");
     lstOfElements<<QStringList{
