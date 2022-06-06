@@ -612,6 +612,16 @@ void MainWindow::createActions()
             this, &MainWindow::zoomFit);
     listOfActions.append(zoomFitAction);
 
+    finerGridAction = new QAction(tr("&Finer Grid"), this);
+    finerGridAction->setShortcut(tr("+"));
+    connect(finerGridAction, &QAction::triggered,
+            this, &MainWindow::changeGridFiner);
+
+    coarserGridAction = new QAction(tr("&Coarser Grid"), this);
+    coarserGridAction->setShortcut(tr("-"));
+    connect(coarserGridAction, &QAction::triggered,
+            this, &MainWindow::changeGridCoarser);
+
     showGridAction = new QAction(QIcon(":/images/view-grid.svg"),tr("Show &Grid"), this);
     showGridAction->setCheckable(true);
     showGridAction->setChecked(configuration.showGrid);
@@ -665,6 +675,9 @@ void MainWindow::createMenus()
     viewMenu->addAction(zoomOutAction);
     viewMenu->addAction(zoomAction);
     viewMenu->addAction(zoomFitAction);
+    viewMenu->addSeparator();
+    viewMenu->addAction(finerGridAction);
+    viewMenu->addAction(coarserGridAction);
     viewMenu->addSeparator();
     viewMenu->addAction(showGridAction);
 
@@ -1125,7 +1138,28 @@ void MainWindow::zoomFit()
     scene->setCursorVisible(true);
     setGrid();
 }
-
+/*!
+ * \brief change grid by halving grid distance
+ */
+void MainWindow::changeGridFiner()
+{
+    qreal g=scene->grid();
+    scene->setGrid(g/2);
+    setGrid();
+}
+/*!
+ * \brief change grid by doubling grid distance
+ */
+void MainWindow::changeGridCoarser()
+{
+    qreal g=scene->grid();
+    scene->setGrid(g*2);
+    setGrid();
+}
+/*!
+ * \brief show/hide grid
+ * \param grid true:show
+ */
 void MainWindow::toggleGrid(bool grid)
 {
     scene->setGridVisible(grid);
@@ -1134,7 +1168,9 @@ void MainWindow::toggleGrid(bool grid)
     scene->invalidate(topLeft.x(),topLeft.y(),bottomRight.x()-topLeft.x(),bottomRight.y()-topLeft.y());
     configuration.showGrid=grid;
 }
-
+/*!
+ * \brief update grid painting after zoom etc
+ */
 void MainWindow::setGrid()
 {
     if(scene->isGridVisible()){
@@ -1294,6 +1330,7 @@ QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
 {
     QRectF result;
     foreach(const QGraphicsItem *item,items){
+        if(!item) continue;
         QRectF rect=item->mapToScene(item->boundingRect()).boundingRect();
         result=result.united(rect);
     }
@@ -1309,6 +1346,7 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
     }
 
     foreach( QGraphicsItem *item, items){
+        if(!item) continue;
         if(item->childItems().isEmpty()){
             QTransform trans=item->transform();
             QPointF shift=item->pos()-pt;

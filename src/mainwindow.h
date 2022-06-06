@@ -127,6 +127,8 @@ private slots:
    void zoomRect();
    void doZoomRect(QPointF p1,QPointF p2);
    void zoomFit();
+   void changeGridFiner();
+   void changeGridCoarser();
    void toggleGrid(bool grid);
    void setGrid();
    void save();
@@ -184,6 +186,8 @@ private:
    QAction *zoomOutAction;
    QAction *zoomAction;
    QAction *zoomFitAction;
+   QAction *finerGridAction;
+   QAction *coarserGridAction;
    QAction *showGridAction;
 
    QAction *printAction;
