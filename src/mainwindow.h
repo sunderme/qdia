@@ -131,8 +131,8 @@ private slots:
    void changeGridCoarser();
    void toggleGrid(bool grid);
    void setGrid();
-   void save();
-   void saveAs();
+   void fileSave();
+   void fileSaveAs();
    void fileOpen();
    bool openFile(QString fileName);
    void openRecentFile();

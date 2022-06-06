@@ -636,12 +636,12 @@ void MainWindow::createActions()
     saveAction = new QAction(QIcon(":/images/document-save.svg"),tr("&Save ..."), this);
     saveAction->setShortcut(tr("Ctrl+s"));
     connect(saveAction, &QAction::triggered,
-            this, &MainWindow::save);
+            this, &MainWindow::fileSave);
 
     saveAsAction = new QAction(QIcon(":/images/document-save-as.svg"),tr("Save &As ..."), this);
     saveAsAction->setShortcut(tr("Ctrl+s"));
     connect(saveAsAction, &QAction::triggered,
-            this, &MainWindow::saveAs);
+            this, &MainWindow::fileSaveAs);
 
     copyToClipboardAction=new QAction(tr("&Copy to clipboard"), this);
     copyToClipboardAction->setShortcut(tr("Ctrl+c"));
@@ -1191,7 +1191,7 @@ void MainWindow::setGrid()
     }
 }
 
-void MainWindow::saveAs()
+void MainWindow::fileSaveAs()
 {
     QFileDialog::Options options;
     QString selectedFilter;
@@ -1223,7 +1223,7 @@ void MainWindow::saveAs()
     }
 }
 
-void MainWindow::save()
+void MainWindow::fileSave()
 {
     if (!myFileName.isEmpty()){
         QFile file(myFileName);
