@@ -106,14 +106,16 @@ DiagramItem::DiagramItem(const QJsonObject &json, QMenu *contextMenu)
     p.setY(json["y"].toDouble());
     setPos(p);
     setZValue(json["z"].toDouble());
-    myDiagramType=static_cast<DiagramType>(json["diagramtype"].toInt());
+    myDiagramType=static_cast<DiagramType>(json["diagramtype"].toInt(DiagramType::None));
     QColor color;
     color.setNamedColor(json["pen"].toString());
     color.setAlpha(json["pen_alpha"].toInt());
     setPen(color);
     color.setNamedColor(json["brush"].toString());
     color.setAlpha(json["brush_alpha"].toInt());
-    setBrush(color);
+    Qt::BrushStyle style=static_cast<Qt::BrushStyle>(json["brush_style"].toInt());
+    QBrush b(color,style);
+    setBrush(b);
 
     qreal m11=json["m11"].toDouble();
     qreal m12=json["m12"].toDouble();
@@ -174,6 +176,7 @@ void DiagramItem::write(QJsonObject &json)
     json["pen_alpha"]=pen().color().alpha();
     json["brush"]=brush().color().name();
     json["brush_alpha"]=brush().color().alpha();
+    json["brush_style"]=brush().style();
     json["m11"]=transform().m11();
     json["m12"]=transform().m12();
     json["m21"]=transform().m21();
