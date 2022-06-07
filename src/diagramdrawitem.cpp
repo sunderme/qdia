@@ -282,7 +282,7 @@ void DiagramDrawItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
         if(myHoverPoint==8) myHoverPoint=-1;
         else update();
     }
-    DiagramItem::hoverEnterEvent(e);
+    DiagramItem::hoverMoveEvent(e);
 }
 
 void DiagramDrawItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
