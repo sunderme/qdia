@@ -50,19 +50,27 @@
 
 #include "diagramtextitem.h"
 #include "diagramscene.h"
+#include <QTextBlockFormat>
+#include <QTextDocument>
+#include <QTextCursor>
 
 #include <QJsonObject>
 
-//! [0]
 DiagramTextItem::DiagramTextItem(QGraphicsItem *parent)
     : QGraphicsTextItem(parent)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
+    m_alignment=Qt::AlignRight | Qt::AlignBottom;
+    updateGeometry();
+    connect(document(), SIGNAL(contentsChanged()),
+             this, SLOT(updateGeometry()));
+    m_inUpdate=false;
 }
 DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
 {
     //QGraphicsTextItem();
+    m_alignment=textItem.m_alignment;
     setFont(textItem.font());
     setDefaultTextColor(textItem.defaultTextColor());
     setHtml(textItem.toHtml());
@@ -71,6 +79,10 @@ DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
     setFlag(QGraphicsItem::ItemIsSelectable);
     setPos(textItem.pos());
     m_adapt=false;
+
+    updateGeometry();
+    connect(document(), SIGNAL(contentsChanged()),
+             this, SLOT(updateGeometry()));
 }
 
 DiagramTextItem::DiagramTextItem(const QJsonObject &json)
@@ -85,6 +97,7 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
     color.setAlpha(json["pen_alpha"].toInt());
     setDefaultTextColor(color);
     setHtml(json["text"].toString());
+    m_alignment=Qt::AlignLeft;
 
     qreal m11=json["m11"].toDouble();
     qreal m12=json["m12"].toDouble();
@@ -94,6 +107,10 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
     qreal dy=json["dy"].toDouble();
     QTransform tf(m11,m12,m21,m22,dx,dy);
     setTransform(tf);
+
+    updateGeometry();
+    connect(document(), SIGNAL(contentsChanged()),
+             this, SLOT(updateGeometry()));
 }
 QVariant DiagramTextItem::itemChange(GraphicsItemChange change,
                      const QVariant &value)
@@ -117,17 +134,24 @@ void DiagramTextItem::focusInEvent(QFocusEvent *event)
 
 void DiagramTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+    setAlignment(Qt::AlignRight);
     if (textInteractionFlags() == Qt::NoTextInteraction)
         setTextInteractionFlags(Qt::TextEditorInteraction);
     QGraphicsTextItem::mouseDoubleClickEvent(event);
 }
-
+/*!
+ * \brief copy from this item
+ * \return
+ */
 DiagramTextItem* DiagramTextItem::copy()
 {
     DiagramTextItem* newTextItem=new DiagramTextItem(*this);
     return newTextItem;
 }
-
+/*!
+ * \brief write data to json object for saving
+ * \param json
+ */
 void DiagramTextItem::write(QJsonObject &json)
 {
     QPointF p=pos();
@@ -144,5 +168,50 @@ void DiagramTextItem::write(QJsonObject &json)
     json["dx"]=transform().dx();
     json["dy"]=transform().dy();
 }
+/*!
+ * \brief set text alignment
+ * \param alignment
+ */
+void DiagramTextItem::setAlignment(Qt::Alignment alignment)
+{
+    m_alignment = alignment;
+    QTextBlockFormat format;
+    format.setAlignment(alignment);
+    QTextCursor cursor = textCursor();      // save cursor position
+    int position = textCursor().position();
+    cursor.select(QTextCursor::Document);
+    cursor.mergeBlockFormat(format);
+    cursor.clearSelection();
+    cursor.setPosition(position);           // restore cursor position
+    setTextCursor(cursor);
+}
 
-//! [5]
+Qt::Alignment DiagramTextItem::alignment() const
+{
+    return m_alignment;
+}
+
+void DiagramTextItem::updateGeom(int, int, int)
+{
+    updateGeometry();
+}
+
+void DiagramTextItem::updateGeometry()
+{
+    if(m_inUpdate) return;
+    m_inUpdate=true;
+
+    setTextWidth(-1);
+    qreal w=document()->idealWidth();
+    setTextWidth(w);
+    setAlignment(m_alignment);
+    QPointF topRight = boundingRect().topRight();
+    qDebug()<<m_topRightPrev<<topRight;
+    if (m_alignment & Qt::AlignRight)
+    {
+        setPos(pos() + (m_topRightPrev - topRight));
+    }
+    m_inUpdate=false;
+    m_topRightPrev=topRight;
+}
+

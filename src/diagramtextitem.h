@@ -72,7 +72,14 @@ public:
     DiagramTextItem* copy();
     void write(QJsonObject &json);
 
+    void setAlignment(Qt::Alignment alignment);
+    Qt::Alignment alignment() const;
+
     int type() const override { return Type; }
+
+public slots:
+    void updateGeom(int, int, int);
+    void updateGeometry();
 
 signals:
     void lostFocus(DiagramTextItem *item);
@@ -88,6 +95,9 @@ protected:
 private:
     QPointF mCenterPoint;
     bool m_adapt;
+    Qt::Alignment m_alignment;
+    bool m_inUpdate;
+    QPointF m_topRightPrev;
 };
 //! [0]
 
