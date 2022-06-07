@@ -331,6 +331,7 @@ QPainterPath DiagramSplineItem::shape() const
 void DiagramSplineItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 {
     if (isSelected()) {
+        setCursor(Qt::SizeAllCursor);
         myHoverPoint=-1;
         QPointF hover_point(onGrid(e->pos()));
         if(hasClickedOn(hover_point,p0)) myHoverPoint=0;
@@ -345,6 +346,7 @@ void DiagramSplineItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 void DiagramSplineItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
 {
     if (isSelected()) {
+        setCursor(Qt::ArrowCursor);
         if(myHoverPoint>-1){
             myHoverPoint=-1;
             update();

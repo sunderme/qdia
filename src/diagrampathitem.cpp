@@ -409,6 +409,7 @@ QPointF DiagramPathItem::onGrid(QPointF pos)
 
 void DiagramPathItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
     if (isSelected()) {
+        setCursor(Qt::SizeAllCursor);
         QPointF hover_point = onGrid(e -> pos());
         for(myHoverPoint=0;myHoverPoint<myPoints.count();myHoverPoint++){
             if(hasClickedOn(hover_point,myPoints.at(myHoverPoint))) break;
@@ -421,6 +422,7 @@ void DiagramPathItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
 
 void DiagramPathItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
     if (isSelected()) {
+        setCursor(Qt::ArrowCursor);
         if(myHoverPoint>-1){
             myHoverPoint=-1;
             update();
