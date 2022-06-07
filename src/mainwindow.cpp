@@ -55,10 +55,10 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     connect(scene, &DiagramScene::forceCursor,
             this, &MainWindow::moveCursor);
     // activate/deactivate shortcuts when text is edited in scene
-    connect(scene, SIGNAL(editorHasReceivedFocus()),
-            this, SLOT(deactivateShortcuts()));
-    connect(scene, SIGNAL(editorHasLostFocus()),
-            this, SLOT(activateShortcuts()));
+    connect(scene, &DiagramScene::editorHasReceivedFocus,
+            this, &MainWindow::deactivateShortcuts);
+    connect(scene, &DiagramScene::editorHasLostFocus,
+            this, &MainWindow::activateShortcuts);
     connect(scene, &DiagramScene::zoomRect,
             this, &MainWindow::doZoomRect);
     connect(scene, &DiagramScene::zoom,
