@@ -123,7 +123,34 @@ void DiagramScene::setItemColor(const QColor &color)
         }
     }
 }
-
+/*!
+ * \brief set text alignment of selected elements
+ * \param alignment
+ */
+void DiagramScene::setTextAlignment(const Qt::Alignment alignment)
+{
+    m_textAlignment = alignment;
+    foreach(QGraphicsItem *elem,selectedItems()){
+        DiagramTextItem *item = dynamic_cast<DiagramTextItem *>(elem);
+        if(item){
+            item->setAlignment(alignment);
+            item->updateGeometry();
+        }
+    }
+}
+/*!
+ * \brief DiagramScene::textAlignment
+ * \return
+ */
+Qt::Alignment DiagramScene::textAlignment() const
+{
+    return m_textAlignment;
+}
+/*!
+ * \brief set text font
+ * Update selected text elements
+ * \param font
+ */
 void DiagramScene::setFont(const QFont &font)
 {
     myFont = font;
@@ -314,7 +341,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 this, &DiagramScene::itemSelected);
         addItem(textItem);
         textItem->setDefaultTextColor(myTextColor);
-        textItem->setPos(onGrid(mouseEvent->scenePos()));
+        textItem->setCorrectedPos(onGrid(mouseEvent->scenePos()));
         textItem->setSelected(true);
         textItem->setFocus();
         emit textInserted(textItem);
@@ -627,7 +654,8 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     //addItem(textItem);
                     textItem->setParentItem(item);
                     textItem->setDefaultTextColor(myTextColor);
-                    textItem->setPos(item->boundingRect().center());
+                    textItem->setAlignment(Qt::AlignVCenter|Qt::AlignHCenter);
+                    textItem->setCorrectedPos(item->boundingRect().center());
                     textItem->setSelected(true);
                     textItem->setFocus();
 

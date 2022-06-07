@@ -87,6 +87,8 @@ public:
     void setLineColor(const QColor &color);
     void setTextColor(const QColor &color);
     void setItemColor(const QColor &color);
+    void setTextAlignment(const Qt::Alignment alignment);
+    Qt::Alignment textAlignment() const;
     void setFont(const QFont &font);
     void setArrow(const int i);
     void setGrid(const qreal grid)
@@ -171,6 +173,7 @@ private:
     QColor myTextColor;
     QColor myItemColor;
     QColor myLineColor;
+    Qt::Alignment m_textAlignment;
 
     DiagramItem *insertedItem;
     DiagramDrawItem *insertedDrawItem;

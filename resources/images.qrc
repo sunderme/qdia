@@ -10,6 +10,12 @@
         <file>images/document-save.svg</file>
         <file>images/document-save.svgz</file>
         <file>images/floodfill.png</file>
+        <file>images/format-align-vertical-bottom.svg</file>
+        <file>images/format-align-vertical-center.svg</file>
+        <file>images/format-align-vertical-top.svg</file>
+        <file>images/format-justify-center.svg</file>
+        <file>images/format-justify-left.svg</file>
+        <file>images/format-justify-right.svg</file>
         <file>images/italic.svg</file>
 		<file>images/kdenlive-add-text-clip.svg</file>
         <file>images/linecolor.png</file>

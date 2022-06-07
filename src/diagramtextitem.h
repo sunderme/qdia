@@ -94,11 +94,12 @@ protected:
     void focusInEvent(QFocusEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
+    QPointF calcOffset() const;
+
 private:
-    QPointF mCenterPoint;
+    QPointF m_anchorPoint;
     bool m_adapt;
     Qt::Alignment m_alignment;
-    QPointF m_topRightPrev;
 };
 //! [0]
 

@@ -133,10 +133,34 @@ void DiagramTextItem::focusInEvent(QFocusEvent *event)
 
 void DiagramTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    setAlignment(Qt::AlignRight);
     if (textInteractionFlags() == Qt::NoTextInteraction)
         setTextInteractionFlags(Qt::TextEditorInteraction);
     QGraphicsTextItem::mouseDoubleClickEvent(event);
+}
+/*!
+ * \brief calculate the offset for item pos to anchorpoint
+ * \return offset
+ */
+QPointF DiagramTextItem::calcOffset() const
+{
+    QPointF offset;
+    if(m_alignment & Qt::AlignRight){
+        qreal w=boundingRect().width();
+        offset+=QPointF(-w,0);
+    }
+    if(m_alignment & Qt::AlignHCenter){
+        qreal w=boundingRect().width()/2;
+        offset+=QPointF(-w,0);
+    }
+    if(m_alignment & Qt::AlignBottom){
+        qreal h=boundingRect().height();
+        offset+=QPointF(0,-h);
+    }
+    if(m_alignment & Qt::AlignVCenter){
+        qreal h=boundingRect().height()/2;
+        offset+=QPointF(0,-h);
+    }
+    return offset;
 }
 /*!
  * \brief copy from this item
@@ -193,24 +217,8 @@ Qt::Alignment DiagramTextItem::alignment() const
 
 void DiagramTextItem::setCorrectedPos(QPointF pt)
 {
-    QPointF offset;
-    if(m_alignment & Qt::AlignRight){
-        qreal w=boundingRect().width();
-        offset+=QPointF(-w,0);
-    }
-    if(m_alignment & Qt::AlignHCenter){
-        qreal w=boundingRect().width()/2;
-        offset+=QPointF(-w,0);
-    }
-    if(m_alignment & Qt::AlignBottom){
-        qreal h=boundingRect().height();
-        offset+=QPointF(0,h);
-    }
-    if(m_alignment & Qt::AlignVCenter){
-        qreal h=boundingRect().height()/2;
-        offset+=QPointF(0,h);
-    }
-
+    m_anchorPoint=pt;
+    QPointF offset=calcOffset();
     setPos(pt+offset);
 }
 
@@ -226,10 +234,7 @@ void DiagramTextItem::updateGeometry()
     setTextWidth(w);
     setAlignment(m_alignment);
     QPointF topRight = boundingRect().topRight();
-    if (m_alignment & Qt::AlignRight)
-    {
-        setPos(pos() + (m_topRightPrev - topRight));
-    }
-    m_topRightPrev=topRight;
+    QPointF offset=calcOffset();
+    setPos(m_anchorPoint+offset);
 }
 

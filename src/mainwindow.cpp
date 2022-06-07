@@ -166,6 +166,28 @@ void MainWindow::pointerGroupClicked(QAbstractButton *button)
     else view->setDragMode(QGraphicsView::RubberBandDrag);
     scene->setMode(DiagramScene::Mode(pointerTypeGroup->checkedId()));
 }
+/*!
+ * \brief set horizontal text Align
+ * \param button
+ */
+void MainWindow::horzAlignGroupClicked(QAbstractButton *button)
+{
+    int id=horzAlignGroup->checkedId();
+    int align=static_cast<int>(scene->textAlignment());
+    align=align & 0xf0;
+    scene->setTextAlignment(static_cast<Qt::Alignment>(id|align));
+}
+/*!
+ * \brief set vertical text Align
+ * \param button
+ */
+void MainWindow::vertAlignGroupClicked(QAbstractButton *button)
+{
+    int id=vertAlignGroup->checkedId();
+    int align=static_cast<int>(scene->textAlignment());
+    align=align & 0xf;
+    scene->setTextAlignment(static_cast<Qt::Alignment>(id | align));
+}
 
 void MainWindow::bringToFront()
 {
@@ -313,6 +335,13 @@ void MainWindow::handleFontChange()
     font.setUnderline(underlineAction->isChecked());
 
     scene->setFont(font);
+}
+/*!
+ * \brief set text alignment
+ */
+void MainWindow::handleAlignChange()
+{
+    scene->setTextAlignment(Qt::AlignRight);
 }
 
 void MainWindow::itemSelected(QGraphicsItem *item)
@@ -532,6 +561,19 @@ void MainWindow::createActions()
     underlineAction->setCheckable(true);
     underlineAction->setShortcut(tr("Ctrl+U"));
     connect(underlineAction, &QAction::triggered, this, &MainWindow::handleFontChange);
+
+    alAction = new QAction(QIcon(":/images/format-justify-left.svg"),tr("Align &Left"), this);
+    connect(alAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
+    acAction = new QAction(QIcon(":/images/format-justify-center.svg"),tr("Align &Center"), this);
+    connect(acAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
+    arAction = new QAction(QIcon(":/images/format-justify-right.svg"),tr("Align &Right"), this);
+    connect(arAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
+    abAction = new QAction(QIcon(":/images/format-align-vertical-bottom.svg"),tr("Align &Bottom"), this);
+    connect(alAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
+    amAction = new QAction(QIcon(":/images/format-align-vertical-center.svg"),tr("Align &Middle (vertical)"), this);
+    connect(alAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
+    atAction = new QAction(QIcon(":/images/format-align-vertical-top.svg"),tr("Align &Top"), this);
+    connect(alAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
 
     aboutAction = new QAction(tr("A&bout"), this);
     aboutAction->setShortcut(tr("F1"));
@@ -753,6 +795,49 @@ void MainWindow::createToolbars()
     textToolBar->addAction(boldAction);
     textToolBar->addAction(italicAction);
     textToolBar->addAction(underlineAction);
+
+    horzAlignGroup = new QButtonGroup(this);
+    horzAlignGroup->setExclusive(true);
+    QToolButton *bt= new QToolButton;
+    bt->setCheckable(true);
+    bt->setChecked(true);
+    bt->setIcon(QIcon(":/images/format-justify-left.svg"));
+    horzAlignGroup->addButton(bt, int(Qt::AlignLeft));
+    textToolBar->addWidget(bt);
+    bt= new QToolButton;
+    bt->setCheckable(true);
+    bt->setIcon(QIcon(":/images/format-justify-center.svg"));
+    horzAlignGroup->addButton(bt, int(Qt::AlignHCenter));
+    textToolBar->addWidget(bt);
+    bt= new QToolButton;
+    bt->setCheckable(true);
+    bt->setIcon(QIcon(":/images/format-justify-right.svg"));
+    horzAlignGroup->addButton(bt, int(Qt::AlignRight));
+    textToolBar->addWidget(bt);
+    connect(horzAlignGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
+            this, &MainWindow::horzAlignGroupClicked);
+
+    vertAlignGroup = new QButtonGroup(this);
+    vertAlignGroup->setExclusive(true);
+    bt= new QToolButton;
+    bt->setCheckable(true);
+    bt->setChecked(true);
+    bt->setIcon(QIcon(":/images/format-align-vertical-top.svg"));
+    vertAlignGroup->addButton(bt, int(Qt::AlignTop));
+    textToolBar->addWidget(bt);
+    bt= new QToolButton;
+    bt->setCheckable(true);
+    bt->setIcon(QIcon(":/images/format-align-vertical-center.svg"));
+    vertAlignGroup->addButton(bt, int(Qt::AlignVCenter));
+    textToolBar->addWidget(bt);
+    bt= new QToolButton;
+    bt->setCheckable(true);
+    bt->setIcon(QIcon(":/images/format-align-vertical-bottom.svg"));
+    vertAlignGroup->addButton(bt, int(Qt::AlignBottom));
+    textToolBar->addWidget(bt);
+    connect(vertAlignGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
+            this, &MainWindow::vertAlignGroupClicked);
+
 
     colorToolBar = addToolBar(tr("Color"));
     colorToolBar->addWidget(fontColorToolButton);

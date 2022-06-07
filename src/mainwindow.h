@@ -89,6 +89,8 @@ private slots:
    void buttonGroupClicked(QAbstractButton *button);
    void deleteItem();
    void pointerGroupClicked(QAbstractButton *button);
+   void horzAlignGroupClicked(QAbstractButton *button);
+   void vertAlignGroupClicked(QAbstractButton *button);
    void bringToFront();
    void sendToBack();
    void rotateRight();
@@ -114,6 +116,7 @@ private slots:
    void fillButtonTriggered();
    void lineButtonTriggered();
    void handleFontChange();
+   void handleAlignChange();
    void itemSelected(QGraphicsItem *item);
    void lineArrowButtonTriggered();
    void textAddButtonTriggered();
@@ -216,6 +219,7 @@ private:
 
    QToolBox *toolBox;
    QButtonGroup *pointerTypeGroup;
+   QButtonGroup *horzAlignGroup,*vertAlignGroup;
    QAbstractButton *currentToolButton;
    QToolButton *fontColorToolButton;
    QToolButton *fillColorToolButton;
@@ -225,6 +229,8 @@ private:
    QAction *boldAction;
    QAction *underlineAction;
    QAction *italicAction;
+   QAction *alAction,*acAction,*arAction;
+   QAction *abAction,*amAction,*atAction;
    QAction *textAction;
    QAction *fillAction;
    QAction *lineAction;
