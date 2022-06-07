@@ -1303,6 +1303,9 @@ void MainWindow::fileSaveAs()
         {
             if(scene->save_json(&file)){
                 myFileName=fileName;
+                m_recentFiles.removeOne(myFileName);
+                m_recentFiles.prepend(myFileName);
+                populateRecentFiles();
             }
             file.close();
             if(file.error()){
