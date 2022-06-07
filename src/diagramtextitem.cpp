@@ -250,7 +250,6 @@ void DiagramTextItem::updateGeometry()
     qreal w=document()->idealWidth();
     setTextWidth(w);
     setAlignment(m_alignment);
-    QPointF topRight = boundingRect().topRight();
     QPointF offset=calcOffset();
     setPos(m_anchorPoint+offset);
     m_updateGeometry=false;
