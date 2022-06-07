@@ -57,7 +57,6 @@ QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
 QT_END_NAMESPACE
 
-//! [0]
 class DiagramTextItem : public QGraphicsTextItem
 {
     Q_OBJECT
@@ -101,6 +100,5 @@ private:
     bool m_adapt;
     Qt::Alignment m_alignment;
 };
-//! [0]
 
 #endif // DIAGRAMTEXTITEM_H
