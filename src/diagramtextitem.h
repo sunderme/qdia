@@ -75,10 +75,12 @@ public:
     void setAlignment(Qt::Alignment alignment);
     Qt::Alignment alignment() const;
 
+    void setCorrectedPos(QPointF pt);
+
     int type() const override { return Type; }
 
 public slots:
-    void updateGeom(int, int, int);
+    void updateGeometry(int, int, int);
     void updateGeometry();
 
 signals:
@@ -96,7 +98,6 @@ private:
     QPointF mCenterPoint;
     bool m_adapt;
     Qt::Alignment m_alignment;
-    bool m_inUpdate;
     QPointF m_topRightPrev;
 };
 //! [0]

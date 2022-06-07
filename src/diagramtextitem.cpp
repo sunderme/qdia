@@ -61,11 +61,10 @@ DiagramTextItem::DiagramTextItem(QGraphicsItem *parent)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
-    m_alignment=Qt::AlignRight | Qt::AlignBottom;
+    m_alignment=Qt::AlignLeft;
     updateGeometry();
-    connect(document(), SIGNAL(contentsChanged()),
-             this, SLOT(updateGeometry()));
-    m_inUpdate=false;
+    connect(document(), SIGNAL(contentsChange(int,int,int)),
+             this, SLOT(updateGeometry(int,int,int)));
 }
 DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
 {
@@ -97,7 +96,7 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
     color.setAlpha(json["pen_alpha"].toInt());
     setDefaultTextColor(color);
     setHtml(json["text"].toString());
-    m_alignment=Qt::AlignLeft;
+    m_alignment=static_cast<Qt::Alignment>(json["alignment"].toInt());
 
     qreal m11=json["m11"].toDouble();
     qreal m12=json["m12"].toDouble();
@@ -160,6 +159,7 @@ void DiagramTextItem::write(QJsonObject &json)
     json["z"]=zValue();
     json["type"]=type();
     json["text"]=toHtml();
+    json["alignment"]=static_cast<int>(m_alignment);
     json["color"]=defaultTextColor().name();
     json["m11"]=transform().m11();
     json["m12"]=transform().m12();
@@ -191,27 +191,45 @@ Qt::Alignment DiagramTextItem::alignment() const
     return m_alignment;
 }
 
-void DiagramTextItem::updateGeom(int, int, int)
+void DiagramTextItem::setCorrectedPos(QPointF pt)
+{
+    QPointF offset;
+    if(m_alignment & Qt::AlignRight){
+        qreal w=boundingRect().width();
+        offset+=QPointF(-w,0);
+    }
+    if(m_alignment & Qt::AlignHCenter){
+        qreal w=boundingRect().width()/2;
+        offset+=QPointF(-w,0);
+    }
+    if(m_alignment & Qt::AlignBottom){
+        qreal h=boundingRect().height();
+        offset+=QPointF(0,h);
+    }
+    if(m_alignment & Qt::AlignVCenter){
+        qreal h=boundingRect().height()/2;
+        offset+=QPointF(0,h);
+    }
+
+    setPos(pt+offset);
+}
+
+void DiagramTextItem::updateGeometry(int, int, int)
 {
     updateGeometry();
 }
 
 void DiagramTextItem::updateGeometry()
 {
-    if(m_inUpdate) return;
-    m_inUpdate=true;
-
     setTextWidth(-1);
     qreal w=document()->idealWidth();
     setTextWidth(w);
     setAlignment(m_alignment);
     QPointF topRight = boundingRect().topRight();
-    qDebug()<<m_topRightPrev<<topRight;
     if (m_alignment & Qt::AlignRight)
     {
         setPos(pos() + (m_topRightPrev - topRight));
     }
-    m_inUpdate=false;
     m_topRightPrev=topRight;
 }
 
