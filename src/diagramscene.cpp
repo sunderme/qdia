@@ -964,7 +964,9 @@ bool DiagramScene::load_json(QFile *file)
             break;
         case QGraphicsItem::UserType+3:
             textItem = new DiagramTextItem(json);
-            textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+            textItem->setTextInteractionFlags(Qt::NoTextInteraction);
+            textItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+            textItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
             connect(textItem, &DiagramTextItem::lostFocus,
                     this, &DiagramScene::editorLostFocus);
             connect(textItem, &DiagramTextItem::receivedFocus,

@@ -97,7 +97,6 @@ protected:
 
 private:
     QPointF m_anchorPoint;
-    bool m_adapt;
     Qt::Alignment m_alignment;
 };
 

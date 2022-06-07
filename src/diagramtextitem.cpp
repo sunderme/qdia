@@ -77,7 +77,6 @@ DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
     setPos(textItem.pos());
-    m_adapt=false;
 
     updateGeometry();
     connect(document(), SIGNAL(contentsChanged()),
@@ -89,14 +88,15 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
     QPointF p;
     p.setX(json["x"].toDouble());
     p.setY(json["y"].toDouble());
-    setPos(p);
-    setZValue(json["z"].toDouble());
+
     QColor color;
     color.setNamedColor(json["pen"].toString());
     color.setAlpha(json["pen_alpha"].toInt());
     setDefaultTextColor(color);
     setHtml(json["text"].toString());
     m_alignment=static_cast<Qt::Alignment>(json["alignment"].toInt());
+    setCorrectedPos(p);
+    setZValue(json["z"].toDouble());
 
     qreal m11=json["m11"].toDouble();
     qreal m12=json["m12"].toDouble();
@@ -177,7 +177,7 @@ DiagramTextItem* DiagramTextItem::copy()
  */
 void DiagramTextItem::write(QJsonObject &json)
 {
-    QPointF p=pos();
+    QPointF p=m_anchorPoint;
     json["x"]=p.x();
     json["y"]=p.y();
     json["z"]=zValue();
