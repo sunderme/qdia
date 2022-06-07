@@ -16,15 +16,15 @@ public:
     DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu);
     DiagramDrawItem(const DiagramDrawItem& diagram);//copy constructor
 
-    DiagramItem* copy();
-    void write(QJsonObject &json);
+    DiagramItem* copy() override;
+    void write(QJsonObject &json) override;
 
     DiagramType diagramType() const
         { return myDiagramType; }
     QPainterPath path() const
         { return mPainterPath; }
     QPixmap image() const;
-    int type() const
+    int type() const  override
         { return Type;}
 
     void setPos2(qreal x,qreal y);
@@ -40,18 +40,17 @@ public:
     qreal getRadius()
         { return myRadius; }
 
-
 protected:
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     QPainterPath createPath();
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-    QPainterPath shape() const;
-    QRectF boundingRect() const;
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *e);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *e);
-    void mousePressEvent(QGraphicsSceneMouseEvent *e);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
+    QPainterPath shape() const override;
+    QRectF boundingRect() const override;
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *e) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *e) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *e) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *e) override;
     bool hasClickedOn(QPointF press_point, QPointF point) const ;
     QPointF onGrid(QPointF pos);
     void mySetDimension(QPointF newPos);

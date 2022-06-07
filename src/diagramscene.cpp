@@ -308,6 +308,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         textItem->setZValue(1000.0);
         connect(textItem, &DiagramTextItem::lostFocus,
                 this, &DiagramScene::editorLostFocus);
+        connect(textItem, &DiagramTextItem::receivedFocus,
+                this, &DiagramScene::editorReceivedFocus);
         connect(textItem, &DiagramTextItem::selectedChange,
                 this, &DiagramScene::itemSelected);
         addItem(textItem);
@@ -598,7 +600,43 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
         insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
         insertedPathItem->setEnabled(false);
         insertedPathItem=nullptr;
+        mouseEvent->accept();
         break;
+    case MoveItem:
+        if(selectedItems().count()==1){
+            QGraphicsItem *item=selectedItems().first();
+            if(item->type()==QGraphicsItem::UserType+16){
+                if(item->childItems().count()==1){
+                    // already has text item
+                    textItem=qgraphicsitem_cast<DiagramTextItem *>(item->childItems().first());
+                    textItem->setSelected(true);
+                    textItem->setFocus();
+                }else{
+                    // draw item, add text in center
+                    textItem = new DiagramTextItem();
+                    textItem->setFont(myFont);
+                    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+                    textItem->setZValue(1000.0);
+                    connect(textItem, &DiagramTextItem::lostFocus,
+                            this, &DiagramScene::editorLostFocus);
+                    connect(textItem, &DiagramTextItem::receivedFocus,
+                            this, &DiagramScene::editorReceivedFocus);
+                    connect(textItem, &DiagramTextItem::selectedChange,
+                            this, &DiagramScene::itemSelected);
+                    //addItem(textItem);
+                    textItem->setParentItem(item);
+                    textItem->setDefaultTextColor(myTextColor);
+                    textItem->setPos(item->boundingRect().center());
+                    textItem->setSelected(true);
+                    textItem->setFocus();
+
+                    emit textInserted(textItem);
+                }
+                mouseEvent->accept();
+                break;
+            }
+        }
+        [[fallthrough]];
     default:
         QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
     }
@@ -894,12 +932,12 @@ bool DiagramScene::load_json(QFile *file)
         case QGraphicsItem::UserType+3:
             textItem = new DiagramTextItem(json);
             textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-            connect(textItem, SIGNAL(lostFocus(DiagramTextItem *)),
-                    this, SLOT(editorLostFocus(DiagramTextItem *)));
-            connect(textItem, SIGNAL(receivedFocus(DiagramTextItem *)),
-                    this, SLOT(editorReceivedFocus(DiagramTextItem *)));
-            connect(textItem, SIGNAL(selectedChange(QGraphicsItem *)),
-                    this, SIGNAL(itemSelected(QGraphicsItem *)));
+            connect(textItem, &DiagramTextItem::lostFocus,
+                    this, &DiagramScene::editorLostFocus);
+            connect(textItem, &DiagramTextItem::receivedFocus,
+                    this, &DiagramScene::editorReceivedFocus);
+            connect(textItem, &DiagramTextItem::selectedChange,
+                    this, &DiagramScene::itemSelected);
             addItem(textItem);
             break;
         default:

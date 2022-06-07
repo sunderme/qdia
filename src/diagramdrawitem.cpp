@@ -404,5 +404,5 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
         e->setAccepted(true);
     }
     else
-    DiagramItem::mouseMoveEvent(e);
+        DiagramItem::mouseMoveEvent(e);
 }
