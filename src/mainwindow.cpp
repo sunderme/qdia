@@ -38,6 +38,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     // read config
     QSettings settings("QDia","QDia");
     m_recentFiles=settings.value("recentFiles").toStringList();
+    QString fontName=settings.value("font").toString();
+    int fontSize=settings.value("fontsize").toInt();
     // setup GUI
     createActions();
     createToolBox();
@@ -80,6 +82,10 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     setCentralWidget(widget);
     setUnifiedTitleAndToolBarOnMac(true);
 
+    // update font combo
+    fontCombo->setCurrentFont(QFont(fontName));
+    fontSizeCombo->setCurrentText(QString("%1").arg(fontSize));
+
     // restore geometry
     if(settings.contains("geometry")){
         restoreGeometry(settings.value("geometry").toByteArray());
@@ -103,6 +109,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     settings.setValue("geometry", saveGeometry());
     settings.setValue("windowState", saveState());
     settings.setValue("recentFiles",m_recentFiles);
+    settings.setValue("font",fontCombo->currentFont().toString());
+    settings.setValue("fontsize",fontSizeCombo->currentText().toInt());
     event->accept();
 }
 
