@@ -76,6 +76,8 @@ public:
     Qt::Alignment alignment() const;
 
     void setCorrectedPos(QPointF pt);
+    QPointF anchorPoint() const;
+    QPointF calcOffset() const;
 
     int type() const override { return Type; }
 
@@ -93,8 +95,6 @@ protected:
     void focusOutEvent(QFocusEvent *event) override;
     void focusInEvent(QFocusEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
-
-    QPointF calcOffset() const;
 
 private:
     QPointF m_anchorPoint;

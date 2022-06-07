@@ -221,6 +221,14 @@ void DiagramTextItem::setCorrectedPos(QPointF pt)
     QPointF offset=calcOffset();
     setPos(pt+offset);
 }
+/*!
+ * \brief return anchor point
+ * \return
+ */
+QPointF DiagramTextItem::anchorPoint() const
+{
+    return m_anchorPoint;
+}
 
 void DiagramTextItem::updateGeometry(int, int, int)
 {

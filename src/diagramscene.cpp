@@ -684,14 +684,16 @@ void DiagramScene::checkOnGrid()
             qreal dx = qRound(centerPoint.x()/10)*10.0 - centerPoint.x();
             qreal dy = qRound(centerPoint.y()/10)*10.0 - centerPoint.y();
             item->moveBy(-dx,-dy);*/
-            qreal x = qRound(item->x()/10)*10.0;
-            qreal y = qRound(item->y()/10)*10.0;
-            item->setPos(x,y);
+            DiagramTextItem *textItem=qgraphicsitem_cast<DiagramTextItem *>(item);
+            QPointF pt=item->pos()-textItem->calcOffset();
+            qreal x = qRound(pt.x()/myGrid)*myGrid;
+            qreal y = qRound(pt.y()/myGrid)*myGrid;
+            textItem->setCorrectedPos(QPointF(x,y));
         }
         else
         {
-            qreal x = qRound(item->x()/10)*10.0;
-            qreal y = qRound(item->y()/10)*10.0;
+            qreal x = qRound(item->x()/myGrid)*myGrid;
+            qreal y = qRound(item->y()/myGrid)*myGrid;
             item->setPos(x,y);
         }
     }
