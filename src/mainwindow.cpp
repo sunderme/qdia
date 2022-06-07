@@ -535,6 +535,7 @@ void MainWindow::createActions()
     groupAction->setStatusTip(tr("group Items"));
     connect(groupAction, SIGNAL(triggered()),
             this, SLOT(groupItems()));
+    listOfActions.append(groupAction);
 
     ungroupAction = new QAction(QIcon(":/images/object-ungroup.svg"),
                                 tr("&ungroup Item"), this);
@@ -542,16 +543,19 @@ void MainWindow::createActions()
     ungroupAction->setStatusTip(tr("ungroup Items"));
     connect(ungroupAction, SIGNAL(triggered()),
             this, SLOT(ungroupItems()));
+    listOfActions.append(ungroupAction);
 
     deleteAction = new QAction(tr("&Delete Item"), this);
     deleteAction->setShortcut(tr("Delete"));
     deleteAction->setStatusTip(tr("Delete item from diagram"));
     connect(deleteAction, &QAction::triggered, this, &MainWindow::deleteItem);
+    listOfActions.append(deleteAction);
 
     exitAction = new QAction(tr("E&xit"), this);
     exitAction->setShortcuts(QKeySequence::Quit);
     exitAction->setStatusTip(tr("Quit Scenediagram example"));
     connect(exitAction, &QAction::triggered, this, &QWidget::close);
+    listOfActions.append(exitAction);
 
     boldAction = new QAction(tr("Bold"), this);
     boldAction->setCheckable(true);
@@ -629,14 +633,17 @@ void MainWindow::createActions()
     escShortcut = new QShortcut(QKeySequence(Qt::Key_Escape),
                                 this);
     connect(escShortcut,&QShortcut::activated,this,&MainWindow::abort);
+    listOfShortcuts.append(escShortcut);
 
     dotShortcut = new QShortcut(QKeySequence("."),
                                 this);
     connect(dotShortcut,&QShortcut::activated,this,&MainWindow::insertDot);
+    listOfShortcuts.append(dotShortcut);
 
     wireShortcut = new QShortcut(QKeySequence("w"),
                                 this);
     connect(wireShortcut,&QShortcut::activated,this,&MainWindow::switchToWire);
+    listOfShortcuts.append(wireShortcut);
 
     // Zoom in/out
     zoomInAction = new QAction(QIcon(":/images/zoomin.svg"),tr("Zoom &in"), this);
@@ -649,6 +656,7 @@ void MainWindow::createActions()
     zoomOutAction->setShortcut(tr("Ctrl+z"));
     connect(zoomOutAction, &QAction::triggered,
             this, &MainWindow::zoomOut);
+    listOfActions.append(zoomOutAction);
 
     zoomAction = new QAction(QIcon(":/images/zoom.svg"),tr("&Zoom area"), this);
     zoomAction->setShortcut(tr("z"));
@@ -666,42 +674,50 @@ void MainWindow::createActions()
     finerGridAction->setShortcut(tr("+"));
     connect(finerGridAction, &QAction::triggered,
             this, &MainWindow::changeGridFiner);
+    listOfActions.append(finerGridAction);
 
     coarserGridAction = new QAction(tr("&Coarser Grid"), this);
     coarserGridAction->setShortcut(tr("-"));
     connect(coarserGridAction, &QAction::triggered,
             this, &MainWindow::changeGridCoarser);
+    listOfActions.append(coarserGridAction);
 
     showGridAction = new QAction(QIcon(":/images/view-grid.svg"),tr("Show &Grid"), this);
     showGridAction->setCheckable(true);
     showGridAction->setChecked(configuration.showGrid);
     connect(showGridAction, &QAction::toggled,
             this, &MainWindow::toggleGrid);
+    listOfActions.append(showGridAction);
 
     loadAction = new QAction(QIcon(":/images/document-open.svg"),tr("&Open ..."), this);
     loadAction->setShortcut(tr("Ctrl+o"));
     connect(loadAction, &QAction::triggered,
             this, &MainWindow::fileOpen);
+    listOfActions.append(loadAction);
 
     saveAction = new QAction(QIcon(":/images/document-save.svg"),tr("&Save ..."), this);
     saveAction->setShortcut(tr("Ctrl+s"));
     connect(saveAction, &QAction::triggered,
             this, &MainWindow::fileSave);
+    listOfActions.append(saveAction);
 
     saveAsAction = new QAction(QIcon(":/images/document-save-as.svg"),tr("Save &As ..."), this);
     saveAsAction->setShortcut(tr("Ctrl+s"));
     connect(saveAsAction, &QAction::triggered,
             this, &MainWindow::fileSaveAs);
+    listOfActions.append(saveAsAction);
 
     copyToClipboardAction=new QAction(tr("&Copy to clipboard"), this);
     copyToClipboardAction->setShortcut(tr("Ctrl+c"));
     connect(copyToClipboardAction,&QAction::triggered,
             this, &MainWindow::copyToClipboard);
+    listOfActions.append(copyToClipboardAction);
 
     pasteFromClipboardAction=new QAction(tr("&Paste from clipboard"), this);
     pasteFromClipboardAction->setShortcut(tr("Ctrl+v"));
     connect(pasteFromClipboardAction,&QAction::triggered,
             this, &MainWindow::pasteFromClipboard);
+    listOfActions.append(pasteFromClipboardAction);
 }
 
 void MainWindow::createMenus()

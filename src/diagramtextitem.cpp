@@ -85,6 +85,9 @@ DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
 
 DiagramTextItem::DiagramTextItem(const QJsonObject &json)
 {
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
+
     QPointF p;
     p.setX(json["x"].toDouble());
     p.setY(json["y"].toDouble());

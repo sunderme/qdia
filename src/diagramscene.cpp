@@ -953,20 +953,14 @@ bool DiagramScene::load_json(QFile *file)
         case QGraphicsItem::UserType+6:
             insertedPathItem = new DiagramPathItem(json,myItemMenu);
             addItem(insertedPathItem);
-            insertedPathItem->setFlag(QGraphicsItem::ItemIsMovable, true);
-            insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
             break;
         case QGraphicsItem::UserType+7:
             insertedSplineItem = new DiagramSplineItem(json,myItemMenu);
             addItem(insertedSplineItem);
-            insertedSplineItem->setFlag(QGraphicsItem::ItemIsMovable, true);
-            insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
             break;
         case QGraphicsItem::UserType+3:
             textItem = new DiagramTextItem(json);
-            textItem->setTextInteractionFlags(Qt::NoTextInteraction);
-            textItem->setFlag(QGraphicsItem::ItemIsMovable, true);
-            textItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
             connect(textItem, &DiagramTextItem::lostFocus,
                     this, &DiagramScene::editorLostFocus);
             connect(textItem, &DiagramTextItem::receivedFocus,
