@@ -241,7 +241,11 @@ void DiagramTextItem::updateGeometry(int, int, int)
 {
     updateGeometry();
 }
-
+/*!
+ * \brief update Geometry when text is changed
+ * Necessary to keep alignment
+ * item position needs to be updated depending on text width/height
+ */
 void DiagramTextItem::updateGeometry()
 {
     if(m_updateGeometry) return;

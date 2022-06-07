@@ -211,6 +211,7 @@ void DiagramScene::editorLostFocus(DiagramTextItem *item)
         removeItem(item);
         item->deleteLater();
     }
+    emit editorHasLostFocus();
 }
 void DiagramScene::wheelEvent(QGraphicsSceneWheelEvent *mouseEvent)
 {
@@ -676,14 +677,8 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 void DiagramScene::checkOnGrid()
 {
     foreach (QGraphicsItem *item, selectedItems()) {
-
+        if(item->parentItem()) continue; // don't change elements which are bound to other items, e.g. text for rectangle
         if(item->type()==DiagramTextItem::Type){
-            // not item position but center position needs to be on grid
-            /*QRectF rect=item->sceneBoundingRect();
-            QPointF centerPoint=rect.center();
-            qreal dx = qRound(centerPoint.x()/10)*10.0 - centerPoint.x();
-            qreal dy = qRound(centerPoint.y()/10)*10.0 - centerPoint.y();
-            item->moveBy(-dx,-dy);*/
             DiagramTextItem *textItem=qgraphicsitem_cast<DiagramTextItem *>(item);
             QPointF pt=item->pos()-textItem->calcOffset();
             qreal x = qRound(pt.x()/myGrid)*myGrid;
