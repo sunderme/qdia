@@ -62,6 +62,8 @@ DiagramTextItem::DiagramTextItem(QGraphicsItem *parent)
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
     m_alignment=Qt::AlignLeft;
+
+    m_updateGeometry=false;
     updateGeometry();
     connect(document(), SIGNAL(contentsChange(int,int,int)),
              this, SLOT(updateGeometry(int,int,int)));
@@ -78,12 +80,13 @@ DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
     setFlag(QGraphicsItem::ItemIsSelectable);
     setPos(textItem.pos());
 
+    m_updateGeometry=false;
     updateGeometry();
     connect(document(), SIGNAL(contentsChanged()),
              this, SLOT(updateGeometry()));
 }
 
-DiagramTextItem::DiagramTextItem(const QJsonObject &json)
+DiagramTextItem::DiagramTextItem(const QJsonObject &json) : QGraphicsTextItem(nullptr)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -110,6 +113,7 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
     QTransform tf(m11,m12,m21,m22,dx,dy);
     setTransform(tf);
 
+    m_updateGeometry=false;
     updateGeometry();
     connect(document(), SIGNAL(contentsChanged()),
              this, SLOT(updateGeometry()));
@@ -240,6 +244,8 @@ void DiagramTextItem::updateGeometry(int, int, int)
 
 void DiagramTextItem::updateGeometry()
 {
+    if(m_updateGeometry) return;
+    m_updateGeometry=true;
     setTextWidth(-1);
     qreal w=document()->idealWidth();
     setTextWidth(w);
@@ -247,5 +253,6 @@ void DiagramTextItem::updateGeometry()
     QPointF topRight = boundingRect().topRight();
     QPointF offset=calcOffset();
     setPos(m_anchorPoint+offset);
+    m_updateGeometry=false;
 }
 

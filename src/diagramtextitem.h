@@ -98,6 +98,7 @@ protected:
 private:
     QPointF m_anchorPoint;
     Qt::Alignment m_alignment;
+    bool m_updateGeometry;
 };
 
 #endif // DIAGRAMTEXTITEM_H
