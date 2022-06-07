@@ -634,7 +634,7 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
     case MoveItem:
         if(selectedItems().count()==1){
             QGraphicsItem *item=selectedItems().first();
-            if(item->type()==QGraphicsItem::UserType+16){
+            if(item->type()==DiagramDrawItem::Type){
                 if(item->childItems().count()==1){
                     // already has text item
                     textItem=qgraphicsitem_cast<DiagramTextItem *>(item->childItems().first());
@@ -664,6 +664,14 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
                     emit textInserted(textItem);
                 }
+                mouseEvent->accept();
+                break;
+            }
+            if(item->type()==DiagramTextItem::Type){
+                textItem=qgraphicsitem_cast<DiagramTextItem *>(item);
+                textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+                textItem->setSelected(true);
+                textItem->setFocus();
                 mouseEvent->accept();
                 break;
             }
