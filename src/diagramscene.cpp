@@ -331,6 +331,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     case InsertText:
         textItem = new DiagramTextItem();
         textItem->setFont(myFont);
+        textItem->setAlignment(m_textAlignment);
         textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
         textItem->setZValue(1000.0);
         connect(textItem, &DiagramTextItem::lostFocus,
@@ -643,6 +644,7 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     // draw item, add text in center
                     textItem = new DiagramTextItem();
                     textItem->setFont(myFont);
+                    textItem->setAlignment(m_textAlignment);
                     textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
                     textItem->setZValue(1000.0);
                     connect(textItem, &DiagramTextItem::lostFocus,
