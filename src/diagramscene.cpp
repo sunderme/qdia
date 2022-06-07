@@ -609,6 +609,7 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 if(item->childItems().count()==1){
                     // already has text item
                     textItem=qgraphicsitem_cast<DiagramTextItem *>(item->childItems().first());
+                    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
                     textItem->setSelected(true);
                     textItem->setFocus();
                 }else{
