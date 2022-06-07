@@ -363,6 +363,27 @@ void MainWindow::itemSelected(QGraphicsItem *item)
     boldAction->setChecked(font.weight() == QFont::Bold);
     italicAction->setChecked(font.italic());
     underlineAction->setChecked(font.underline());
+    int align=static_cast<int>(textItem->alignment());
+    if( (align & 0xf) == 0){
+        // fall back to align left
+        align|=1;
+    }
+    for(auto *bt:horzAlignGroup->buttons()){
+        auto *button=qobject_cast<QToolButton*>(bt);
+        if(align & horzAlignGroup->id(button)){
+            button->setChecked(true);
+        }
+    }
+    if( (align & 0xf0) == 0){
+        // fall back to align top
+        align|=0x20;
+    }
+    for(auto *bt:vertAlignGroup->buttons()){
+        auto *button=qobject_cast<QToolButton*>(bt);
+        if(align & vertAlignGroup->id(button)){
+            button->setChecked(true);
+        }
+    }
 }
 
 void MainWindow::about()

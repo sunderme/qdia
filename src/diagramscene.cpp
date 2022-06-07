@@ -941,27 +941,27 @@ bool DiagramScene::load_json(QFile *file)
         QJsonObject json=array[i].toObject();
         int mDiaType=json["type"].toInt();
         switch (mDiaType) {
-        case QGraphicsItem::UserType+15:
+        case DiagramItem::Type:
             insertedItem = new DiagramItem(json,myItemMenu);
             addItem(insertedItem);
             break;
-        case QGraphicsItem::UserType+32:
+        case DiagramElement::Type:
             insertedItem = new DiagramElement(json,myItemMenu);
             addItem(insertedItem);
             break;
-        case QGraphicsItem::UserType+16:
+        case DiagramDrawItem::Type:
             insertedDrawItem = new DiagramDrawItem(json,myItemMenu);
             addItem(insertedDrawItem);
             break;
-        case QGraphicsItem::UserType+6:
+        case DiagramPathItem::Type:
             insertedPathItem = new DiagramPathItem(json,myItemMenu);
             addItem(insertedPathItem);
             break;
-        case QGraphicsItem::UserType+7:
+        case DiagramSplineItem::Type:
             insertedSplineItem = new DiagramSplineItem(json,myItemMenu);
             addItem(insertedSplineItem);
             break;
-        case QGraphicsItem::UserType+3:
+        case DiagramTextItem::Type:
             textItem = new DiagramTextItem(json);
             textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
             connect(textItem, &DiagramTextItem::lostFocus,
