@@ -1319,7 +1319,6 @@ void MainWindow::setGrid()
         }
         scene->setGridScale(k);
         view->resetCachedContent();
-        //scene->update(scene->sceneRect());
     }
 }
 
