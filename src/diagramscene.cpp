@@ -1017,8 +1017,10 @@ void DiagramScene::drawBackground(QPainter *p, const QRectF &r) {
         // to ease transition from qelec
         int xGrid=myGridScale * (int) myGrid;
         int yGrid=myGridScale * (int) myGrid;
-        // dessine les points de la grille
-        p -> setPen(Qt::black);
+        QPen pen(Qt::black);
+        pen.setCosmetic(true);
+        pen.setWidth(2.0);
+        p -> setPen(pen);
         p -> setBrush(Qt::NoBrush);
         qreal limite_x = r.x() + r.width();
         qreal limite_y = r.y() + r.height();
