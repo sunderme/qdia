@@ -33,7 +33,7 @@ public:
 
     QPixmap image() const;
     QPixmap icon();
-    QPainterPath getPath() const;
+    QPainterPath getPath();
     QVector<QPointF> getPoints()
         { return myPoints; }
     int type() const
@@ -51,10 +51,11 @@ protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     void createPath();
+    void drawArrows(QPainter *painter) const;
     QPainterPath createArrow(QPointF p1, QPointF p2) const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     QRectF boundingRect() const;
-    QPainterPath shape() const;
+    QPainterPath shape();
     bool hasClickedOn(QPointF press_point, QPointF point) const;
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
@@ -70,6 +71,7 @@ private:
     qreal len,breite;
     int mySelPoint,myHoverPoint;
     qreal myHandlerWidth;
+    QList<QPainterPath> m_arrows;
 
 };
 

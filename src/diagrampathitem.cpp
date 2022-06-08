@@ -85,25 +85,36 @@ void DiagramPathItem::createPath()
     QPainterPath myPath=getPath();
     if(myPath.elementCount()>0) setPath(myPath);
 }
-
-QPainterPath DiagramPathItem::getPath() const
+/*!
+ * \brief draw the actual arrows (if necessary)
+ * Separated from path drawing as it needs to have a filling brush
+ * \param painter
+ */
+void DiagramPathItem::drawArrows(QPainter *painter) const
 {
+    for(const QPainterPath &path:m_arrows){
+        painter->drawPath(path);
+    }
+}
+
+QPainterPath DiagramPathItem::getPath()
+{
+    m_arrows.clear();
     QPainterPath myPath;
     QPointF p1,p2;
     if(myPoints.size()>1)
     {
+        p2=myPoints.at(0);
+        myPath.moveTo(p2);
         for (int i = 1; i < myPoints.size(); ++i) {
-            p1=myPoints.at(i-1);
+            p1=p2;
             p2=myPoints.at(i);
             if( (i==1)&&((myDiagramType==Start) || (myDiagramType==StartEnd)) )
             {
                 QPainterPath arrow = createArrow(p2,p1);
-                myPath.addPath(arrow);
+                m_arrows.append(arrow);
             }
-
-            myPath.moveTo(p2);
-            myPath.lineTo(p1);
-            myPath.closeSubpath();
+            myPath.lineTo(p2);
         }
         if((myDiagramType==End) or (myDiagramType==StartEnd)){
             // eliminate effect of several points on the same position
@@ -113,7 +124,7 @@ QPainterPath DiagramPathItem::getPath() const
                 p1=myPoints.at(myPoints.size()-k);
             }
             QPainterPath arrow = createArrow(p1,p2);
-            myPath.addPath(arrow);
+            m_arrows.append(arrow);
         }
     }
     return myPath;
@@ -298,8 +309,10 @@ void DiagramPathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
            QWidget *)
 {
      painter->setPen(pen());
-     painter->setBrush(brush());
+     painter->setBrush(Qt::NoBrush);
      painter->drawPath(getPath());
+     painter->setBrush(brush());
+     drawArrows(painter);
      // selected
      if(isSelected()){
          QBrush selBrush=QBrush(Qt::cyan);
@@ -358,7 +371,7 @@ void DiagramPathItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
     }
 }
 
-QPainterPath DiagramPathItem::shape() const {
+QPainterPath DiagramPathItem::shape() {
     QPainterPath myPath = getPath();
     if(isSelected()){
              foreach (QPointF point, myPoints)
