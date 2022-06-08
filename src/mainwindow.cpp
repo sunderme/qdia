@@ -231,6 +231,16 @@ void MainWindow::sendToBack()
     selectedItem->setZValue(zValue);
     scene->setCursorVisible(true);
 }
+/*!
+ * \brief select all item
+ * ctrl+a
+ */
+void MainWindow::selectAll()
+{
+    for(auto *item:scene->items()){
+        item->setSelected(true);
+    }
+}
 
 void MainWindow::rotateRight()
 {
@@ -571,6 +581,11 @@ void MainWindow::createActions()
     connect(exitAction, &QAction::triggered, this, &QWidget::close);
     listOfActions.append(exitAction);
 
+    selectAllAction = new QAction(tr("Select &All"), this);
+    selectAllAction->setShortcuts(QKeySequence::SelectAll);
+    connect(selectAllAction, &QAction::triggered, this, &MainWindow::selectAll);
+    listOfActions.append(selectAllAction);
+
     boldAction = new QAction(tr("Bold"), this);
     boldAction->setCheckable(true);
     QPixmap pixmap(":/images/bold.svg");
@@ -756,6 +771,8 @@ void MainWindow::createMenus()
     itemMenu->addSeparator();
     itemMenu->addAction(toFrontAction);
     itemMenu->addAction(sendBackAction);
+    itemMenu->addSeparator();
+    itemMenu->addAction(selectAllAction);
     itemMenu->addSeparator();
     itemMenu->addAction(rotateRightAction);
     itemMenu->addAction(rotateLeftAction);

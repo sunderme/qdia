@@ -93,6 +93,7 @@ private slots:
    void vertAlignGroupClicked(QAbstractButton *button);
    void bringToFront();
    void sendToBack();
+   void selectAll();
    void rotateRight();
    void rotateLeft();
    void flipX();
@@ -173,6 +174,7 @@ private:
 
    QAction *toFrontAction;
    QAction *sendBackAction;
+   QAction *selectAllAction;
    QAction *aboutAction;
    QAction *rotateRightAction;
    QAction *rotateLeftAction;
