@@ -276,21 +276,16 @@ void MainWindow::flipY()
     transformSelected(QTransform(1,0,0,-1,0,0),scene->activeItems());
 }
 
-//! [9]
 void MainWindow::currentFontChanged(const QFont &)
 {
     handleFontChange();
 }
-//! [9]
 
-//! [10]
 void MainWindow::fontSizeChanged(const QString &)
 {
     handleFontChange();
 }
-//! [10]
 
-//! [11]
 void MainWindow::sceneScaleChanged(const QString &scale)
 {
     double newScale = scale.left(scale.indexOf(tr("%"))).toDouble() / 100.0;
@@ -299,9 +294,7 @@ void MainWindow::sceneScaleChanged(const QString &scale)
     view->translate(oldMatrix.dx(), oldMatrix.dy());
     view->scale(newScale, newScale);
 }
-//! [11]
 
-//! [12]
 void MainWindow::textColorChanged()
 {
     textAction = qobject_cast<QAction *>(sender());
@@ -310,9 +303,7 @@ void MainWindow::textColorChanged()
                                      qvariant_cast<QColor>(textAction->data())));
     textButtonTriggered();
 }
-//! [12]
 
-//! [13]
 void MainWindow::itemColorChanged()
 {
     fillAction = qobject_cast<QAction *>(sender());
@@ -1502,6 +1493,10 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
         if(item->childItems().isEmpty()){
             QTransform trans=item->transform();
             QPointF shift=item->pos()-pt;
+            if(items.count()==1) {
+                shift.setX(0);
+                shift.setY(0);
+            }
             item->setTransform(trans*QTransform(1,0,0,1,shift.x(),shift.y())*transform*QTransform(1,0,0,1,-shift.x(),-shift.y()),false);
         }else{
             transformSelected(transform,item->childItems());
