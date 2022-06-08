@@ -1271,7 +1271,9 @@ void MainWindow::zoomFit()
 void MainWindow::changeGridFiner()
 {
     qreal g=scene->grid();
-    scene->setGrid(g/2);
+    g/=2.;
+    if(g<1) return; // limit grid to minimum of 1
+    scene->setGrid(g);
     setGrid();
 }
 /*!
@@ -1280,7 +1282,9 @@ void MainWindow::changeGridFiner()
 void MainWindow::changeGridCoarser()
 {
     qreal g=scene->grid();
-    scene->setGrid(g*2);
+    g*=2.;
+    if(g>200.) return; // limit grid to 160
+    scene->setGrid(g);
     setGrid();
 }
 /*!
@@ -1314,7 +1318,8 @@ void MainWindow::setGrid()
             k=k*2;
         }
         scene->setGridScale(k);
-        scene->update();
+        view->resetCachedContent();
+        //scene->update(scene->sceneRect());
     }
 }
 
