@@ -116,7 +116,6 @@ private slots:
    void fillButtonTriggered();
    void lineButtonTriggered();
    void handleFontChange();
-   void handleAlignChange();
    void itemSelected(QGraphicsItem *item);
    void lineArrowButtonTriggered();
    void textAddButtonTriggered();
@@ -229,8 +228,6 @@ private:
    QAction *boldAction;
    QAction *underlineAction;
    QAction *italicAction;
-   QAction *alAction,*acAction,*arAction;
-   QAction *abAction,*amAction,*atAction;
    QAction *textAction;
    QAction *fillAction;
    QAction *lineAction;

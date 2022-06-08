@@ -344,13 +344,6 @@ void MainWindow::handleFontChange()
 
     scene->setFont(font);
 }
-/*!
- * \brief set text alignment
- */
-void MainWindow::handleAlignChange()
-{
-    scene->setTextAlignment(Qt::AlignRight);
-}
 
 void MainWindow::itemSelected(QGraphicsItem *item)
 {
@@ -594,19 +587,6 @@ void MainWindow::createActions()
     underlineAction->setCheckable(true);
     underlineAction->setShortcut(tr("Ctrl+U"));
     connect(underlineAction, &QAction::triggered, this, &MainWindow::handleFontChange);
-
-    alAction = new QAction(QIcon(":/images/format-justify-left.svg"),tr("Align &Left"), this);
-    connect(alAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
-    acAction = new QAction(QIcon(":/images/format-justify-center.svg"),tr("Align &Center"), this);
-    connect(acAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
-    arAction = new QAction(QIcon(":/images/format-justify-right.svg"),tr("Align &Right"), this);
-    connect(arAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
-    abAction = new QAction(QIcon(":/images/format-align-vertical-bottom.svg"),tr("Align &Bottom"), this);
-    connect(alAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
-    amAction = new QAction(QIcon(":/images/format-align-vertical-center.svg"),tr("Align &Middle (vertical)"), this);
-    connect(alAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
-    atAction = new QAction(QIcon(":/images/format-align-vertical-top.svg"),tr("Align &Top"), this);
-    connect(alAction, &QAction::triggered, this, &MainWindow::handleAlignChange);
 
     aboutAction = new QAction(tr("A&bout"), this);
     aboutAction->setShortcut(tr("F1"));
