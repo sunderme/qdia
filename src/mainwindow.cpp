@@ -63,6 +63,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
             this, &MainWindow::doZoomRect);
     connect(scene, &DiagramScene::zoom,
             this, &MainWindow::zoom);
+    connect(scene, &DiagramScene::zoomPointer,
+            this, &MainWindow::zoomPointer);
     connect(scene, &DiagramScene::abortSignal,
             this, &MainWindow::abortFromScene);
     createToolbars();
@@ -1219,12 +1221,12 @@ void MainWindow::exportImage()
 
 void MainWindow::zoomIn()
 {
-    zoom(2.0);
+    zoom(1.4);
 }
 
 void MainWindow::zoomOut()
 {
-    zoom(0.5);
+    zoom(0.7);
 }
 
 void MainWindow::zoom(const qreal factor)
@@ -1241,6 +1243,22 @@ void MainWindow::zoom(const qreal factor)
         view->scale(newScale, newScale);
 
         setGrid();
+    }
+}
+/*!
+ * \brief zoom with keeping the pointer at the same position
+ * \param factor
+ * \param pointer
+ */
+void MainWindow::zoomPointer(const qreal factor, QPointF pointer)
+{
+    QRectF r=view->mapToScene(view->viewport()->rect()).boundingRect();
+    if(r.contains(pointer)){
+        r=r.translated(-pointer);
+        r.setRect(r.x()/factor,r.y()/factor,r.width()/factor,r.height()/factor);
+        r.translate(pointer);
+
+        doZoomRect(r.topLeft(),r.bottomRight());
     }
 }
 

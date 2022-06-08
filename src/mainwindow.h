@@ -127,6 +127,7 @@ private slots:
    void zoomIn();
    void zoomOut();
    void zoom(const qreal factor);
+   void zoomPointer(const qreal factor,QPointF pointer);
    void zoomRect();
    void doZoomRect(QPointF p1,QPointF p2);
    void zoomFit();

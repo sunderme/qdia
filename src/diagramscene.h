@@ -145,6 +145,7 @@ signals:
     void editorHasReceivedFocus();
     void zoomRect(QPointF p1,QPointF p2);
     void zoom(const qreal factor);
+    void zoomPointer(const qreal factor,QPointF pointer);
     void forceCursor(QPointF p);
     void abortSignal();
 

@@ -224,7 +224,7 @@ void DiagramScene::wheelEvent(QGraphicsSceneWheelEvent *mouseEvent)
         else {
             factor = -100.0/i; // negative Richtung ...
         }
-        emit zoom(factor);
+        emit zoomPointer(factor,mouseEvent->scenePos());
         mouseEvent->setAccepted(true);
         return;
     }
