@@ -228,7 +228,7 @@ void DiagramScene::wheelEvent(QGraphicsSceneWheelEvent *mouseEvent)
         mouseEvent->setAccepted(true);
         return;
     }
-    QGraphicsScene::wheelEvent(mouseEvent);
+    mouseEvent->ignore();
 }
 
 void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
