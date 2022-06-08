@@ -262,13 +262,22 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         case InsertElement:
             if (insertedItem){
                 insertedItem=nullptr;
-                mouseEvent->setAccepted(true);
                 myMode=MoveItem;
                 mouseEvent->accept();
                 // switch toolbar !!
                 emit abortSignal();
             }
             break;
+        case InsertDrawItem:
+            if(insertedDrawItem){
+                insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
+                insertedDrawItem->setEnabled(false);
+                insertedDrawItem = nullptr;
+                myMode=MoveItem;
+                mouseEvent->accept();
+                // switch toolbar !!
+                emit abortSignal();
+            }
         default:
             ;
         }
@@ -364,7 +373,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         {
             insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
             insertedDrawItem->setEnabled(false);
-            insertedDrawItem = 0;
+            insertedDrawItem = nullptr;
         }
 
         break;
