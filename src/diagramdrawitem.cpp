@@ -401,6 +401,14 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
         }
         mPainterPath=createPath();
         setPath(mPainterPath);
+        // update text position if present
+        // currently only center
+        for(auto *i:childItems()){
+            DiagramTextItem *textItem=qgraphicsitem_cast<DiagramTextItem*>(i);
+            if(textItem){
+                textItem->setCorrectedPos(boundingRect().center());
+            }
+        }
         e->setAccepted(true);
     }
     else
