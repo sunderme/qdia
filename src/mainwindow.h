@@ -54,7 +54,7 @@
 #include "diagramitem.h"
 #include "diagramdrawitem.h"
 #include "diagrampathitem.h"
-
+#include "ColorPickerToolButton.h"
 #include <QMainWindow>
 #include <QShortcut>
 
@@ -109,9 +109,9 @@ private slots:
    void currentFontChanged(const QFont &font);
    void fontSizeChanged(const QString &size);
    void sceneScaleChanged(const QString &scale);
-   void textColorChanged();
-   void itemColorChanged();
-   void lineColorChanged();
+   void textColorChanged(QColor color);
+   void itemColorChanged(QColor color);
+   void lineColorChanged(QColor color);
    void lineArrowChanged();
    void textButtonTriggered();
    void fillButtonTriggered();
@@ -223,17 +223,15 @@ private:
    QButtonGroup *pointerTypeGroup;
    QButtonGroup *horzAlignGroup,*vertAlignGroup;
    QAbstractButton *currentToolButton;
-   QToolButton *fontColorToolButton;
-   QToolButton *fillColorToolButton;
-   QToolButton *lineColorToolButton;
+   ColorPickerToolButton *fontColorToolButton;
+   ColorPickerToolButton *fillColorToolButton;
+   ColorPickerToolButton *lineColorToolButton;
    QToolButton *pointerButton;
    QToolButton *linePointerButton;
    QAction *boldAction;
    QAction *underlineAction;
    QAction *italicAction;
-   QAction *textAction;
-   QAction *fillAction;
-   QAction *lineAction;
+
    QAction *arrowAction;
 
    QAction *loadAction;
@@ -246,6 +244,8 @@ private:
    QList<QShortcut*> listOfShortcuts;
 
    bool myShowGrid; // Grid visible ?
+
+   QColor m_fillColor,m_lineColor,m_textColor;
 
    QString myFileName; // aktueller Filename
    QStringList m_recentFiles;

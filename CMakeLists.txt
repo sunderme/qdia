@@ -37,6 +37,8 @@ set(PROJECT_SOURCES
         src/diagramscene.cpp
         src/diagramscene.h
         src/config.h src/config.cpp
+        src/ColorPickerActionWidget.cpp src/ColorPickerActionWidget.h
+        src/ColorPickerToolButton.cpp src/ColorPickerToolButton.h
         resources/images.qrc
         resources/libs.qrc
         ${TS_FILES}

@@ -295,46 +295,46 @@ void MainWindow::sceneScaleChanged(const QString &scale)
     view->scale(newScale, newScale);
 }
 
-void MainWindow::textColorChanged()
+void MainWindow::textColorChanged(QColor color)
 {
-    textAction = qobject_cast<QAction *>(sender());
+    m_textColor=color;
     fontColorToolButton->setIcon(createColorToolButtonIcon(
                                      ":/images/textpointer.png",
-                                     qvariant_cast<QColor>(textAction->data())));
+                                     color));
     textButtonTriggered();
 }
 
-void MainWindow::itemColorChanged()
+void MainWindow::itemColorChanged(QColor color)
 {
-    fillAction = qobject_cast<QAction *>(sender());
+    m_fillColor=color;
     fillColorToolButton->setIcon(createColorToolButtonIcon(
                                      ":/images/floodfill.png",
-                                     qvariant_cast<QColor>(fillAction->data())));
+                                     color));
     fillButtonTriggered();
 }
 
-void MainWindow::lineColorChanged()
+void MainWindow::lineColorChanged(QColor color)
 {
-    lineAction = qobject_cast<QAction *>(sender());
+    m_lineColor=color;
     lineColorToolButton->setIcon(createColorToolButtonIcon(
                                      ":/images/linecolor.png",
-                                     qvariant_cast<QColor>(lineAction->data())));
+                                     color));
     lineButtonTriggered();
 }
 
 void MainWindow::textButtonTriggered()
 {
-    scene->setTextColor(qvariant_cast<QColor>(textAction->data()));
+    scene->setTextColor(m_textColor);
 }
 
 void MainWindow::fillButtonTriggered()
 {
-    scene->setItemColor(qvariant_cast<QColor>(fillAction->data()));
+    scene->setItemColor(m_fillColor);
 }
 
 void MainWindow::lineButtonTriggered()
 {
-    scene->setLineColor(qvariant_cast<QColor>(lineAction->data()));
+    scene->setLineColor(m_lineColor);
 }
 
 void MainWindow::handleFontChange()
@@ -803,28 +803,28 @@ void MainWindow::createToolbars()
     connect(fontSizeCombo, &QComboBox::currentTextChanged,
             this, &MainWindow::fontSizeChanged);
 
-    fontColorToolButton = new QToolButton;
+    fontColorToolButton = new ColorPickerToolButton;
     fontColorToolButton->setPopupMode(QToolButton::MenuButtonPopup);
-    fontColorToolButton->setMenu(createColorMenu(SLOT(textColorChanged()), Qt::black));
-    textAction = fontColorToolButton->menu()->defaultAction();
+    connect(fontColorToolButton,&ColorPickerToolButton::colorSelected,this,&MainWindow::textColorChanged);
+    m_textColor=Qt::black;
     fontColorToolButton->setIcon(createColorToolButtonIcon(":/images/textpointer.png", Qt::black));
     fontColorToolButton->setAutoFillBackground(true);
     connect(fontColorToolButton, &QAbstractButton::clicked,
             this, &MainWindow::textButtonTriggered);
 
-    fillColorToolButton = new QToolButton;
+    fillColorToolButton = new ColorPickerToolButton;
     fillColorToolButton->setPopupMode(QToolButton::MenuButtonPopup);
-    fillColorToolButton->setMenu(createColorMenu(SLOT(itemColorChanged()), Qt::white));
-    fillAction = fillColorToolButton->menu()->defaultAction();
+    connect(fillColorToolButton,&ColorPickerToolButton::colorSelected,this,&MainWindow::itemColorChanged);
+    m_fillColor=Qt::white;
     fillColorToolButton->setIcon(createColorToolButtonIcon(
                                      ":/images/format-fill-color.svg", Qt::white));
     connect(fillColorToolButton, &QAbstractButton::clicked,
             this, &MainWindow::fillButtonTriggered);
 
-    lineColorToolButton = new QToolButton;
+    lineColorToolButton = new ColorPickerToolButton;
     lineColorToolButton->setPopupMode(QToolButton::MenuButtonPopup);
-    lineColorToolButton->setMenu(createColorMenu(SLOT(lineColorChanged()), Qt::black));
-    lineAction = lineColorToolButton->menu()->defaultAction();
+    connect(lineColorToolButton,&ColorPickerToolButton::colorSelected,this,&MainWindow::lineColorChanged);
+    m_lineColor=Qt::black;
     lineColorToolButton->setIcon(createColorToolButtonIcon(
                                      ":/images/format-stroke-color.svg", Qt::black));
     connect(lineColorToolButton, &QAbstractButton::clicked,
