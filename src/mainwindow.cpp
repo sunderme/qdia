@@ -1504,9 +1504,10 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
             transform*=QTransform::fromTranslate(-transform.dx(),-transform.dy());
             item->setPos(mx,my);
             item->setTransform(transform);
-        }//else{
-        //    transformSelected(transform,item->childItems());
-        //}
+        }else{
+            // needs improvement when several elements and groups are concerned (TODO)
+            transformSelected(transform,item->childItems());
+        }
     }
 }
 
