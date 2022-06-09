@@ -910,19 +910,19 @@ bool DiagramScene::save_json(QFile *file)
         QJsonObject json;
         if(item->type()>QGraphicsItem::UserType){
             switch (item->type()) {
-            case QGraphicsItem::UserType+3:
+            case DiagramTextItem::Type:
             {
                 DiagramTextItem *mItem = dynamic_cast<DiagramTextItem *>(item);
                 mItem->write(json);
             }
                 break;
-            case QGraphicsItem::UserType+6:
+            case DiagramPathItem::Type:
             {
                 DiagramPathItem *mItem = dynamic_cast<DiagramPathItem *>(item);
                 mItem->write(json);
             }
                 break;
-            case QGraphicsItem::UserType+7:
+            case DiagramSplineItem::Type:
             {
                 DiagramSplineItem *mItem = dynamic_cast<DiagramSplineItem *>(item);
                 mItem->write(json);
@@ -1064,13 +1064,10 @@ void DiagramScene::setArrow(const int i)
     if (!selectedItems().empty()){
         foreach(QGraphicsItem* item,selectedItems()){
             switch(item->type()){
-            case QGraphicsItem::UserType+3:
-                // Textitem does not possess Linecolor !
-                break;
-            case QGraphicsItem::UserType+6:
+            case DiagramPathItem::Type:
                 qgraphicsitem_cast<DiagramPathItem*>(item)->setDiagramType(DiagramPathItem::DiagramType(myArrow));
                 break;
-            case QGraphicsItem::UserType+7:
+            case DiagramSplineItem::Type:
                 qgraphicsitem_cast<DiagramSplineItem*>(item)->setDiagramType(DiagramSplineItem::DiagramType(myArrow));
                 break;
             default:
