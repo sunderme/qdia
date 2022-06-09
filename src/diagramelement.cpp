@@ -35,6 +35,8 @@ DiagramElement::DiagramElement(const DiagramElement& diagram)
         setAcceptHoverEvents(true);
     }
     setTransform(diagram.transform());
+    setPen(diagram.pen());
+    setBrush(diagram.brush());
     setPos(diagram.pos());
 }
 
