@@ -1496,7 +1496,14 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
                 shift.setX(0);
                 shift.setY(0);
             }
-            item->setTransform(trans*QTransform(1,0,0,1,shift.x(),shift.y())*transform*QTransform(1,0,0,1,-shift.x(),-shift.y()),false); // this approach shift anchor point of item ... to be improved
+            item->setTransform(trans*QTransform(1,0,0,1,shift.x(),shift.y())*transform*QTransform(1,0,0,1,-shift.x(),-shift.y()),false);
+            // correct anchor point shift
+            QTransform transform=item->transform();
+            qreal mx=item->pos().x()+transform.dx();
+            qreal my=item->pos().y()+transform.dy();
+            transform*=QTransform::fromTranslate(-transform.dx(),-transform.dy());
+            item->setPos(mx,my);
+            item->setTransform(transform);
         }else{
             transformSelected(transform,item->childItems());
         }
