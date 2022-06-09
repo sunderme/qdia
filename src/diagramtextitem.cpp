@@ -78,7 +78,7 @@ DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
     setTransform(textItem.transform());
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
-    setPos(textItem.pos());
+    setCorrectedPos(textItem.anchorPoint());
 
     m_updateGeometry=false;
     updateGeometry();

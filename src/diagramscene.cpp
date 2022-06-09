@@ -729,11 +729,14 @@ void DiagramScene::setRouting(DiagramPathItem::routingType type)
 QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
 {
     switch(item->type()){
-    case QGraphicsItem::UserType+3:
+    case DiagramTextItem::Type:
         return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramTextItem*>(item)->copy());
         break;
-    case QGraphicsItem::UserType+6:
+    case DiagramPathItem::Type:
         return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramPathItem*>(item)->copy());
+        break;
+    case DiagramSplineItem::Type:
+        return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramSplineItem*>(item)->copy());
         break;
     case QGraphicsItemGroup::Type:
         return nullptr; // TODO: fix
