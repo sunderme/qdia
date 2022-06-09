@@ -1489,7 +1489,7 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
 
     foreach( QGraphicsItem *item, items){
         if(!item) continue;
-        if(item->childItems().isEmpty()){
+        if(item->type()!=QGraphicsItemGroup::Type){
             QTransform trans=item->transform();
             QPointF shift=item->pos()-pt;
             if(items.count()==1) {
@@ -1504,9 +1504,9 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
             transform*=QTransform::fromTranslate(-transform.dx(),-transform.dy());
             item->setPos(mx,my);
             item->setTransform(transform);
-        }else{
-            transformSelected(transform,item->childItems());
-        }
+        }//else{
+        //    transformSelected(transform,item->childItems());
+        //}
     }
 }
 
