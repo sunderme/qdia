@@ -783,6 +783,10 @@ void MainWindow::createToolbars()
     editToolBar = addToolBar(tr("Edit"));
     editToolBar->addAction(toFrontAction);
     editToolBar->addAction(sendBackAction);
+    editToolBar->addAction(rotateRightAction);
+    editToolBar->addAction(rotateLeftAction);
+    editToolBar->addAction(flipXAction);
+    editToolBar->addAction(flipYAction);
 
     fontCombo = new QFontComboBox();
     connect(fontCombo, &QFontComboBox::currentFontChanged,
@@ -811,7 +815,7 @@ void MainWindow::createToolbars()
     fillColorToolButton->setMenu(createColorMenu(SLOT(itemColorChanged()), Qt::white));
     fillAction = fillColorToolButton->menu()->defaultAction();
     fillColorToolButton->setIcon(createColorToolButtonIcon(
-                                     ":/images/floodfill.png", Qt::white));
+                                     ":/images/format-fill-color.svg", Qt::white));
     connect(fillColorToolButton, &QAbstractButton::clicked,
             this, &MainWindow::fillButtonTriggered);
 
@@ -820,7 +824,7 @@ void MainWindow::createToolbars()
     lineColorToolButton->setMenu(createColorMenu(SLOT(lineColorChanged()), Qt::black));
     lineAction = lineColorToolButton->menu()->defaultAction();
     lineColorToolButton->setIcon(createColorToolButtonIcon(
-                                     ":/images/linecolor.png", Qt::black));
+                                     ":/images/format-stroke-color.svg", Qt::black));
     connect(lineColorToolButton, &QAbstractButton::clicked,
             this, &MainWindow::lineButtonTriggered);
 
@@ -996,7 +1000,7 @@ QIcon MainWindow::createColorToolButtonIcon(const QString &imageFile, QColor col
     QPixmap image(imageFile);
     // Draw icon centred horizontally on button.
     QRect target(4, 0, 42, 43);
-    QRect source(0, 0, 42, 43);
+    QRect source=image.rect();
     painter.fillRect(QRect(0, 60, 50, 80), color);
     painter.drawPixmap(target, image, source);
 

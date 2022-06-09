@@ -24,6 +24,7 @@
 <file>images/format-justify-right.svg</file>
 <file>images/document-save-as.svg</file>
 <file>images/format-align-vertical-bottom.svg</file>
+<file>images/format-fill-color.svg</file>
 <file>images/bringtofront.svg</file>
 <file>images/document-close.svgz</file>
 <file>images/document-print.svg</file>
@@ -32,6 +33,7 @@
 <file>images/zoomin.svg</file>
 <file>images/format-justify-left.svg</file>
 <file>images/tool-pointer.svg</file>
+<file>images/format-stroke-color.svg</file>
 <file>images/italic.svg</file>
 </qresource>
 </RCC>
