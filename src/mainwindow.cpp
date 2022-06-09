@@ -1471,13 +1471,12 @@ QIcon MainWindow::createArrowIcon(const int i)
 
 QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
 {
-    QRectF result;
+    QPolygonF result;
     foreach(const QGraphicsItem *item,items){
         if(!item) continue;
-        QRectF rect=item->mapToScene(item->boundingRect()).boundingRect();
-        result=result.united(rect);
+        result.append(item->pos());
     }
-    return result;
+    return result.boundingRect();
 }
 
 void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsItem *> items, bool forceOnGrid)
@@ -1485,7 +1484,7 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
     QRectF bound = getTotalBoundary(items);
     QPointF pt=bound.center();
     if(forceOnGrid){
-        pt=scene->onGrid(pt);
+        pt=bound.bottomRight();
     }
 
     foreach( QGraphicsItem *item, items){
@@ -1497,7 +1496,7 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
                 shift.setX(0);
                 shift.setY(0);
             }
-            item->setTransform(trans*QTransform(1,0,0,1,shift.x(),shift.y())*transform*QTransform(1,0,0,1,-shift.x(),-shift.y()),false);
+            item->setTransform(trans*QTransform(1,0,0,1,shift.x(),shift.y())*transform*QTransform(1,0,0,1,-shift.x(),-shift.y()),false); // this approach shift anchor point of item ... to be improved
         }else{
             transformSelected(transform,item->childItems());
         }
