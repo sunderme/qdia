@@ -2,6 +2,7 @@
 <qresource prefix="/">
 <file>images/format-justify-center.svg</file>
 <file>images/format-align-vertical-center.svg</file>
+<file>images/edit-copy.svg</file>
 <file>images/view-grid.svg</file>
 <file>images/format-align-vertical-top.svg</file>
 <file>images/kdenlive-add-text-clip.svg</file>
@@ -12,6 +13,8 @@
 <file>images/floodfill.png</file>
 <file>images/sendtoback.svg</file>
 <file>images/linecolor.png</file>
+<file>images/edit-paste.svg</file>
+<file>images/transform-move.svg</file>
 <file>images/object-ungroup.svg</file>
 <file>images/document-save.svg</file>
 <file>images/zoompage.svg</file>

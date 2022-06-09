@@ -608,7 +608,7 @@ void MainWindow::createActions()
     exportAction->setStatusTip(tr("Export Diagram to image"));
     connect(exportAction, SIGNAL(triggered()), this, SLOT(exportImage()));
 
-    copyAction = new QAction(tr("&Copy"), this);
+    copyAction = new QAction(QIcon(":/images/edit-copy.svg"),tr("&Copy"), this);
     copyAction->setShortcut(tr("c"));
     connect(copyAction, SIGNAL(triggered()),
             this, SLOT(copyItems()));
@@ -620,7 +620,7 @@ void MainWindow::createActions()
             this, SLOT(duplicateItems()));
     listOfActions.append(duplicateAction);
 
-    moveAction = new QAction(tr("&Move"), this);
+    moveAction = new QAction(QIcon(":/images/transform-move.svg"),tr("&Move"), this);
     moveAction->setShortcut(tr("m"));
     connect(moveAction, SIGNAL(triggered()),
             this, SLOT(moveItems()));
@@ -716,13 +716,13 @@ void MainWindow::createActions()
             this, &MainWindow::fileSaveAs);
     listOfActions.append(saveAsAction);
 
-    copyToClipboardAction=new QAction(tr("&Copy to clipboard"), this);
+    copyToClipboardAction=new QAction(QIcon(":/images/edit-copy.svg"),tr("&Copy to clipboard"), this);
     copyToClipboardAction->setShortcut(tr("Ctrl+c"));
     connect(copyToClipboardAction,&QAction::triggered,
             this, &MainWindow::copyToClipboard);
     listOfActions.append(copyToClipboardAction);
 
-    pasteFromClipboardAction=new QAction(tr("&Paste from clipboard"), this);
+    pasteFromClipboardAction=new QAction(QIcon(":/images/edit-paste.svg"),tr("&Paste from clipboard"), this);
     pasteFromClipboardAction->setShortcut(tr("Ctrl+v"));
     connect(pasteFromClipboardAction,&QAction::triggered,
             this, &MainWindow::pasteFromClipboard);
@@ -783,6 +783,8 @@ void MainWindow::createToolbars()
     editToolBar = addToolBar(tr("Edit"));
     editToolBar->addAction(toFrontAction);
     editToolBar->addAction(sendBackAction);
+    editToolBar->addAction(moveAction);
+    editToolBar->addAction(copyAction);
     editToolBar->addAction(rotateRightAction);
     editToolBar->addAction(rotateLeftAction);
     editToolBar->addAction(flipXAction);
