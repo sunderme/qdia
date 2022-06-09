@@ -78,6 +78,9 @@ public:
     QPointF anchorPoint() const;
     QPointF calcOffset() const;
 
+    void setTouched(bool state=true);
+    bool touched() const;
+
     int type() const override { return Type; }
 
 public slots:
@@ -99,6 +102,7 @@ private:
     QPointF m_anchorPoint;
     Qt::Alignment m_alignment;
     bool m_updateGeometry;
+    bool m_touched;
 };
 
 #endif // DIAGRAMTEXTITEM_H

@@ -155,6 +155,19 @@ QVariant DiagramDrawItem::itemChange(GraphicsItemChange change,
     if (change == QGraphicsItem::ItemPositionChange) {
         ;
     }
+    if(change == QGraphicsItem::ItemSelectedHasChanged){
+        if(value.toBool()){
+            // check if text is still in center
+            for(auto *i:childItems()){
+                DiagramTextItem *textItem=qgraphicsitem_cast<DiagramTextItem*>(i);
+                if(textItem){
+                    if(textItem->pos()-textItem->calcOffset()!=textItem->anchorPoint()){
+                        textItem->setTouched();
+                    }
+                }
+            }
+        }
+    }
 
     return value;
 }
@@ -405,7 +418,7 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
         // currently only center
         for(auto *i:childItems()){
             DiagramTextItem *textItem=qgraphicsitem_cast<DiagramTextItem*>(i);
-            if(textItem){
+            if(textItem && !textItem->touched()){
                 textItem->setCorrectedPos(boundingRect().center());
             }
         }

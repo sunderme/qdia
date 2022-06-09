@@ -64,6 +64,7 @@ DiagramTextItem::DiagramTextItem(QGraphicsItem *parent)
     m_alignment=Qt::AlignLeft;
 
     m_updateGeometry=false;
+    m_touched=false;
     updateGeometry();
     connect(document(), SIGNAL(contentsChange(int,int,int)),
              this, SLOT(updateGeometry(int,int,int)));
@@ -81,6 +82,7 @@ DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
     setCorrectedPos(textItem.anchorPoint());
 
     m_updateGeometry=false;
+    m_touched=false;
     updateGeometry();
     connect(document(), SIGNAL(contentsChanged()),
              this, SLOT(updateGeometry()));
@@ -115,6 +117,7 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json) : QGraphicsTextItem(nu
     setTransform(tf);
 
     m_updateGeometry=false;
+    m_touched=false;
     updateGeometry();
     connect(document(), SIGNAL(contentsChanged()),
              this, SLOT(updateGeometry()));
@@ -169,6 +172,23 @@ QPointF DiagramTextItem::calcOffset() const
         offset+=QPointF(0,-h);
     }
     return offset;
+}
+/*!
+ * \brief set state for item as touched/tainted
+ * Used in drawitem to check if it was manually offset from the center
+ * \param state
+ */
+void DiagramTextItem::setTouched(bool state)
+{
+        m_touched=state;
+}
+/*!
+ * \brief return if textitem was touched/tainted
+ * \return
+ */
+bool DiagramTextItem::touched() const
+{
+    return m_touched;
 }
 /*!
  * \brief copy from this item
