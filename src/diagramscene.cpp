@@ -1027,8 +1027,8 @@ void DiagramScene::drawBackground(QPainter *p, const QRectF &r) {
 
     if (myGridVisible) {
         // to ease transition from qelec
-        int xGrid=myGridScale * (int) myGrid;
-        int yGrid=myGridScale * (int) myGrid;
+        qreal xGrid=myGridScale * myGrid;
+        qreal yGrid=myGridScale * myGrid;
         QPen pen(Qt::black);
         pen.setCosmetic(true);
         pen.setWidth(2.0);
@@ -1037,13 +1037,11 @@ void DiagramScene::drawBackground(QPainter *p, const QRectF &r) {
         qreal limite_x = r.x() + r.width();
         qreal limite_y = r.y() + r.height();
 
-        int g_x = (int)ceil(r.x());
-        while (g_x % xGrid) ++ g_x;
-        int g_y = (int)ceil(r.y());
-        while (g_y % yGrid) ++ g_y;
+        qreal g_x = floor(r.x()/xGrid)*xGrid;
+        qreal g_y = floor(r.y()/yGrid)*yGrid;
 
-        for (int gx = g_x ; gx < limite_x ; gx += xGrid) {
-            for (int gy = g_y ; gy < limite_y ; gy += yGrid) {
+        for (qreal gx = g_x ; gx < limite_x ; gx += xGrid) {
+            for (qreal gy = g_y ; gy < limite_y ; gy += yGrid) {
                 p -> drawPoint(gx, gy);
             }
         }
