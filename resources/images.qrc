@@ -8,6 +8,7 @@
 <file>images/object-rotate-right.svg</file>
 <file>images/object-group.svg</file>
 <file>images/document-save.svgz</file>
+<file>images/object-flip-horizontal.svg</file>
 <file>images/floodfill.png</file>
 <file>images/sendtoback.svg</file>
 <file>images/linecolor.png</file>
@@ -16,6 +17,7 @@
 <file>images/zoompage.svg</file>
 <file>images/bold.svg</file>
 <file>images/underline.svg</file>
+<file>images/object-flip-vertical.svg</file>
 <file>images/linepointer.png</file>
 <file>images/textpointer.png</file>
 <file>images/zoomout.svg</file>

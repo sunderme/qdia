@@ -626,14 +626,14 @@ void MainWindow::createActions()
             this, SLOT(moveItems()));
     listOfActions.append(moveAction);
 
-    flipXAction = new QAction(QIcon(":/images/lc_flipvertical.png"),
+    flipXAction = new QAction(QIcon(":/images/object-flip-horizontal.svg"),
                               tr("Flip &X"), this);
     flipXAction->setShortcut(tr("f"));
     connect(flipXAction, SIGNAL(triggered()),
             this, SLOT(flipX()));
     listOfActions.append(flipXAction);
 
-    flipYAction = new QAction(QIcon(":/images/lc_fliphorizontal.png"),tr("Flip &Y"), this);
+    flipYAction = new QAction(QIcon(":/images/object-flip-vertical.svg"),tr("Flip &Y"), this);
     flipYAction->setShortcut(tr("Shift+F"));
     connect(flipYAction, SIGNAL(triggered()),
             this, SLOT(flipY()));
