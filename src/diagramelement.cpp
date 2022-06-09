@@ -1,5 +1,6 @@
 #include "diagramelement.h"
 #include <QFile>
+#include <QCursor>
 #include <QPainter>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -15,6 +16,7 @@ DiagramElement::DiagramElement(const QString fileName, QMenu *contextMenu, QGrap
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+        setAcceptHoverEvents(true);
     }
 }
 
@@ -30,6 +32,7 @@ DiagramElement::DiagramElement(const DiagramElement& diagram)
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+        setAcceptHoverEvents(true);
     }
     setTransform(diagram.transform());
     setPos(diagram.pos());
@@ -115,6 +118,28 @@ QRectF DiagramElement::boundingRect() const
         rect=rect.united(localRect);
     }
     return rect;
+}
+/*!
+ * \brief change cursor when move is feasible
+ * \param e
+ */
+void DiagramElement::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
+{
+    if (isSelected()) {
+        setCursor(Qt::SizeAllCursor);
+    }
+    DiagramItem::hoverEnterEvent(e);
+}
+/*!
+ * \brief change cursor back to default
+ * \param e
+ */
+void DiagramElement::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
+{
+    if (isSelected()) {
+        setCursor(Qt::ArrowCursor);
+    }
+    DiagramItem::hoverLeaveEvent(e);
 }
 
 QList<DiagramElement::Path> DiagramElement::importPathFromFile(const QString &fn)
@@ -288,5 +313,6 @@ DiagramElement::DiagramElement(const QJsonObject &json, QMenu *contextMenu):Diag
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+        setAcceptHoverEvents(true);
     }
 }

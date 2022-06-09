@@ -12,12 +12,12 @@ public:
     DiagramElement(const QJsonObject &json, QMenu *contextMenu);
     DiagramElement(const DiagramElement& diagram);//copy constructor
 
-    DiagramItem* copy();
-    void write(QJsonObject &obj);
+    DiagramItem* copy() override;
+    void write(QJsonObject &obj) override;
     QPixmap image() const;
     DiagramType diagramType() const
         { return Element; }
-    int type() const
+    int type() const override
         { return Type;}
     QString getName() {
         return mName;
@@ -31,8 +31,11 @@ protected:
         bool filled=false;
         QTransform t;
     };
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
+    QRectF boundingRect() const override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *e) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *e) override;
+
     QString mFileName;
     QString mName;
     bool mFilled;
