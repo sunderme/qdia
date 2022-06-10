@@ -80,6 +80,7 @@ DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
     setCorrectedPos(textItem.anchorPoint());
+    setZValue(textItem.zValue());
 
     m_updateGeometry=false;
     m_touched=false;
