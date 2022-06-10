@@ -122,6 +122,12 @@ QPainterPath DiagramDrawItem::createPath()
         path.lineTo(0,dy);
         path.lineTo(0,0);
         break;
+    case OTA:
+        path.moveTo(0, 0);
+        path.lineTo(0,dx);
+        path.lineTo(dx,dx/2);
+        path.lineTo(0,0);
+        break;
     default:
         break;
     }
@@ -345,13 +351,8 @@ QPainterPath DiagramDrawItem::shape() const {
 QRectF DiagramDrawItem::boundingRect() const
 {
     qreal extra = pen().width()+20 / 2.0 + myHandlerWidth;
-    qreal minx = myPos2.x() < 0 ? myPos2.x() : 0;
-    qreal maxx = myPos2.x() < 0 ? 0 : myPos2.x() ;
-    qreal miny = myPos2.y() < 0 ? myPos2.y() : 0;
-    qreal maxy = myPos2.y() < 0 ? 0 : myPos2.y() ;
 
-    QRectF newRect = QRectF(minx,miny,maxx-minx,maxy-miny)
-    .adjusted(-extra, -extra, extra, extra);
+    QRectF newRect = path().boundingRect().adjusted(-extra, -extra, extra, extra);
     return newRect;
 }
 

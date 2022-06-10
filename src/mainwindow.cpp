@@ -409,7 +409,8 @@ void MainWindow::createToolBox()
         {tr("RoundedRect"),DiagramDrawItem::RoundedRect},
         {tr("Rhombus"),DiagramDrawItem::Rhombus},
         {tr("Triangle"),DiagramDrawItem::Triangle},
-        {tr("DA"),DiagramDrawItem::DA}
+        {tr("DA"),DiagramDrawItem::DA},
+        {tr("OTA"),DiagramDrawItem::OTA}
     };
     int row=0;
     int col=0;
@@ -1600,9 +1601,6 @@ void MainWindow::lineArrowChanged()
 }
 
 /* TODO
- * rotate multiple elememts/group around a fixed point
- * copy/duplicate group
- * update paint select when ungrouping/grouping
  * shape of element wrong e.g. LED
  * filling of DiagramElement wrong
  * dotted lines
