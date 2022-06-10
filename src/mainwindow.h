@@ -165,6 +165,7 @@ private:
    QIcon createArrowIcon(const int i);
    QRectF getTotalBoundary(const QList<QGraphicsItem*> items) const;
    void transformSelected(const QTransform transform,QList<QGraphicsItem*> items,bool forceOnGrid=false);
+   void transformItems(const QTransform transform,QList<QGraphicsItem*> items,QPointF anchorPoint);
 
    DiagramScene *scene;
    QGraphicsView *view;

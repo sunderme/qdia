@@ -1480,7 +1480,12 @@ QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
     QPolygonF result;
     foreach(const QGraphicsItem *item,items){
         if(!item) continue;
-        result.append(item->pos());
+        if(item->type()==QGraphicsItemGroup::Type){
+            QRectF groupRect=getTotalBoundary(item->childItems());
+            result<<item->mapToParent(groupRect.bottomLeft())<<item->mapToParent(groupRect.topRight());
+        }else{
+            result.append(item->pos());
+        }
     }
     return result.boundingRect();
 }
@@ -1493,11 +1498,21 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
         pt=bound.bottomRight();
     }
 
+    transformItems(transform,items,pt);
+}
+/*!
+ * \brief perofrm the transformation of items around an anchor point
+ * \param transform
+ * \param items
+ * \param abchorPoint
+ */
+void MainWindow::transformItems(const QTransform transform, QList<QGraphicsItem *> items, QPointF anchorPoint)
+{
     foreach( QGraphicsItem *item, items){
         if(!item) continue;
         if(item->type()!=QGraphicsItemGroup::Type){
             QTransform trans=item->transform();
-            QPointF shift=item->pos()-pt;
+            QPointF shift=item->pos()-anchorPoint;
             if(items.count()==1) {
                 shift.setX(0);
                 shift.setY(0);
@@ -1510,9 +1525,17 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
             transform*=QTransform::fromTranslate(-transform.dx(),-transform.dy());
             item->setPos(mx,my);
             item->setTransform(transform);
+            // works ahward with several rotate
         }else{
-            // needs improvement when several elements and groups are concerned (TODO)
-            transformSelected(transform,item->childItems());
+            QList<QGraphicsItem*> lst=item->childItems();
+            QGraphicsItemGroup *ig=qgraphicsitem_cast<QGraphicsItemGroup *>(item);
+            for(auto *i:lst){
+                ig->removeFromGroup(i);
+            }
+            transformItems(transform,lst,anchorPoint);
+            for(auto *i:lst){
+                ig->addToGroup(i);
+            }
         }
     }
 }
@@ -1548,3 +1571,4 @@ void MainWindow::lineArrowChanged()
     linePointerButton->setIcon(createArrowIcon(arrowAction->data().toInt()));
     lineArrowButtonTriggered();
 }
+
