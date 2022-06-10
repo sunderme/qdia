@@ -12,7 +12,11 @@ DiagramElement::DiagramElement(const QString fileName, QMenu *contextMenu, QGrap
     mFileName=fileName;
     lstPaths=importPathFromFile(mFileName);
     if(!lstPaths.isEmpty()){
-        setPath(lstPaths.first().path);
+        QPainterPath p;
+        for(const auto &lp:lstPaths){
+            p|=lp.path;
+        }
+        setPath(p);
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -28,7 +32,11 @@ DiagramElement::DiagramElement(const DiagramElement& diagram)
     mFilled=diagram.mFilled;
     lstPaths=importPathFromFile(mFileName);
     if(!lstPaths.isEmpty()){
-        setPath(lstPaths.first().path);
+        QPainterPath p;
+        for(const auto &lp:lstPaths){
+            p|=lp.path;
+        }
+        setPath(p);
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -121,6 +129,7 @@ QRectF DiagramElement::boundingRect() const
     }
     return rect;
 }
+
 /*!
  * \brief change cursor when move is feasible
  * \param e
@@ -311,7 +320,11 @@ DiagramElement::DiagramElement(const QJsonObject &json, QMenu *contextMenu):Diag
     mName=json["name"].toString();
     lstPaths=importPathFromFile(mFileName);
     if(!lstPaths.isEmpty()){
-        setPath(lstPaths.first().path);
+        QPainterPath p;
+        for(const auto &lp:lstPaths){
+            p|=lp.path;
+        }
+        setPath(p);
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
