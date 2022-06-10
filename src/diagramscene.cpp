@@ -463,6 +463,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             // copy
             foreach(QGraphicsItem* item,myList){
                 insItem=copy(item);
+                if(!insItem) continue;
                 addItem(insItem);
                 insItem->setPos(item->pos());
                 copiedItems.append(item);
