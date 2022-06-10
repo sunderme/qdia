@@ -781,6 +781,7 @@ void MainWindow::createMenus()
 void MainWindow::createToolbars()
 {
     editToolBar = addToolBar(tr("Edit"));
+    editToolBar->setObjectName("edit");
     editToolBar->addAction(toFrontAction);
     editToolBar->addAction(sendBackAction);
     editToolBar->addAction(moveAction);
@@ -831,6 +832,7 @@ void MainWindow::createToolbars()
             this, &MainWindow::lineButtonTriggered);
 
     textToolBar = addToolBar(tr("Font"));
+    textToolBar->setObjectName("text");
     textToolBar->addWidget(fontCombo);
     textToolBar->addWidget(fontSizeCombo);
     textToolBar->addAction(boldAction);
@@ -881,6 +883,7 @@ void MainWindow::createToolbars()
 
 
     colorToolBar = addToolBar(tr("Color"));
+    colorToolBar->setObjectName("color");
     colorToolBar->addWidget(fontColorToolButton);
     colorToolBar->addWidget(fillColorToolButton);
     colorToolBar->addWidget(lineColorToolButton);
@@ -913,11 +916,13 @@ void MainWindow::createToolbars()
             this, &MainWindow::pointerGroupClicked);
 
     pointerToolbar = addToolBar(tr("Pointer type"));
+    pointerToolbar->setObjectName("pointer");
     pointerToolbar->addWidget(pointerButton);
     pointerToolbar->addWidget(linePointerButton);
     pointerToolbar->addWidget(textButton);
 
     zoomToolbar = addToolBar(tr("Zoom"));
+    zoomToolbar->setObjectName("zoom");
     zoomToolbar->addAction(zoomInAction);
     zoomToolbar->addAction(zoomOutAction);
     zoomToolbar->addAction(zoomAction);
@@ -1571,3 +1576,12 @@ void MainWindow::lineArrowChanged()
     lineArrowButtonTriggered();
 }
 
+/* TODO
+ * rotate multiple elememts/group around a fixed point
+ * copy/duplicate group
+ * update paint select when ungrouping/grouping
+ * shape of element wrong e.g. LED
+ * filling of DiagramElement wrong
+ * dotted lines
+ * line thickness
+ */

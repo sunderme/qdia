@@ -743,7 +743,9 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
     {
         QList<QGraphicsItem*>copied;
         for(auto *i:item->childItems()){
-            copied<<copy(i);
+            auto *newItem=copy(i);
+            addItem(newItem);
+            copied<<newItem;
         }
         QGraphicsItemGroup *ig=createItemGroup(copied);
         ig->setFlag(QGraphicsItem::ItemIsMovable, true);
