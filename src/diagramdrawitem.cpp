@@ -252,10 +252,11 @@ QPointF DiagramDrawItem::getHandler(int i) const
 {
     QPointF point;
     QRectF rect=path().boundingRect();
-    if(i<3) point=QPointF(rect.width()/2*i,0);
-    if(i==3) point=QPointF(rect.width(),rect.height()/2);
-    if(i>3 && i<7) point=QPointF(rect.width()/2*(i-4),rect.height());
-    if(i==7) point=QPointF(0,rect.height()/2);
+
+    if(i<3) point=QPointF(rect.left()+rect.width()/2*i,rect.top());
+    if(i==3) point=QPointF(rect.right(),rect.bottom()-rect.height()/2);
+    if(i>3 && i<7) point=QPointF(rect.left()+rect.width()/2*(i-4),rect.bottom());
+    if(i==7) point=QPointF(rect.left(),rect.bottom()-rect.height()/2);
     return point;
 }
 
