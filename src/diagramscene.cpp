@@ -841,6 +841,7 @@ void DiagramScene::duplicateItems()
             // copy item
             item->setSelected(false);
             QGraphicsItem *newItem=copy(item);
+            if(!newItem) continue;
             addItem(newItem);
             newItem->setZValue(maxZ);
             maxZ+=0.1;
