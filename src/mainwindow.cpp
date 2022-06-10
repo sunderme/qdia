@@ -1525,7 +1525,6 @@ void MainWindow::transformItems(const QTransform transform, QList<QGraphicsItem 
             transform*=QTransform::fromTranslate(-transform.dx(),-transform.dy());
             item->setPos(mx,my);
             item->setTransform(transform);
-            // works ahward with several rotate
         }else{
             QList<QGraphicsItem*> lst=item->childItems();
             QGraphicsItemGroup *ig=qgraphicsitem_cast<QGraphicsItemGroup *>(item);
