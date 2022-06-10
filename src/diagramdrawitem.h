@@ -57,6 +57,7 @@ protected:
 
 
 private:
+    QPointF getHandler(int i) const;
     DiagramType myDiagramType;
     QPainterPath mPainterPath;
     QMenu *myContextMenu;

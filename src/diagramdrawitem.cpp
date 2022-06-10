@@ -242,6 +242,22 @@ void DiagramDrawItem::mySetDimension(QPointF newPos)
     }
     else myPos2=newPos;
 }
+/*!
+ * \brief return position of the stretch handlers
+ * \param i number of handler
+ * clock-wise, start left top
+ * \return
+ */
+QPointF DiagramDrawItem::getHandler(int i) const
+{
+    QPointF point;
+    QRectF rect=path().boundingRect();
+    if(i<3) point=QPointF(rect.width()/2*i,0);
+    if(i==3) point=QPointF(rect.width(),rect.height()/2);
+    if(i>3 && i<7) point=QPointF(rect.width()/2*(i-4),rect.height());
+    if(i==7) point=QPointF(0,rect.height()/2);
+    return point;
+}
 
 QPointF DiagramDrawItem::getDimension()
 {
@@ -262,7 +278,8 @@ void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
          QBrush selBrush=QBrush(Qt::NoBrush);
          painter->setBrush(selBrush);
          painter->setPen(selPen);
-         painter->drawRect(QRectF(QPointF(0,0),myPos2));
+         QRectF rect=path().boundingRect();
+         painter->drawRect(rect);
          // Draghandles
          selBrush=QBrush(Qt::cyan,Qt::SolidPattern);
          selPen=QPen(Qt::cyan);
@@ -271,10 +288,7 @@ void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
          QPointF point;
          for(int i=0;i<8;i++)
          {
-             if(i<3) point=QPointF(myPos2.x()/2*i,0);
-             if(i==3) point=QPointF(myPos2.x(),myPos2.y()/2);
-             if(i>3 && i<7) point=QPointF(myPos2.x()/2*(i-4),myPos2.y());
-             if(i==7) point=QPointF(0,myPos2.y()/2);
+             point=getHandler(i);
              if(i==myHoverPoint){
                  painter->setBrush(QBrush(Qt::red));
              }
@@ -292,10 +306,7 @@ void DiagramDrawItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
         QPointF hover_point = e -> pos();
         QPointF point;
         for(myHoverPoint=0;myHoverPoint<8;myHoverPoint++){
-            if(myHoverPoint<3) point=QPointF(myPos2.x()/2*myHoverPoint,0);
-            if(myHoverPoint==3) point=QPointF(myPos2.x(),myPos2.y()/2);
-            if(myHoverPoint>3 && myHoverPoint<7) point=QPointF(myPos2.x()/2*(myHoverPoint-4),myPos2.y());
-            if(myHoverPoint==7) point=QPointF(0,myPos2.y()/2);
+            point=getHandler(myHoverPoint);
             if(hasClickedOn(hover_point,point)) break;
         }//for
         if(myHoverPoint==8) myHoverPoint=-1;
@@ -337,10 +348,7 @@ QPainterPath DiagramDrawItem::shape() const {
         QPointF point;
         for(int i=0;i<8;i++)
         {
-            if(i<3) point=QPointF(myPos2.x()/2*i,0);
-            if(i==3) point=QPointF(myPos2.x(),myPos2.y()/2);
-            if(i>3 && i<7) point=QPointF(myPos2.x()/2*(i-4),myPos2.y());
-            if(i==7) point=QPointF(0,myPos2.y()/2);
+            point=getHandler(i);
             // Rect around valid point
             myPath.addRect(QRectF(point-QPointF(myHandlerWidth,myHandlerWidth),point+QPointF(myHandlerWidth,myHandlerWidth)));
         }// for
@@ -362,10 +370,7 @@ void DiagramDrawItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
             QPointF mouse_point = e -> pos();
             QPointF point;
             for(mySelPoint=0;mySelPoint<8;mySelPoint++){
-                if(mySelPoint<3) point=QPointF(myPos2.x()/2*mySelPoint,0);
-                if(mySelPoint==3) point=QPointF(myPos2.x(),myPos2.y()/2);
-                if(mySelPoint>3 && mySelPoint<7) point=QPointF(myPos2.x()/2*(mySelPoint-4),myPos2.y());
-                if(mySelPoint==7) point=QPointF(0,myPos2.y()/2);
+                point=getHandler(mySelPoint);
                 if(hasClickedOn(mouse_point,point)) break;
             }//for
             if(mySelPoint==8) mySelPoint=-1;
