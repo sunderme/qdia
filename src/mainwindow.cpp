@@ -1584,4 +1584,5 @@ void MainWindow::lineArrowChanged()
  * filling of DiagramElement wrong
  * dotted lines
  * line thickness
+ * shift visibility up/down
  */

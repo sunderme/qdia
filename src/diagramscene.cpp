@@ -463,6 +463,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             // copy
             foreach(QGraphicsItem* item,myList){
                 insItem=copy(item);
+
                 if(!insItem) continue;
                 addItem(insItem);
                 insItem->setPos(item->pos());
@@ -491,10 +492,9 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             qreal dx=insertedItem->pos().rx()-point.rx()-myDx;
             qreal dy=insertedItem->pos().ry()-point.ry()-myDy;
             foreach(QGraphicsItem* item,copiedItems){
-                if(item->parentItem()!=0){
+                if(item->parentItem()){
                     if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
-                }
-                else {
+                }else{
                     item->moveBy(-dx,-dy);
                 }
             }
@@ -744,6 +744,10 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
         QList<QGraphicsItem*>copied;
         for(auto *i:item->childItems()){
             auto *newItem=copy(i);
+            newItem->setPos(i->pos());
+            newItem->setParentItem(nullptr);
+            newItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+            newItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
             addItem(newItem);
             copied<<newItem;
         }
