@@ -1602,7 +1602,6 @@ void MainWindow::lineArrowChanged()
 
 /* TODO
  * fix tools: shifted text when 2 per row
- * shape of element wrong e.g. LED
  * filling of DiagramElement wrong
  * dotted lines
  * line thickness
