@@ -386,39 +386,39 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
     if ((e -> buttons() & Qt::LeftButton)&&(mySelPoint>-1)) {
         QPointF mouse_point = onGrid(e -> pos());
         prepareGeometryChange();
+        QRectF rect=QRectF(QPointF(),myPos2).normalized();
         switch (mySelPoint) {
             case 0:
-                mySetDimension(myPos2-mouse_point);
-                setPos(mapToScene(mouse_point));
+                rect.setTopLeft(mouse_point);
                 break;
             case 1:
-                setPos(pos().x(),mapToScene(mouse_point).y());
-                mySetDimension(QPointF(myPos2.x(),(myPos2.y()-mouse_point.y())));
+                rect.setTop(mouse_point.y());
                 break;
             case 2:
-                setPos(pos().x(),mapToScene(mouse_point).y());
-                mySetDimension(QPointF(mouse_point.x(),myPos2.y()-mouse_point.y()));
+                rect.setTopRight(mouse_point);
                 break;
             case 3:
-                mySetDimension(QPointF(mouse_point.x(),myPos2.y()));
+                rect.setRight(mouse_point.x());
                 break;
             case 6:
-                mySetDimension(mouse_point);
+                rect.setBottomRight(mouse_point);
                 break;
             case 5:
-                mySetDimension(QPointF(myPos2.x(),mouse_point.y()));
+                rect.setBottom(mouse_point.y());
                 break;
             case 4:
-                mySetDimension(QPointF(myPos2.x()-mouse_point.x(),mouse_point.y()));
-                setPos(mapToScene(mouse_point).x(),pos().y());
+                rect.setBottomLeft(mouse_point);
                 break;
             case 7:
-                setPos(mapToScene(mouse_point).x(),pos().y());
-                mySetDimension(QPointF(myPos2.x()-mouse_point.x(),myPos2.y()));
+                rect.setLeft(mouse_point.x());
                 break;
             default:
                 break;
         }
+        QPointF anchorPoint=QPointF(rect.x(),rect.y());
+        rect.translate(-anchorPoint); // renormalize: anchor is at 0/0, the item is moved instead
+        mySetDimension(QPointF(rect.x()+rect.width(),rect.y()+rect.height()));
+        setPos(mapToScene(anchorPoint));
         mPainterPath=createPath();
         setPath(mPainterPath);
         // update text position if present
