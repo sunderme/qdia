@@ -156,7 +156,7 @@ protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
     void wheelEvent(QGraphicsSceneWheelEvent *mouseEvent) override;
     bool event(QEvent *mEvent) override;
-    QGraphicsItem* copy(QGraphicsItem* item);
+    QGraphicsItem* copy(QGraphicsItem *item);
     void drawBackground(QPainter *p, const QRectF &r) override;
     void enableAllItems(bool enable=true);
 

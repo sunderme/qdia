@@ -469,8 +469,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 copiedItems.append(item);
                 item->setZValue(maxZ);
                 maxZ+=0.1;
-                //check for children
-                if(item->childItems().count()>0){
+                //check for children but not group
+                if(item->type()!=QGraphicsItemGroup::Type && item->childItems().count()>0){
                     foreach(QGraphicsItem* item_l1,item->childItems()){
                         QGraphicsItem* addedItem=copy(item_l1);
                         addItem(addedItem);
@@ -506,7 +506,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 item->setZValue(maxZ);
                 maxZ+=0.1;
                 //check for children
-                if(item->childItems().count()>0){
+                if(item->type()!=QGraphicsItemGroup::Type && item->childItems().count()>0){
                     foreach(QGraphicsItem* item_l1,item->childItems()){
                         QGraphicsItem* addedItem=copy(item_l1);
                         addItem(addedItem);
@@ -740,7 +740,16 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
         return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramSplineItem*>(item)->copy());
         break;
     case QGraphicsItemGroup::Type:
-        return nullptr; // TODO: fix
+    {
+        QList<QGraphicsItem*>copied;
+        for(auto *i:item->childItems()){
+            copied<<copy(i);
+        }
+        QGraphicsItemGroup *ig=createItemGroup(copied);
+        ig->setFlag(QGraphicsItem::ItemIsMovable, true);
+        ig->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        return ig;
+    }
         break;
     default:
         DiagramItem* newItem=dynamic_cast<DiagramItem*>(item)->copy();
@@ -848,6 +857,15 @@ void DiagramScene::duplicateItems()
             // move to side/down
             newItem->moveBy(10,10);
             newItem->setSelected(true);
+            //check for children but not group
+            if(item->type()!=QGraphicsItemGroup::Type && item->childItems().count()>0){
+                foreach(QGraphicsItem* item_l1,item->childItems()){
+                    QGraphicsItem* addedItem=copy(item_l1);
+                    addItem(addedItem);
+                    addedItem->setParentItem(newItem);
+                    addedItem->setPos(item_l1->pos());
+                }
+            }
         }
     }
 }
