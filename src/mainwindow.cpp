@@ -1084,14 +1084,16 @@ void MainWindow::ungroupItems()
         return;
 
     foreach (QGraphicsItem *item, scene->selectedItems()) {
-        if (item->type()==10) {
-            QGraphicsItemGroup *group = (QGraphicsItemGroup*) item;
+        if (item->type()==QGraphicsItemGroup::Type) {
+            QGraphicsItemGroup *group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+            group->setSelected(false);
+            QList<QGraphicsItem*>lst=group->childItems();
             scene->destroyItemGroup(group);
+            for(auto *i:lst){
+                i->setSelected(false);
+            }
         }
     }
-    //QGraphicsItemGroup *group = (QGraphicsItemGroup*)scene->selectedItems().first();
-    //scene->destroyItemGroup(group);
-    //scene->destroyItemGroup(scene->selectedItems());
 }
 
 void MainWindow::activateShortcuts()
@@ -1494,13 +1496,34 @@ QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
     }
     return result.boundingRect();
 }
+/*!
+ * \brief look through the list and get the first reasonable position
+ * Used as rotation anchor. QGraphicsItemGroup does not give an reasonable point but children, mapped to scene do
+ * \param items
+ * \return found Point
+ */
+QPointF MainWindow::getFirstPoint(const QList<QGraphicsItem *> items) const
+{
+    foreach(const QGraphicsItem *item,items){
+        if(!item) continue;
+        if(item->type()==QGraphicsItemGroup::Type){
+            QPointF pt=getFirstPoint(item->childItems());
+            return pt;
+        }else{
+            return item->pos();
+        }
+    }
+    return QPointF(); // should never be reached
+}
 
 void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsItem *> items, bool forceOnGrid)
 {
+    if(items.isEmpty()) return;
     QRectF bound = getTotalBoundary(items);
     QPointF pt=bound.center();
     if(forceOnGrid){
-        pt=bound.bottomRight();
+        // just use first element as it stays the same on repeated call on rotate
+        pt=getFirstPoint(items);
     }
 
     transformItems(transform,items,pt);
