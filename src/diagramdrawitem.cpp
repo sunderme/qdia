@@ -386,7 +386,7 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
     if ((e -> buttons() & Qt::LeftButton)&&(mySelPoint>-1)) {
         QPointF mouse_point = onGrid(e -> pos());
         prepareGeometryChange();
-        QRectF rect=QRectF(QPointF(),myPos2).normalized();
+        Rect rect=Rect(myPos2);
         switch (mySelPoint) {
             case 0:
                 rect.setTopLeft(mouse_point);
@@ -415,9 +415,9 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
             default:
                 break;
         }
-        QPointF anchorPoint=QPointF(rect.x(),rect.y());
+        QPointF anchorPoint=rect.anchorPoint();
         rect.translate(-anchorPoint); // renormalize: anchor is at 0/0, the item is moved instead
-        mySetDimension(QPointF(rect.x()+rect.width(),rect.y()+rect.height()));
+        mySetDimension(rect.point());
         setPos(mapToScene(anchorPoint));
         mPainterPath=createPath();
         setPath(mPainterPath);
@@ -433,4 +433,118 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
     }
     else
         DiagramItem::mouseMoveEvent(e);
+}
+
+Rect::Rect(QPointF pt)
+{
+    m_point=pt;
+    // anchor is 0/0
+}
+
+QPointF Rect::anchorPoint() const
+{
+    return m_anchor;
+}
+
+QPointF Rect::point() const
+{
+    return m_point;
+}
+/*!
+ * \brief manipulate left side of rect
+ * change anchor or point, depending which one is more left
+ * \param x
+ */
+void Rect::setLeft(qreal x)
+{
+    if(m_anchor.x()<m_point.x()){
+        m_anchor.setX(x);
+    }else{
+        m_point.setX(x);
+    }
+}
+/*!
+ * \brief manipulate right side of rect
+ * change anchor or point, depending which one is more right
+ * \param x
+ */
+void Rect::setRight(qreal x)
+{
+    if(m_anchor.x()>m_point.x()){
+        m_anchor.setX(x);
+    }else{
+        m_point.setX(x);
+    }
+}
+/*!
+ * \brief manipulate top side of rect
+ * change anchor or point, depending which one is more up
+ * \param x
+ */
+void Rect::setTop(qreal y)
+{
+    if(m_anchor.y()<m_point.y()){
+        m_anchor.setY(y);
+    }else{
+        m_point.setY(y);
+    }
+}
+/*!
+ * \brief manipulate bottom side of rect
+ * change anchor or point, depending which one is more down
+ * \param x
+ */
+void Rect::setBottom(qreal y)
+{
+    if(m_anchor.y()>m_point.y()){
+        m_anchor.setY(y);
+    }else{
+        m_point.setY(y);
+    }
+}
+/*!
+ * \brief setTopLeft of rectangle
+ * \param pt
+ */
+void Rect::setTopLeft(QPointF pt)
+{
+    setLeft(pt.x());
+    setTop(pt.y());
+}
+/*!
+ * \brief setTopLeft of rectangle
+ * \param pt
+ */
+void Rect::setTopRight(QPointF pt)
+{
+    setRight(pt.x());
+    setTop(pt.y());
+}
+/*!
+ * \brief setTopLeft of rectangle
+ * \param pt
+ */
+void Rect::setBottomLeft(QPointF pt)
+{
+    setLeft(pt.x());
+    setBottom(pt.y());
+}
+/*!
+ * \brief setTopLeft of rectangle
+ * \param pt
+ */
+void Rect::setBottomRight(QPointF pt)
+{
+    setRight(pt.x());
+    setBottom(pt.y());
+}
+
+/*!
+ * \brief translate rect by pt
+ * \param pt
+ */
+void Rect::translate(QPointF pt)
+{
+    m_anchor+=pt;
+    m_point+=pt;
 }

@@ -4,7 +4,37 @@
 #include <QList>
 #include "diagramitem.h"
 
-//! [0]
+/*!
+ * \brief The Rect class provides a simple repesentation of an rectangle
+ * The rectangle can be directly manipulated on all edges/corner
+ * It keeps anchor and second point, so negative width/height is maintained and handled corrctly (unlike QRectF)
+ */
+class Rect
+{
+public:
+    Rect(QPointF pt);
+    QPointF anchorPoint() const;
+    QPointF point() const;
+
+    void setLeft(qreal x);
+    void setRight(qreal x);
+    void setTop(qreal y);
+    void setBottom(qreal y);
+    void setTopLeft(QPointF pt);
+    void setTopRight(QPointF pt);
+    void setBottomLeft(QPointF pt);
+    void setBottomRight(QPointF pt);
+
+    void translate(QPointF pt);
+private:
+    QPointF m_anchor;
+    QPointF m_point;
+};
+
+/*!
+ * \brief The DiagramDrawItem class provides drawable figures like rectangle, ellipse
+ * It always has two definition point (pos() and myPos2) which define the dimension of the drawing
+ */
 class DiagramDrawItem : public DiagramItem
 {
 public:
