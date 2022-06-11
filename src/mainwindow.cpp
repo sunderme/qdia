@@ -423,7 +423,7 @@ void MainWindow::createToolBox()
             ++row;
         }
     }
-    if(col==1) ++row;
+    if(col>0) ++row;
     layout->setRowStretch(row, 10);
     layout->setColumnStretch(2, 10);
 
