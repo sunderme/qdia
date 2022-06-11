@@ -1601,6 +1601,7 @@ void MainWindow::lineArrowChanged()
 }
 
 /* TODO
+ * fix resizing over width/height ==0 (handle shifted)
  * fix tools: shifted text when 2 per row
  * filling of DiagramElement wrong
  * dotted lines
