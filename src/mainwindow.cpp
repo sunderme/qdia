@@ -1530,7 +1530,7 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
     transformItems(transform,items,pt);
 }
 /*!
- * \brief perofrm the transformation of items around an anchor point
+ * \brief perform the transformation of items around an anchor point
  * \param transform
  * \param items
  * \param abchorPoint
