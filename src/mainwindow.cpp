@@ -1602,11 +1602,11 @@ void MainWindow::lineArrowChanged()
 
 /* TODO
  * fix resizing over width/height ==0 (handle shifted)
- * fix tools: shifted text when 2 per row
  * filling of DiagramElement wrong
  * dotted lines
  * line thickness
  * shift z up/down smaller steps
+ * click on line to add text / bus width ?
  * Align ?
  * undo/redo
  * import xcircuit/drawio?
