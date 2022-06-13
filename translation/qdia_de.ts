@@ -19,7 +19,7 @@
 Written by Jan Sundermeyer (C) 2022
 Simple schematic/diagram entry editor.</source>
         <translation>Version %1
-Geschriben von Jan Sundermeyer (C) 2022
+Geschrieben von Jan Sundermeyer (C) 2022
 Einfacher Schaltplan/Diagramm Editor.</translation>
     </message>
     <message>
