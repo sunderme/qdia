@@ -16,7 +16,9 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Core Gui LinguistTools REQ
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS PrintSupport REQUIRED)
 
 
-set(TS_FILES translation/qdia_en_US.ts)
+set(TS_FILES translation/qdia_en_US.ts translation/qdia_de.ts)
+set_source_files_properties(${TS_FILES}
+    PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translation")
 
 set(PROJECT_SOURCES
         src/main.cpp
@@ -55,7 +57,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 
-    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+    #qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+    qt6_add_translations(qdia TS_FILES ${TS_FILES})
+
 else()
     if(ANDROID)
         add_library(qdia SHARED
