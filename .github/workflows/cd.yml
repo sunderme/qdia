@@ -29,6 +29,10 @@ jobs:
           mkdir build
           cd build
           cmake ..
+      - name: Release translation
+        run: |
+          cd build
+          cmake --build . --target qdia_lrelease
       - name: Build
         run: |
           cd build
@@ -93,6 +97,11 @@ jobs:
         cd build
         cmake -DCMAKE_INSTALL_PREFIX=appdir/usr ..
 
+    - name: Release translation
+      run: |
+        cd build
+        cmake --build . --target qdia_lrelease
+
     - name: Build
       run: |
         cd build
@@ -149,6 +158,9 @@ jobs:
         mkdir build
         cd build
         cmake ..
+
+    - name: Release translation
+      run: cmake --build build --target qdia_lrelease
 
     - name: Build
       run: cmake --build build
