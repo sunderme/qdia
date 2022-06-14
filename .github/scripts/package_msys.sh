@@ -7,6 +7,7 @@ echo "package build into zip for win"
 # workaround for botched qt6 installation
 mkdir -p package-zip
 cp qdia.exe package-zip/
+cp -r translation package-zip/translations
 cd package-zip
 windeployqt-qt6 qdia.exe
 ldd qdia.exe | awk '{print $3}'| grep ming | xargs -I{} cp -u {} .

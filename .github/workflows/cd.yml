@@ -155,7 +155,7 @@ jobs:
         cmake ..
 
     - name: Release translation
-      run: cmake --build . --target qdia_lrelease
+      run: cmake --build build --target qdia_lrelease
 
     - name: Build
       run: cmake --build build
