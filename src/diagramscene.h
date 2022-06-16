@@ -88,6 +88,7 @@ public:
     void setTextColor(const QColor &color);
     void setItemColor(const QColor &color);
     void setLineWidth(const int w);
+    void setLinePattern(const Qt::PenStyle style);
     void setTextAlignment(const Qt::Alignment alignment);
     Qt::Alignment textAlignment() const;
     void setFont(const QFont &font);
@@ -176,6 +177,7 @@ private:
     QColor myItemColor;
     QColor myLineColor;
     int myLineWidth;
+    Qt::PenStyle myPenStyle;
     Qt::Alignment m_textAlignment;
 
     DiagramItem *insertedItem;

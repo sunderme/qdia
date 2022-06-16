@@ -79,6 +79,7 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     myTextColor = Qt::black;
     myLineColor = Qt::black;
     myLineWidth = 1;
+    myPenStyle = Qt::SolidLine;
 
     myRouting=DiagramPathItem::free;
     myGrid=10.0;
@@ -132,10 +133,23 @@ void DiagramScene::setLineWidth(const int w)
 {
     myLineWidth = w;
     foreach(QGraphicsItem *elem,selectedItems()){
-        DiagramItem *item = dynamic_cast<DiagramItem *>(elem);
+        QGraphicsPathItem *item = dynamic_cast<QGraphicsPathItem *>(elem);
         if(item){
             QPen pen=item->pen();
             pen.setWidth(w);
+            item->setPen(pen);
+        }
+    }
+}
+
+void DiagramScene::setLinePattern(const Qt::PenStyle style)
+{
+    myPenStyle=style;
+    foreach(QGraphicsItem *elem,selectedItems()){
+        QGraphicsPathItem *item = dynamic_cast<QGraphicsPathItem *>(elem);
+        if(item){
+            QPen pen=item->pen();
+            pen.setStyle(style);
             item->setPen(pen);
         }
     }
@@ -310,6 +324,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             insertedItem->setBrush(myItemColor);
             QPen pen(myLineColor);
             pen.setWidth(myLineWidth);
+            pen.setStyle(myPenStyle);
             insertedItem->setPen(pen);
             insertedItem->setZValue(maxZ);
             maxZ+=0.1;
@@ -326,6 +341,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             insertedPathItem = new DiagramPathItem(DiagramPathItem::DiagramType(myArrow),myItemMenu);
             QPen pen(myLineColor);
             pen.setWidth(myLineWidth);
+            pen.setStyle(myPenStyle);
             insertedPathItem->setPen(pen);
             insertedPathItem->setBrush(myLineColor);
             insertedPathItem->setZValue(maxZ);
@@ -342,6 +358,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             insertedSplineItem = new DiagramSplineItem(DiagramSplineItem::DiagramType(myArrow),myItemMenu);
             QPen pen(myLineColor);
             pen.setWidth(myLineWidth);
+            pen.setStyle(myPenStyle);
             insertedSplineItem->setPen(pen);
             //insertedSplineItem->setBrush(myLineColor);
             insertedSplineItem->setZValue(maxZ);
@@ -388,6 +405,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             insertedDrawItem->setBrush(myItemColor);
             QPen pen(myLineColor);
             pen.setWidth(myLineWidth);
+            pen.setStyle(myPenStyle);
             insertedDrawItem->setPen(pen);
             insertedDrawItem->setZValue(maxZ);
             maxZ+=0.1;
@@ -594,6 +612,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             insertedItem->setBrush(myItemColor);
             QPen pen(myLineColor);
             pen.setWidth(myLineWidth);
+            pen.setStyle(myPenStyle);
             insertedItem->setPen(pen);
             insertedItem->setSelected(true);
             insertedItem->setZValue(maxZ);

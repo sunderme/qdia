@@ -343,6 +343,13 @@ void MainWindow::lineThicknessButtonTriggered()
     scene->setLineWidth(w);
 }
 
+void MainWindow::linePatternButtonTriggered()
+{
+    int w=patternAction->data().toInt();
+    Qt::PenStyle style=static_cast<Qt::PenStyle>(w);
+    scene->setLinePattern(style);
+}
+
 void MainWindow::handleFontChange()
 {
     QFont font = fontCombo->currentFont();
@@ -905,6 +912,17 @@ void MainWindow::createToolbars()
             this, &MainWindow::lineThicknessButtonTriggered);
 
     colorToolBar->addWidget(lineThicknessButton);
+
+    linePatternButton = new QToolButton;
+    linePatternButton->setIcon(createLinePatternIcon(1));
+    linePatternButton->setPopupMode(QToolButton::MenuButtonPopup);
+    linePatternButton->setMenu(createLinePatternMenu(SLOT(linePatternChanged()),
+                                               1));
+    thicknessAction = linePatternButton->menu()->defaultAction();
+    connect(linePatternButton, &QToolButton::clicked,
+            this, &MainWindow::linePatternButtonTriggered);
+
+    colorToolBar->addWidget(linePatternButton);
 
     pointerButton = new QToolButton;
     pointerButton->setCheckable(true);
@@ -1538,6 +1556,40 @@ QIcon MainWindow::createLineThicknesIcon(const int i)
     return QIcon(pixmap);
 }
 
+QMenu *MainWindow::createLinePatternMenu(const char *slot, const int def)
+{
+    QStringList names;
+        names << tr("No Pen") << tr("Solid Line") << tr("Dash Line") << tr("Dot Line") << tr("Dash Dot Line") << tr("Dash Dot Dot Line");
+    QMenu *patternMenu = new QMenu;
+    for (int i = 0; i < names.count(); ++i) {
+        QAction *action = new QAction(names.at(i), this);
+        action->setData(i);
+        action->setIcon(createLinePatternIcon(i));
+        connect(action, SIGNAL(triggered()),
+                this, slot);
+        patternMenu->addAction(action);
+        if (i == def) {
+            patternMenu->setDefaultAction(action);
+        }
+    }
+    return patternMenu;
+}
+
+QIcon MainWindow::createLinePatternIcon(const int i)
+{
+    QPixmap pixmap(50, 80);
+    pixmap.fill(Qt::transparent);
+    QPainter p(&pixmap);
+    QPen pen(Qt::black);
+    Qt::PenStyle style=static_cast<Qt::PenStyle>(i);
+    pen.setStyle(style);
+    p.setPen(pen);
+
+    p.drawLine(10,40,40,40);
+
+    return QIcon(pixmap);
+}
+
 QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
 {
     QPolygonF result;
@@ -1662,11 +1714,16 @@ void MainWindow::lineThicknessChanged()
     lineThicknessButtonTriggered();
 }
 
+void MainWindow::linePatternChanged()
+{
+    patternAction=qobject_cast<QAction *>(sender());
+    linePatternButton->setIcon(createLinePatternIcon(patternAction->data().toInt()));
+    linePatternButtonTriggered();
+}
+
 /* TODO
  * fix resizing over width/height ==0 (handle shifted)
  * filling of DiagramElement wrong
- * dotted lines
- * line thickness
  * shift z up/down smaller steps
  * click on line to add text / bus width ?
  * Align ?

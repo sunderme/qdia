@@ -110,9 +110,11 @@ DiagramItem::DiagramItem(const QJsonObject &json, QMenu *contextMenu)
     QColor color;
     color.setNamedColor(json["pen"].toString());
     color.setAlpha(json["pen_alpha"].toInt());
-    int width=json["pen_width"].toInt();
+    int width=json["pen_width"].toInt(1);
+    Qt::PenStyle pstyle=static_cast<Qt::PenStyle>(json["pen_style"].toInt(1));
     QPen pen(color);
     pen.setWidth(width);
+    pen.setStyle(pstyle);
     setPen(pen);
     color.setNamedColor(json["brush"].toString());
     color.setAlpha(json["brush_alpha"].toInt());
@@ -178,6 +180,7 @@ void DiagramItem::write(QJsonObject &json)
     json["pen"]=pen().color().name();
     json["pen_alpha"]=pen().color().alpha();
     json["pen_width"]=pen().width();
+    json["pen_style"]=pen().style();
     json["brush"]=brush().color().name();
     json["brush_alpha"]=brush().color().alpha();
     json["brush_style"]=brush().style();
