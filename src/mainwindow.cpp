@@ -337,6 +337,12 @@ void MainWindow::lineButtonTriggered()
     scene->setLineColor(m_lineColor);
 }
 
+void MainWindow::lineThicknessButtonTriggered()
+{
+    int w=thicknessAction->data().toInt();
+    scene->setLineWidth(w);
+}
+
 void MainWindow::handleFontChange()
 {
     QFont font = fontCombo->currentFont();
@@ -888,6 +894,17 @@ void MainWindow::createToolbars()
     colorToolBar->addWidget(fontColorToolButton);
     colorToolBar->addWidget(fillColorToolButton);
     colorToolBar->addWidget(lineColorToolButton);
+
+    lineThicknessButton = new QToolButton;
+    lineThicknessButton->setIcon(createLineThicknesIcon(1));
+    lineThicknessButton->setPopupMode(QToolButton::MenuButtonPopup);
+    lineThicknessButton->setMenu(createLineThicknessMenu(SLOT(lineThicknessChanged()),
+                                               0));
+    thicknessAction = lineThicknessButton->menu()->defaultAction();
+    connect(lineThicknessButton, &QToolButton::clicked,
+            this, &MainWindow::lineThicknessButtonTriggered);
+
+    colorToolBar->addWidget(lineThicknessButton);
 
     pointerButton = new QToolButton;
     pointerButton->setCheckable(true);
@@ -1482,6 +1499,44 @@ QIcon MainWindow::createArrowIcon(const int i)
 
     return QIcon(pixmap);
 }
+/*!
+ * \brief create line thickness menu
+ * \param slot to connect to
+ * \param def default action
+ * \return
+ */
+QMenu *MainWindow::createLineThicknessMenu(const char *slot, const int def)
+{
+    QList<int> th;
+        th << 1 << 2 << 4;
+    QMenu *thicknessMenu = new QMenu;
+    for (int i = 0; i < th.count(); ++i) {
+        QAction *action = new QAction(QString("%1").arg(th[i]), this);
+        action->setData(th[i]);
+        action->setIcon(createLineThicknesIcon(th[i]));
+        connect(action, SIGNAL(triggered()),
+                this, slot);
+        thicknessMenu->addAction(action);
+        if (i == def) {
+            thicknessMenu->setDefaultAction(action);
+        }
+    }
+    return thicknessMenu;
+}
+
+QIcon MainWindow::createLineThicknesIcon(const int i)
+{
+    QPixmap pixmap(50, 80);
+    pixmap.fill(Qt::transparent);
+    QPainter p(&pixmap);
+    QPen pen(Qt::black);
+    pen.setWidth(2*i);
+    p.setPen(pen);
+
+    p.drawLine(10,40,40,40);
+
+    return QIcon(pixmap);
+}
 
 QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
 {
@@ -1598,6 +1653,13 @@ void MainWindow::lineArrowChanged()
     arrowAction = qobject_cast<QAction *>(sender());
     linePointerButton->setIcon(createArrowIcon(arrowAction->data().toInt()));
     lineArrowButtonTriggered();
+}
+
+void MainWindow::lineThicknessChanged()
+{
+    thicknessAction=qobject_cast<QAction *>(sender());
+    lineThicknessButton->setIcon(createLineThicknesIcon(thicknessAction->data().toInt()));
+    lineThicknessButtonTriggered();
 }
 
 /* TODO

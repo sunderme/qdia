@@ -287,6 +287,7 @@ void DiagramPathItem::write(QJsonObject &json)
     json["diagramtype"]=static_cast<int>(myDiagramType);
     json["pen"]=pen().color().name();
     json["pen_alpha"]=pen().color().alpha();
+    json["pen_width"]=pen().width();
     json["brush"]=brush().color().name();
     json["brush_alpha"]=brush().color().alpha();
     QJsonArray array;
@@ -456,7 +457,10 @@ DiagramPathItem::DiagramPathItem(const QJsonObject &json, QMenu *contextMenu)
     QColor color;
     color.setNamedColor(json["pen"].toString());
     color.setAlpha(json["pen_alpha"].toInt());
-    setPen(color);
+    QPen pen(color);
+    int width=json["pen_width"].toInt();
+    pen.setWidth(width);
+    setPen(pen);
     //color.setNamedColor(json["brush"].toString());
     //color.setAlpha(json["brush_alpha"].toInt());
     //setBrush(color);

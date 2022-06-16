@@ -113,9 +113,11 @@ private slots:
    void itemColorChanged(QColor color);
    void lineColorChanged(QColor color);
    void lineArrowChanged();
+   void lineThicknessChanged();
    void textButtonTriggered();
    void fillButtonTriggered();
    void lineButtonTriggered();
+   void lineThicknessButtonTriggered();
    void handleFontChange();
    void itemSelected(QGraphicsItem *item);
    void lineArrowButtonTriggered();
@@ -163,6 +165,10 @@ private:
 
    QMenu *createArrowMenu(const char *slot, const int def);
    QIcon createArrowIcon(const int i);
+
+   QMenu *createLineThicknessMenu(const char *slot, const int def);
+   QIcon createLineThicknesIcon(const int i);
+
    QRectF getTotalBoundary(const QList<QGraphicsItem*> items) const;
    QPointF getFirstPoint(const QList<QGraphicsItem*> items) const;
    void transformSelected(const QTransform transform,QList<QGraphicsItem*> items,bool forceOnGrid=false);
@@ -230,10 +236,12 @@ private:
    ColorPickerToolButton *lineColorToolButton;
    QToolButton *pointerButton;
    QToolButton *linePointerButton;
+   QToolButton *lineThicknessButton;
    QAction *boldAction;
    QAction *underlineAction;
    QAction *italicAction;
 
+   QAction *thicknessAction;
    QAction *arrowAction;
 
    QAction *loadAction;
