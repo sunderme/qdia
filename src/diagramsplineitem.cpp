@@ -98,6 +98,10 @@ DiagramSplineItem::DiagramSplineItem(const DiagramSplineItem &diagram)
     mySelPoint=-1;
     myHandlerWidth = 2.0;
     myHoverPoint=-1;
+
+    setFlag(QGraphicsItem::ItemIsMovable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setAcceptHoverEvents(true);
 }
 
 
