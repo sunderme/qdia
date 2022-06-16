@@ -497,6 +497,8 @@ DiagramPathItem::DiagramPathItem(const QJsonObject &json, QMenu *contextMenu)
     myHandlerWidth = 2.0;
     myHoverPoint=-1;
 
+    createPath();
+
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setAcceptHoverEvents(true);
