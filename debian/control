@@ -1,0 +1,13 @@
+Source: qdia
+Section: graphics
+Priority: extra
+Maintainer: J. Sundermeyer <sunderme@gmx.de>
+Build-Depends: debhelper (>= 7.0.50~),qtbase5-dev
+Standards-Version: 3.9.1
+Homepage: https://github.com/sunderme/qdia
+
+Package: qdia
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Diagram Editor
+ qdia is a simple schematic/diagram editor with focus on quick diagram generation with high quality graphics.

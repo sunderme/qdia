@@ -1,0 +1,9 @@
+Format: http://dep.debian.net/deps/dep5
+Upstream-Name: qdia
+Source: https://github.com/sunderme/qdia
+
+Files: *
+Copyright: 2022 Jan Sundermeyer <sunderme@gmx.de>
+License: AGPL-3.0+
+
+
