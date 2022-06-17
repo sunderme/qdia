@@ -1807,7 +1807,6 @@ void MainWindow::linePatternChanged()
 /* TODO
  * fix resizing over width/height ==0 (handle shifted)
  * filling of DiagramElement wrong
- * shift z up/down smaller steps
  * click on line to add text / bus width ?
  * Align ?
  * undo/redo
