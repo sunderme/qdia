@@ -232,12 +232,21 @@ void MainWindow::bringUp()
             zValues << item->zValue();
     }
     std::sort(zValues.begin(),zValues.end());
-    for(const qreal z:zValues) {
+    int i=0;
+    bool found=false;
+    for(;i<zValues.size();++i) {
+        qreal z=zValues.at(i);
         if(z<=zValue) continue;
         zValue=z;
+        found=true;
         break;
     }
-    zValue+=0.1;
+    if( (i+1)<zValues.size()){
+        // make sure that it is above one but not the next higher one
+        zValue=(zValue+zValues[i+1])/2;
+    }else{
+        if(found) zValue+=0.1;
+    }
     scene->setMaxZ(zValue);
     selectedItem->setZValue(zValue);
     scene->setCursorVisible(true);
@@ -275,12 +284,21 @@ void MainWindow::sendDown()
             zValues << item->zValue();
     }
     std::sort(zValues.begin(),zValues.end());
-    for(const qreal z:zValues) {
+    bool found=false;
+    int i=zValues.size()-1;
+    for(;i>=0;--i) {
+        qreal z=zValues[i];
+        if(z>zValue) continue;
+        found=true;
         zValue=z;
-        if(z<zValue) continue;
         break;
     }
-    zValue-=0.1;
+    if( (i-1)>=0){
+        // make sure that it is above one but not the next higher one
+        zValue=(zValue+zValues[i-1])/2;
+    }else{
+        if(found) zValue-=0.1;
+    }
     selectedItem->setZValue(zValue);
     scene->setCursorVisible(true);
 }
