@@ -125,6 +125,8 @@ public:
     QList<QGraphicsItem *> activeItems() const;
     void duplicateItems();
 
+    void setMaxZ(qreal z);
+
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);
     void abort(bool keepSelection=false);

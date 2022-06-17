@@ -922,6 +922,13 @@ void DiagramScene::duplicateItems()
     }
 }
 
+void DiagramScene::setMaxZ(qreal z)
+{
+    if(z>=maxZ){
+        maxZ=z+0.1;
+    }
+}
+
 void DiagramScene::editorReceivedFocus(DiagramTextItem *item)
 {
     emit editorHasReceivedFocus();

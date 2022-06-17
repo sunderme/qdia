@@ -217,6 +217,32 @@ void MainWindow::bringToFront()
     scene->setCursorVisible(true);
 }
 
+void MainWindow::bringUp()
+{
+    if (scene->selectedItems().isEmpty())
+        return;
+    scene->setCursorVisible(false);
+
+    QGraphicsItem *selectedItem = scene->selectedItems().first();
+    const QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
+
+    qreal zValue=selectedItem->zValue();
+    QList<qreal> zValues;
+    for (const QGraphicsItem *item : overlapItems) {
+            zValues << item->zValue();
+    }
+    std::sort(zValues.begin(),zValues.end());
+    for(const qreal z:zValues) {
+        if(z<=zValue) continue;
+        zValue=z;
+        break;
+    }
+    zValue+=0.1;
+    scene->setMaxZ(zValue);
+    selectedItem->setZValue(zValue);
+    scene->setCursorVisible(true);
+}
+
 void MainWindow::sendToBack()
 {
     if (scene->selectedItems().isEmpty())
@@ -230,6 +256,31 @@ void MainWindow::sendToBack()
         if (item->zValue() <= zValue)
             zValue = item->zValue() - 0.1;
     }
+    selectedItem->setZValue(zValue);
+    scene->setCursorVisible(true);
+}
+
+void MainWindow::sendDown()
+{
+    if (scene->selectedItems().isEmpty())
+        return;
+    scene->setCursorVisible(false);
+
+    QGraphicsItem *selectedItem = scene->selectedItems().first();
+    const QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
+
+    qreal zValue=selectedItem->zValue();
+    QList<qreal> zValues;
+    for (const QGraphicsItem *item : overlapItems) {
+            zValues << item->zValue();
+    }
+    std::sort(zValues.begin(),zValues.end());
+    for(const qreal z:zValues) {
+        zValue=z;
+        if(z<zValue) continue;
+        break;
+    }
+    zValue-=0.1;
     selectedItem->setZValue(zValue);
     scene->setCursorVisible(true);
 }
@@ -544,6 +595,18 @@ void MainWindow::createActions()
     sendBackAction->setStatusTip(tr("Send item to back"));
     connect(sendBackAction, &QAction::triggered, this, &MainWindow::sendToBack);
 
+    bringUpAction = new QAction(QIcon(":/images/bringtofront.svg"),
+                                tr("Bring &up"), this);
+    bringUpAction->setShortcut(tr("Ctrl+U"));
+    bringUpAction->setStatusTip(tr("Bring item one up"));
+    connect(bringUpAction, &QAction::triggered, this, &MainWindow::bringUp);
+
+    sendDownAction = new QAction(QIcon(":/images/sendtoback.svg"),
+                                tr("Send &down"), this);
+    sendDownAction->setShortcut(tr("Ctrl+Shift+U"));
+    sendDownAction->setStatusTip(tr("Send item one down"));
+    connect(sendDownAction, &QAction::triggered, this, &MainWindow::sendDown);
+
     rotateRightAction = new QAction(QIcon(":/images/object-rotate-right.svg"),
                                     tr("rotate &Right"), this);
     rotateRightAction->setShortcut(tr("R"));
@@ -607,7 +670,7 @@ void MainWindow::createActions()
 
     underlineAction = new QAction(QIcon(":/images/underline.svg"), tr("Underline"), this);
     underlineAction->setCheckable(true);
-    underlineAction->setShortcut(tr("Ctrl+U"));
+    //underlineAction->setShortcut(tr("Ctrl+U"));
     connect(underlineAction, &QAction::triggered, this, &MainWindow::handleFontChange);
 
     aboutAction = new QAction(tr("A&bout"), this);
@@ -778,6 +841,8 @@ void MainWindow::createMenus()
     itemMenu->addSeparator();
     itemMenu->addAction(toFrontAction);
     itemMenu->addAction(sendBackAction);
+    itemMenu->addAction(bringUpAction);
+    itemMenu->addAction(sendDownAction);
     itemMenu->addSeparator();
     itemMenu->addAction(selectAllAction);
     itemMenu->addSeparator();

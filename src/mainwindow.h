@@ -92,7 +92,9 @@ private slots:
    void horzAlignGroupClicked(QAbstractButton *button);
    void vertAlignGroupClicked(QAbstractButton *button);
    void bringToFront();
+   void bringUp();
    void sendToBack();
+   void sendDown();
    void selectAll();
    void rotateRight();
    void rotateLeft();
@@ -188,6 +190,8 @@ private:
 
    QAction *toFrontAction;
    QAction *sendBackAction;
+   QAction *bringUpAction;
+   QAction *sendDownAction;
    QAction *selectAllAction;
    QAction *aboutAction;
    QAction *rotateRightAction;
