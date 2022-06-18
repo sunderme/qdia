@@ -28,7 +28,7 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     myHandlerWidth=2.0;
     myRadius=5.0;
 }
-//! [0]
+
 DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
     : DiagramItem(diagram.myContextMenu,diagram.parentItem())
 {
@@ -49,8 +49,8 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
-
 }
+
 DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):DiagramItem(json,contextMenu)
 {
     myDiagramType=static_cast<DiagramType>(json["diagramtype"].toInt());
@@ -67,7 +67,6 @@ DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):Di
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
-
 }
 //! [1]
 QPainterPath DiagramDrawItem::createPath()
@@ -374,8 +373,12 @@ void DiagramDrawItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
                 point=getHandler(mySelPoint);
                 if(hasClickedOn(mouse_point,point)) break;
             }//for
-            if(mySelPoint==8) mySelPoint=-1;
-            else e->accept();
+            if(mySelPoint==8){
+                mySelPoint=-1;
+            }else{
+                mRect=Rect(myPos2,mySelPoint);
+                e->accept();
+            }
         }
     }
     DiagramItem::mousePressEvent(e);
@@ -386,38 +389,10 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
     if ((e -> buttons() & Qt::LeftButton)&&(mySelPoint>-1)) {
         QPointF mouse_point = onGrid(e -> pos());
         prepareGeometryChange();
-        Rect rect=Rect(myPos2);
-        switch (mySelPoint) {
-            case 0:
-                rect.setTopLeft(mouse_point);
-                break;
-            case 1:
-                rect.setTop(mouse_point.y());
-                break;
-            case 2:
-                rect.setTopRight(mouse_point);
-                break;
-            case 3:
-                rect.setRight(mouse_point.x());
-                break;
-            case 6:
-                rect.setBottomRight(mouse_point);
-                break;
-            case 5:
-                rect.setBottom(mouse_point.y());
-                break;
-            case 4:
-                rect.setBottomLeft(mouse_point);
-                break;
-            case 7:
-                rect.setLeft(mouse_point.x());
-                break;
-            default:
-                break;
-        }
-        QPointF anchorPoint=rect.anchorPoint();
-        rect.translate(-anchorPoint); // renormalize: anchor is at 0/0, the item is moved instead
-        mySetDimension(rect.point());
+        mRect.movePoint(mouse_point);
+        QPointF anchorPoint=mRect.anchorPoint();
+        mRect.translate(-anchorPoint); // renormalize: anchor is at 0/0, the item is moved instead
+        mySetDimension(mRect.point());
         setPos(mapToScene(anchorPoint));
         mPainterPath=createPath();
         setPath(mPainterPath);
@@ -435,10 +410,24 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
         DiagramItem::mouseMoveEvent(e);
 }
 
-Rect::Rect(QPointF pt)
+Rect::Rect()
+{
+    m_selPoint=-1;
+    m_mvAnchorX=false;
+    m_mvPointX=false;
+    m_mvAnchorY=false;
+    m_mvPointY=false;
+}
+
+Rect::Rect(QPointF pt,int selPoint)
 {
     m_point=pt;
+    m_mvAnchorX=false;
+    m_mvPointX=false;
+    m_mvAnchorY=false;
+    m_mvPointY=false;
     // anchor is 0/0
+    setSelPoint(selPoint);
 }
 
 QPointF Rect::anchorPoint() const
@@ -450,17 +439,52 @@ QPointF Rect::point() const
 {
     return m_point;
 }
+
+void Rect::setSelPoint(int selPoint)
+{
+    m_selPoint=selPoint;
+    switch (m_selPoint) {
+        case 0:
+            setTopLeft();
+            break;
+        case 1:
+            setTop();
+            break;
+        case 2:
+            setTopRight();
+            break;
+        case 3:
+            setRight();
+            break;
+        case 6:
+            setBottomRight();
+            break;
+        case 5:
+            setBottom();
+            break;
+        case 4:
+            setBottomLeft();
+            break;
+        case 7:
+            setLeft();
+            break;
+        default:
+            break;
+    }
+}
 /*!
  * \brief manipulate left side of rect
  * change anchor or point, depending which one is more left
  * \param x
  */
-void Rect::setLeft(qreal x)
+void Rect::setLeft()
 {
     if(m_anchor.x()<m_point.x()){
-        m_anchor.setX(x);
+        m_mvAnchorX=true;
+        m_mvPointX=false;
     }else{
-        m_point.setX(x);
+        m_mvAnchorX=false;
+        m_mvPointX=true;
     }
 }
 /*!
@@ -468,12 +492,14 @@ void Rect::setLeft(qreal x)
  * change anchor or point, depending which one is more right
  * \param x
  */
-void Rect::setRight(qreal x)
+void Rect::setRight()
 {
     if(m_anchor.x()>m_point.x()){
-        m_anchor.setX(x);
+        m_mvAnchorX=true;
+        m_mvPointX=false;
     }else{
-        m_point.setX(x);
+        m_mvAnchorX=false;
+        m_mvPointX=true;
     }
 }
 /*!
@@ -481,12 +507,14 @@ void Rect::setRight(qreal x)
  * change anchor or point, depending which one is more up
  * \param x
  */
-void Rect::setTop(qreal y)
+void Rect::setTop()
 {
     if(m_anchor.y()<m_point.y()){
-        m_anchor.setY(y);
+        m_mvAnchorY=true;
+        m_mvPointY=false;
     }else{
-        m_point.setY(y);
+        m_mvAnchorY=false;
+        m_mvPointY=true;
     }
 }
 /*!
@@ -494,49 +522,70 @@ void Rect::setTop(qreal y)
  * change anchor or point, depending which one is more down
  * \param x
  */
-void Rect::setBottom(qreal y)
+void Rect::setBottom()
 {
     if(m_anchor.y()>m_point.y()){
-        m_anchor.setY(y);
+        m_mvAnchorY=true;
+        m_mvPointY=false;
     }else{
-        m_point.setY(y);
+        m_mvAnchorY=false;
+        m_mvPointY=true;
     }
 }
 /*!
  * \brief setTopLeft of rectangle
  * \param pt
  */
-void Rect::setTopLeft(QPointF pt)
+void Rect::setTopLeft()
 {
-    setLeft(pt.x());
-    setTop(pt.y());
+    setLeft();
+    setTop();
 }
 /*!
  * \brief setTopLeft of rectangle
  * \param pt
  */
-void Rect::setTopRight(QPointF pt)
+void Rect::setTopRight()
 {
-    setRight(pt.x());
-    setTop(pt.y());
+    setRight();
+    setTop();
 }
 /*!
  * \brief setTopLeft of rectangle
  * \param pt
  */
-void Rect::setBottomLeft(QPointF pt)
+void Rect::setBottomLeft()
 {
-    setLeft(pt.x());
-    setBottom(pt.y());
+    setLeft();
+    setBottom();
 }
 /*!
  * \brief setTopLeft of rectangle
  * \param pt
  */
-void Rect::setBottomRight(QPointF pt)
+void Rect::setBottomRight()
 {
-    setRight(pt.x());
-    setBottom(pt.y());
+    setRight();
+    setBottom();
+}
+/*!
+ * \brief move pos/anchor depending on sel point
+ * \param pt
+ */
+void Rect::movePoint(QPointF pt)
+{
+    if(m_mvPointX){
+        m_point.setX(pt.x());
+    }
+    if(m_mvAnchorX){
+        m_anchor.setX(pt.x());
+    }
+    if(m_mvPointY){
+        m_point.setY(pt.y());
+    }
+    if(m_mvAnchorY){
+        m_anchor.setY(pt.y());
+    }
 }
 
 /*!

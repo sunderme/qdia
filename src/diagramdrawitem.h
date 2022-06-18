@@ -12,23 +12,29 @@
 class Rect
 {
 public:
-    Rect(QPointF pt);
+    Rect();
+    Rect(QPointF pt,int selPoint);
     QPointF anchorPoint() const;
     QPointF point() const;
 
-    void setLeft(qreal x);
-    void setRight(qreal x);
-    void setTop(qreal y);
-    void setBottom(qreal y);
-    void setTopLeft(QPointF pt);
-    void setTopRight(QPointF pt);
-    void setBottomLeft(QPointF pt);
-    void setBottomRight(QPointF pt);
+    void setSelPoint(int selPoint);
+    void setLeft();
+    void setRight();
+    void setTop();
+    void setBottom();
+    void setTopLeft();
+    void setTopRight();
+    void setBottomLeft();
+    void setBottomRight();
+    void movePoint(QPointF pt);
 
     void translate(QPointF pt);
 private:
     QPointF m_anchor;
     QPointF m_point;
+    int m_selPoint;
+    bool m_mvPointX,m_mvPointY;
+    bool m_mvAnchorX,m_mvAnchorY;
 };
 
 /*!
@@ -95,6 +101,7 @@ private:
     int myHoverPoint,mySelPoint;
     qreal myHandlerWidth;
     qreal myRadius;
+    Rect mRect;
 };
 
 #endif // DIAGRAMDRAWITEM_H
