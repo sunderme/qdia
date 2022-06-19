@@ -40,7 +40,7 @@ ColorPickerToolButton::ColorPickerToolButton(QWidget * parent) :
     QAction * colorDialogAction = new QAction(this);
     setDefaultAction(colorDialogAction);
 
-    QObject::connect(colorDialogAction, SIGNAL(triggered(bool)), this, SLOT(onColorDialogAction()));
+    //QObject::connect(colorDialogAction, SIGNAL(triggered(bool)), this, SLOT(onColorDialogAction()));
 
     QObject::connect(colorPickerActionWidget, SIGNAL(colorSelected(QColor)),
                      this, SIGNAL(colorSelected(QColor)));
