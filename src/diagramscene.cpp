@@ -986,6 +986,7 @@ bool DiagramScene::save_json(QFile *file)
 {
     QJsonArray array;
     foreach(QGraphicsItem* item, items()){
+        if(item->parentItem()) continue;
         addElementToJSON(item,array);
     }
     QJsonDocument doc(array);
@@ -1055,6 +1056,13 @@ bool DiagramScene::load_json(QFile *file)
 void DiagramScene::addElementToJSON(QGraphicsItem *item, QJsonArray &array)
 {
     QJsonObject json;
+    if(!item->childItems().isEmpty()){
+        QJsonArray ar;
+        for(auto *i:item->childItems()){
+            addElementToJSON(i,ar);
+        }
+        json["children"]=ar;
+    }
     if(item->type()>QGraphicsItem::UserType){
         switch (item->type()) {
         case DiagramTextItem::Type:
@@ -1085,10 +1093,20 @@ void DiagramScene::addElementToJSON(QGraphicsItem *item, QJsonArray &array)
         array.append(json);
     }
     if(item->type()==QGraphicsItemGroup::Type){
-        for(auto *i:item->childItems()){
-            addElementToJSON(i,array);
-        }
+        json["type"]=item->type();
+        QPointF p=item->pos();
+        json["x"]=p.x();
+        json["y"]=p.y();
+        json["z"]=item->zValue();
+        json["m11"]=item->transform().m11();
+        json["m12"]=item->transform().m12();
+        json["m21"]=item->transform().m21();
+        json["m22"]=item->transform().m22();
+        json["dx"]=item->transform().dx();
+        json["dy"]=item->transform().dy();
+        array.append(json);
     }
+
 }
 
 bool DiagramScene::event(QEvent *mEvent)

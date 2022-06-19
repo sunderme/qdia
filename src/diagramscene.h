@@ -71,7 +71,6 @@ class QGraphicsTextItem;
 class QColor;
 QT_END_NAMESPACE
 
-//! [0]
 class DiagramScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -199,9 +198,6 @@ private:
     int myGridScale;
     QList<QGraphicsItem*> myMoveItems;
     qreal maxZ;
-
-
 };
-//! [0]
 
 #endif // DIAGRAMSCENE_H
