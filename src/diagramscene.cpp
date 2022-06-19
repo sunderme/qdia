@@ -986,36 +986,7 @@ bool DiagramScene::save_json(QFile *file)
 {
     QJsonArray array;
     foreach(QGraphicsItem* item, items()){
-        QJsonObject json;
-        if(item->type()>QGraphicsItem::UserType){
-            switch (item->type()) {
-            case DiagramTextItem::Type:
-            {
-                DiagramTextItem *mItem = dynamic_cast<DiagramTextItem *>(item);
-                mItem->write(json);
-            }
-                break;
-            case DiagramPathItem::Type:
-            {
-                DiagramPathItem *mItem = dynamic_cast<DiagramPathItem *>(item);
-                mItem->write(json);
-            }
-                break;
-            case DiagramSplineItem::Type:
-            {
-                DiagramSplineItem *mItem = dynamic_cast<DiagramSplineItem *>(item);
-                mItem->write(json);
-            }
-                break;
-            default:
-            {
-                DiagramItem *mItem = dynamic_cast<DiagramItem *>(item);
-                mItem->write(json);
-            }
-                break;
-            }
-            array.append(json);
-        }
+        addElementToJSON(item,array);
     }
     QJsonDocument doc(array);
     file->write(doc.toJson());
@@ -1076,6 +1047,48 @@ bool DiagramScene::load_json(QFile *file)
     myMode = MoveItem;
 
     return true;
+}
+/*!
+ * \brief add item as json to JSON array
+ * \param array
+ */
+void DiagramScene::addElementToJSON(QGraphicsItem *item, QJsonArray &array)
+{
+    QJsonObject json;
+    if(item->type()>QGraphicsItem::UserType){
+        switch (item->type()) {
+        case DiagramTextItem::Type:
+        {
+            DiagramTextItem *mItem = dynamic_cast<DiagramTextItem *>(item);
+            mItem->write(json);
+        }
+            break;
+        case DiagramPathItem::Type:
+        {
+            DiagramPathItem *mItem = dynamic_cast<DiagramPathItem *>(item);
+            mItem->write(json);
+        }
+            break;
+        case DiagramSplineItem::Type:
+        {
+            DiagramSplineItem *mItem = dynamic_cast<DiagramSplineItem *>(item);
+            mItem->write(json);
+        }
+            break;
+        default:
+        {
+            DiagramItem *mItem = dynamic_cast<DiagramItem *>(item);
+            mItem->write(json);
+        }
+            break;
+        }
+        array.append(json);
+    }
+    if(item->type()==QGraphicsItemGroup::Type){
+        for(auto *i:item->childItems()){
+            addElementToJSON(i,array);
+        }
+    }
 }
 
 bool DiagramScene::event(QEvent *mEvent)
