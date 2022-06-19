@@ -1002,42 +1002,8 @@ bool DiagramScene::load_json(QFile *file)
     QJsonArray array=loadDoc.array();
     for(int i=0;i<array.size();++i){
         QJsonObject json=array[i].toObject();
-        int mDiaType=json["type"].toInt();
-        switch (mDiaType) {
-        case DiagramItem::Type:
-            insertedItem = new DiagramItem(json,myItemMenu);
-            addItem(insertedItem);
-            break;
-        case DiagramElement::Type:
-            insertedItem = new DiagramElement(json,myItemMenu);
-            addItem(insertedItem);
-            break;
-        case DiagramDrawItem::Type:
-            insertedDrawItem = new DiagramDrawItem(json,myItemMenu);
-            addItem(insertedDrawItem);
-            break;
-        case DiagramPathItem::Type:
-            insertedPathItem = new DiagramPathItem(json,myItemMenu);
-            addItem(insertedPathItem);
-            break;
-        case DiagramSplineItem::Type:
-            insertedSplineItem = new DiagramSplineItem(json,myItemMenu);
-            addItem(insertedSplineItem);
-            break;
-        case DiagramTextItem::Type:
-            textItem = new DiagramTextItem(json);
-            textItem->setTextInteractionFlags(Qt::NoTextInteraction);
-            connect(textItem, &DiagramTextItem::lostFocus,
-                    this, &DiagramScene::editorLostFocus);
-            connect(textItem, &DiagramTextItem::receivedFocus,
-                    this, &DiagramScene::editorReceivedFocus);
-            connect(textItem, &DiagramTextItem::selectedChange,
-                    this, &DiagramScene::itemSelected);
-            addItem(textItem);
-            break;
-        default:
-            break;
-        }
+        QGraphicsItem *item=getElementFromJSON(json);
+        addItem(item);
     }
     // Aufräumen
     insertedItem = nullptr;
@@ -1107,6 +1073,83 @@ void DiagramScene::addElementToJSON(QGraphicsItem *item, QJsonArray &array)
         array.append(json);
     }
 
+}
+/*!
+ * \brief interpret json and return appropriate DiagramItem
+ * \param json
+ * \return
+ */
+QGraphicsItem *DiagramScene::getElementFromJSON(QJsonObject json)
+{
+    QGraphicsItem *item=nullptr;
+    int mDiaType=json["type"].toInt();
+    switch (mDiaType) {
+    case DiagramItem::Type:
+        insertedItem = new DiagramItem(json,myItemMenu);
+        item=insertedItem;
+        break;
+    case DiagramElement::Type:
+        insertedItem = new DiagramElement(json,myItemMenu);
+        item=insertedItem;
+        break;
+    case DiagramDrawItem::Type:
+        insertedDrawItem = new DiagramDrawItem(json,myItemMenu);
+        item=insertedDrawItem;
+        break;
+    case DiagramPathItem::Type:
+        insertedPathItem = new DiagramPathItem(json,myItemMenu);
+        item=insertedPathItem;
+        break;
+    case DiagramSplineItem::Type:
+        insertedSplineItem = new DiagramSplineItem(json,myItemMenu);
+        item=insertedSplineItem;
+        break;
+    case DiagramTextItem::Type:
+        textItem = new DiagramTextItem(json);
+        textItem->setTextInteractionFlags(Qt::NoTextInteraction);
+        connect(textItem, &DiagramTextItem::lostFocus,
+                this, &DiagramScene::editorLostFocus);
+        connect(textItem, &DiagramTextItem::receivedFocus,
+                this, &DiagramScene::editorReceivedFocus);
+        connect(textItem, &DiagramTextItem::selectedChange,
+                this, &DiagramScene::itemSelected);
+        item=textItem;
+        break;
+    case QGraphicsItemGroup::Type:
+    {
+        QGraphicsItemGroup *group=new QGraphicsItemGroup;
+        QPointF p;
+        p.setX(json["x"].toDouble());
+        p.setY(json["y"].toDouble());
+        group->setPos(p);
+        group->setZValue(json["z"].toDouble());
+
+        qreal m11=json["m11"].toDouble();
+        qreal m12=json["m12"].toDouble();
+        qreal m21=json["m21"].toDouble();
+        qreal m22=json["m22"].toDouble();
+        qreal dx=json["dx"].toDouble();
+        qreal dy=json["dy"].toDouble();
+        QTransform tf(m11,m12,m21,m22,dx,dy);
+        group->setTransform(tf);
+        group->setFlag(QGraphicsItem::ItemIsMovable, true);
+        group->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        item=group;
+    }
+        break;
+    default:
+        break;
+    }
+    // handle children
+    if(json["children"].isArray()){
+        QJsonArray array=json["children"].toArray();
+        for(int i=0;i<array.size();++i){
+            QJsonObject json=array[i].toObject();
+            QGraphicsItem *it=getElementFromJSON(json);
+            it->setParentItem(item);
+        }
+    }
+    return item;
 }
 
 bool DiagramScene::event(QEvent *mEvent)

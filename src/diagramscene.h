@@ -116,6 +116,7 @@ public:
     bool save_json(QFile *file);
     bool load_json(QFile *file);
     void addElementToJSON(QGraphicsItem* item,QJsonArray &array);
+    QGraphicsItem* getElementFromJSON(QJsonObject json);
 
     QPointF onGrid(QPointF pos);
     void setCursorVisible(bool t);
