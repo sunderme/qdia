@@ -242,6 +242,8 @@ void DiagramScene::editorLostFocus(DiagramTextItem *item)
     if (item->toPlainText().isEmpty()) {
         removeItem(item);
         item->deleteLater();
+    }else{
+        takeSnapshot();
     }
     emit editorHasLostFocus();
 }
@@ -695,6 +697,7 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
         insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
         insertedPathItem->setEnabled(false);
         insertedPathItem=nullptr;
+        takeSnapshot();
         mouseEvent->accept();
         break;
     case MoveItem:
