@@ -685,6 +685,11 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         mouseEvent->accept();
         return;
     }
+    if(myMode== MoveItem && !selectedItems().isEmpty()){
+        // try to detect dragging elements
+        // fails with area select ...
+        takeSnapshot();
+    }
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
 
@@ -947,6 +952,12 @@ void DiagramScene::setMaxZ(qreal z)
 void DiagramScene::takeSnapshot()
 {
     auto doc=create_json_save();
+    if(!m_snapshots.isEmpty()){
+        // check if duplicate
+        // happens with area select but also with moving around to the same original position
+        if(m_snapshots.at(m_undoPos)==doc)
+            return;
+    }
     if(m_snapshots.size()>m_undoPos+1){
         m_snapshots.insert(m_undoPos+1,doc);
         ++m_undoPos;
