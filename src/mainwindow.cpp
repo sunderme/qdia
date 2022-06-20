@@ -114,7 +114,11 @@ void MainWindow::undo()
  */
 void MainWindow::redo()
 {
-    scene->restoreSnapshot(-2);
+    int max=scene->getSnapshotSize();
+    int current=scene->getSnaphotPosition();
+    if(current+1<max){
+        scene->restoreSnapshot(current+1);
+    }
 }
 /*!
  * \brief write settings on closeEvent
@@ -229,6 +233,7 @@ void MainWindow::bringToFront()
             zValue = item->zValue() + 0.1;
     }
     selectedItem->setZValue(zValue);
+    scene->takeSnapshot();
     scene->setCursorVisible(true);
 }
 
@@ -264,6 +269,7 @@ void MainWindow::bringUp()
     }
     scene->setMaxZ(zValue);
     selectedItem->setZValue(zValue);
+    scene->takeSnapshot();
     scene->setCursorVisible(true);
 }
 
@@ -281,6 +287,7 @@ void MainWindow::sendToBack()
             zValue = item->zValue() - 0.1;
     }
     selectedItem->setZValue(zValue);
+    scene->takeSnapshot();
     scene->setCursorVisible(true);
 }
 
@@ -315,6 +322,7 @@ void MainWindow::sendDown()
         if(found) zValue-=0.1;
     }
     selectedItem->setZValue(zValue);
+    scene->takeSnapshot();
     scene->setCursorVisible(true);
 }
 /*!

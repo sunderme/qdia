@@ -133,6 +133,8 @@ public:
 
     void takeSnapshot();
     void restoreSnapshot(int pos=-1);
+    int getSnaphotPosition();
+    int getSnapshotSize();
 
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);

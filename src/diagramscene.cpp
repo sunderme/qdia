@@ -970,7 +970,26 @@ void DiagramScene::restoreSnapshot(int pos)
     }else{
         clear();
         read_in_json(m_snapshots.at(pos));
+        m_undoPos=pos;
     }
+}
+/*!
+ * \brief get current snaphot position
+ * Is not last if undo was performed
+ * Snapshots are kept to allow redo
+ * \return
+ */
+int DiagramScene::getSnaphotPosition()
+{
+    return m_undoPos;
+}
+/*!
+ * \brief get number of available snapshots;
+ * \return
+ */
+int DiagramScene::getSnapshotSize()
+{
+    return m_snapshots.size();
 }
 
 void DiagramScene::editorReceivedFocus(DiagramTextItem *item)
