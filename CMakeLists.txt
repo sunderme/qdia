@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(qdia VERSION 0.1 LANGUAGES CXX)
+project(qdia VERSION 0.7 LANGUAGES CXX)
+
+add_definitions(-DQDIA_VERSION=\"${qdia_VERSION}\")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

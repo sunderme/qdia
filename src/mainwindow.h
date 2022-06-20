@@ -75,7 +75,7 @@ class QAbstractButton;
 class QGraphicsView;
 QT_END_NAMESPACE
 
-#define QDIA_VERSION "0.6"
+//#define QDIA_VERSION "0.6"
 
 //! [0]
 class MainWindow : public QMainWindow
