@@ -1845,6 +1845,5 @@ void MainWindow::linePatternChanged()
  * filling of DiagramElement wrong
  * click on line to add text / bus width ?
  * Align ?
- * undo/redo
  * import xcircuit/drawio?
  */
