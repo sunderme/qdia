@@ -175,7 +175,8 @@ void MainWindow::deleteItem()
     for (QGraphicsItem *item : qAsConst(selectedItems)) {
          scene->deleteItem(item);
          delete item;
-     }
+    }
+    scene->takeSnapshot();
 }
 
 void MainWindow::pointerGroupClicked(QAbstractButton *button)
