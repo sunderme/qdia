@@ -984,22 +984,40 @@ void DiagramScene::abort(bool keepSelection)
 
 bool DiagramScene::save_json(QFile *file)
 {
+    QJsonDocument doc=create_json_save();
+    file->write(doc.toJson());
+    return true;
+}
+/*!
+ * \brief create json save data
+ * \return
+ */
+QJsonDocument DiagramScene::create_json_save()
+{
     QJsonArray array;
     foreach(QGraphicsItem* item, items()){
         if(item->parentItem()) continue;
         addElementToJSON(item,array);
     }
     QJsonDocument doc(array);
-    file->write(doc.toJson());
-    return true;
+    return doc;
 }
 
 bool DiagramScene::load_json(QFile *file)
 {
     QByteArray data = file->readAll();
 
-    QJsonDocument loadDoc(QJsonDocument::fromJson(data));
-    QJsonArray array=loadDoc.array();
+    read_in_json(QJsonDocument::fromJson(data));
+
+    return true;
+}
+/*!
+ * \brief read in json
+ * \param doc
+ */
+void DiagramScene::read_in_json(QJsonDocument doc)
+{
+    QJsonArray array=doc.array();
     for(int i=0;i<array.size();++i){
         QJsonObject json=array[i].toObject();
         QGraphicsItem *item=getElementFromJSON(json);
@@ -1012,8 +1030,6 @@ bool DiagramScene::load_json(QFile *file)
     insertedSplineItem = nullptr;
     textItem = nullptr;
     myMode = MoveItem;
-
-    return true;
 }
 /*!
  * \brief add item as json to JSON array

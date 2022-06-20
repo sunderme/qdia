@@ -60,6 +60,7 @@
 
 #include <QGraphicsScene>
 #include <QFile>
+#include <QJsonDocument>
 
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
@@ -114,7 +115,9 @@ public:
     }
 
     bool save_json(QFile *file);
+    QJsonDocument create_json_save();
     bool load_json(QFile *file);
+    void read_in_json(QJsonDocument doc);
     void addElementToJSON(QGraphicsItem* item,QJsonArray &array);
     QGraphicsItem* getElementFromJSON(QJsonObject json);
 
@@ -199,6 +202,7 @@ private:
     int myGridScale;
     QList<QGraphicsItem*> myMoveItems;
     qreal maxZ;
+    QList<QJsonDocument> m_snapshots;
 };
 
 #endif // DIAGRAMSCENE_H

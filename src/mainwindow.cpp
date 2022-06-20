@@ -1807,7 +1807,6 @@ void MainWindow::linePatternChanged()
 /* TODO
  * filling of DiagramElement wrong
  * click on line to add text / bus width ?
- * save grouping
  * Align ?
  * undo/redo
  * import xcircuit/drawio?
