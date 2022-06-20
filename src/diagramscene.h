@@ -131,6 +131,9 @@ public:
 
     void setMaxZ(qreal z);
 
+    void takeSnapshot();
+    void restoreSnapshot(int pos=-1);
+
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);
     void abort(bool keepSelection=false);
@@ -203,6 +206,7 @@ private:
     QList<QGraphicsItem*> myMoveItems;
     qreal maxZ;
     QList<QJsonDocument> m_snapshots;
+    int m_undoPos;
 };
 
 #endif // DIAGRAMSCENE_H

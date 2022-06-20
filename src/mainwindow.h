@@ -86,6 +86,8 @@ public:
    MainWindow(int argc, char *argv[],QWidget *parent = nullptr);
 
 private slots:
+   void undo();
+   void redo();
    void buttonGroupClicked(QAbstractButton *button);
    void deleteItem();
    void pointerGroupClicked(QAbstractButton *button);
@@ -187,6 +189,9 @@ private:
    QAction *exitAction;
    QAction *addAction;
    QAction *deleteAction;
+
+   QAction *undoAction;
+   QAction *redoAction;
 
    QAction *toFrontAction;
    QAction *sendBackAction;

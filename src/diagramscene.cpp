@@ -80,6 +80,7 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     myLineColor = Qt::black;
     myLineWidth = 1;
     myPenStyle = Qt::SolidLine;
+    m_undoPos = -1;
 
     myRouting=DiagramPathItem::free;
     myGrid=10.0;
@@ -279,6 +280,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 insertedPathItem->setEnabled(false);
                 insertedPathItem = nullptr;
                 mouseEvent->accept();
+                takeSnapshot();
             }
             break;
         case InsertSpline:
@@ -287,6 +289,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 insertedSplineItem->setEnabled(false);
                 insertedSplineItem=nullptr;
                 mouseEvent->accept();
+                takeSnapshot();
             }
             break;
         case InsertItem:
@@ -295,6 +298,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 insertedItem=nullptr;
                 myMode=MoveItem;
                 mouseEvent->accept();
+                takeSnapshot();
                 // switch toolbar !!
                 emit abortSignal();
             }
@@ -305,6 +309,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 insertedDrawItem->setEnabled(false);
                 insertedDrawItem = nullptr;
                 myMode=MoveItem;
+                takeSnapshot();
                 mouseEvent->accept();
                 // switch toolbar !!
                 emit abortSignal();
@@ -335,6 +340,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         insertedItem->setSelected(false);
         insertedItem->setEnabled(false);
         insertedItem=nullptr;
+        takeSnapshot();
         break;
     case InsertLine:
         if (insertedPathItem == 0){
@@ -396,6 +402,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         textItem->setSelected(true);
         textItem->setFocus();
         emit textInserted(textItem);
+        takeSnapshot();
         mouseEvent->accept();
         return;
         break;
@@ -417,8 +424,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             insertedDrawItem->setPos2(onGrid(mouseEvent->scenePos()));
             insertedDrawItem->setEnabled(false);
             insertedDrawItem = nullptr;
+            takeSnapshot();
         }
-
         break;
     case InsertElement:
         if(insertedItem==nullptr){
@@ -448,6 +455,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             addItem(item);
             insertedItem=item;
         }
+        takeSnapshot();
         break;
     case MoveItems:
     {
@@ -465,6 +473,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             }
             myMoveItems.clear();
             myMode=MoveItem;
+            takeSnapshot();
         }
         else
         {
@@ -558,6 +567,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     }
                 }
             }
+            takeSnapshot();
         }
         break;
     case Zoom:
@@ -926,6 +936,40 @@ void DiagramScene::setMaxZ(qreal z)
 {
     if(z>=maxZ){
         maxZ=z+0.1;
+    }
+}
+/*!
+ * \brief save current scene content as json into m_snapshots
+ */
+void DiagramScene::takeSnapshot()
+{
+    auto doc=create_json_save();
+    if(m_snapshots.size()>m_undoPos+1){
+        m_snapshots.insert(m_undoPos+1,doc);
+        ++m_undoPos;
+    }else{
+        // append snapshot
+
+        m_snapshots<<doc;
+        ++m_undoPos;
+    }
+}
+/*!
+ * \brief restore snapshot
+ * \param pos
+ */
+void DiagramScene::restoreSnapshot(int pos)
+{
+    if(pos<0){
+        // at m_undoPos
+        if(m_undoPos>0){
+            --m_undoPos;
+            clear();
+            read_in_json(m_snapshots.at(m_undoPos));
+        }
+    }else{
+        clear();
+        read_in_json(m_snapshots.at(pos));
     }
 }
 

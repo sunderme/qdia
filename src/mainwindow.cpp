@@ -102,6 +102,21 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     }
 }
 /*!
+ * \brief undo operation
+ */
+void MainWindow::undo()
+{
+    scene->restoreSnapshot();
+}
+/*!
+ * \brief redo operation
+ * (undo undo)
+ */
+void MainWindow::redo()
+{
+    scene->restoreSnapshot(-2);
+}
+/*!
  * \brief write settings on closeEvent
  * \param event
  */
@@ -602,6 +617,16 @@ void MainWindow::createToolBox()
 
 void MainWindow::createActions()
 {
+    undoAction = new QAction(QIcon(":/images/bringtofront.svg"),
+                                tr("&Undo"), this);
+    undoAction->setShortcut(tr("Ctrl+N"));
+    connect(undoAction, &QAction::triggered, this, &MainWindow::undo);
+
+    redoAction = new QAction(QIcon(":/images/bringtofront.svg"),
+                                tr("&Redo"), this);
+    redoAction->setShortcut(tr("Ctrl+Shift+N"));
+    connect(redoAction, &QAction::triggered, this, &MainWindow::redo);
+
     toFrontAction = new QAction(QIcon(":/images/bringtofront.svg"),
                                 tr("Bring to &Front"), this);
     toFrontAction->setShortcut(tr("Ctrl+F"));
@@ -852,6 +877,9 @@ void MainWindow::createMenus()
     viewMenu->addAction(showGridAction);
 
     itemMenu = menuBar()->addMenu(tr("&Item"));
+    itemMenu->addAction(undoAction);
+    itemMenu->addAction(redoAction);
+    itemMenu->addSeparator();
     itemMenu->addAction(deleteAction);
     itemMenu->addAction(copyAction);
     itemMenu->addAction(duplicateAction);
@@ -1718,6 +1746,7 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
     }
 
     transformItems(transform,items,pt);
+    scene->takeSnapshot();
 }
 /*!
  * \brief perform the transformation of items around an anchor point
