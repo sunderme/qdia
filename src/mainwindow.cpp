@@ -626,12 +626,12 @@ void MainWindow::createToolBox()
 
 void MainWindow::createActions()
 {
-    undoAction = new QAction(QIcon(":/images/bringtofront.svg"),
+    undoAction = new QAction(QIcon(":/images/edit-undo.svg"),
                                 tr("&Undo"), this);
     undoAction->setShortcut(tr("Ctrl+N"));
     connect(undoAction, &QAction::triggered, this, &MainWindow::undo);
 
-    redoAction = new QAction(QIcon(":/images/bringtofront.svg"),
+    redoAction = new QAction(QIcon(":/images/edit-redo.svg"),
                                 tr("&Redo"), this);
     redoAction->setShortcut(tr("Ctrl+Shift+N"));
     connect(redoAction, &QAction::triggered, this, &MainWindow::redo);
@@ -914,6 +914,16 @@ void MainWindow::createMenus()
 
 void MainWindow::createToolbars()
 {
+    fileToolBar = addToolBar(tr("File"));
+    fileToolBar->setObjectName("file");
+    fileToolBar->addAction(loadAction);
+    fileToolBar->addAction(saveAction);
+    fileToolBar->addAction(saveAsAction);
+    fileToolBar->addAction(copyToClipboardAction);
+    fileToolBar->addAction(pasteFromClipboardAction);
+    fileToolBar->addAction(undoAction);
+    fileToolBar->addAction(redoAction);
+
     editToolBar = addToolBar(tr("Edit"));
     editToolBar->setObjectName("edit");
     editToolBar->addAction(toFrontAction);
