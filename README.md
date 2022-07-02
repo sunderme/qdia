@@ -8,7 +8,7 @@ Initial code based on Qt/Example/diagramscne
 Build with cmake and qt6.
 
 ## Download
-Installer/binaries for windows, OSX and linux can be found under [Releases](https://github.com/texstudio-org/texstudio/releases/)
+Installer/binaries for windows, OSX and linux can be found under [Releases](https://github.com/sunderme/qdia/releases/)
 
 ## Status
 The program has reached a useable state.
