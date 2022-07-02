@@ -7,10 +7,12 @@ Initial code based on Qt/Example/diagramscne
 
 Build with cmake and qt6.
 
+## Download
+Installer/binaries for windows, OSX and linux can be found under [Releases](https://github.com/texstudio-org/texstudio/releases/)
+
 ## Status
 The program has reached a useable state.
-Basic circuit elements are present. Creating schematics works as well as saving/loading.
-The overall useability is going to be refined.
+Creating schematics,loading/saving, exporting and undo/redo work.
 
 ## Screenshots
 
