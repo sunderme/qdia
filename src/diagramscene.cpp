@@ -698,11 +698,13 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
     switch (myMode){
     case InsertLine:
         //insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
-        insertedPathItem->remove();
-        insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        insertedPathItem->setEnabled(false);
-        insertedPathItem=nullptr;
-        takeSnapshot();
+        if(insertedPathItem){
+            insertedPathItem->remove();
+            insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            insertedPathItem->setEnabled(false);
+            insertedPathItem=nullptr;
+            takeSnapshot();
+        }
         mouseEvent->accept();
         break;
     case MoveItem:
