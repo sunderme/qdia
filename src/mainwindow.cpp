@@ -1855,6 +1855,8 @@ void MainWindow::linePatternChanged()
 /* TODO
  * filling of DiagramElement wrong
  * click on line to add text / bus width ?
+ * text notes
+ * add/mult for signal processing
  * Align ?
  * import xcircuit/drawio?
  */

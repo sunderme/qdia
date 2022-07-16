@@ -106,6 +106,12 @@ void DiagramScene::setLineColor(const QColor &color)
             pen.setColor(myLineColor);
             item->setPen(pen);
         }
+        DiagramPathItem *pathItem = dynamic_cast<DiagramPathItem *>(elem);
+        if(pathItem){
+            QPen pen=pathItem->pen();
+            pen.setColor(myLineColor);
+            pathItem->setPen(pen);
+        }
     }
 }
 
