@@ -628,12 +628,12 @@ void MainWindow::createActions()
 {
     undoAction = new QAction(QIcon(":/images/edit-undo.svg"),
                                 tr("&Undo"), this);
-    undoAction->setShortcut(tr("Ctrl+N"));
+    undoAction->setShortcut(tr("Ctrl+Z"));
     connect(undoAction, &QAction::triggered, this, &MainWindow::undo);
 
     redoAction = new QAction(QIcon(":/images/edit-redo.svg"),
                                 tr("&Redo"), this);
-    redoAction->setShortcut(tr("Ctrl+Shift+N"));
+    redoAction->setShortcut(tr("Ctrl+Shift+Z"));
     connect(redoAction, &QAction::triggered, this, &MainWindow::redo);
 
     toFrontAction = new QAction(QIcon(":/images/bringtofront.svg"),
@@ -785,13 +785,13 @@ void MainWindow::createActions()
 
     // Zoom in/out
     zoomInAction = new QAction(QIcon(":/images/zoomin.svg"),tr("Zoom &in"), this);
-    zoomInAction->setShortcut(tr("Shift+z"));
+    //zoomInAction->setShortcut(tr("Shift+z"));
     connect(zoomInAction, &QAction::triggered,
             this, &MainWindow::zoomIn);
     listOfActions.append(zoomInAction);
 
     zoomOutAction = new QAction(QIcon(":/images/zoomout.svg"),tr("Zoom &out"), this);
-    zoomOutAction->setShortcut(tr("Ctrl+z"));
+    //zoomOutAction->setShortcut(tr("Ctrl+z"));
     connect(zoomOutAction, &QAction::triggered,
             this, &MainWindow::zoomOut);
     listOfActions.append(zoomOutAction);
