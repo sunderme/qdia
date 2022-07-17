@@ -351,7 +351,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         takeSnapshot();
         break;
     case InsertLine:
-        if (insertedPathItem == 0){
+        if (insertedPathItem == nullptr){
             insertedPathItem = new DiagramPathItem(DiagramPathItem::DiagramType(myArrow),myItemMenu);
             QPen pen(myLineColor);
             pen.setWidth(myLineWidth);
@@ -1025,8 +1025,14 @@ void DiagramScene::backoutOne()
     switch(myMode){
     case InsertLine:
         if(insertedPathItem){
-            insertedPathItem->remove();
-            insertedPathItem->updateLast(currentPoint);
+            if(insertedPathItem->getPoints().size()>2){
+                insertedPathItem->remove();
+                insertedPathItem->updateLast(currentPoint);
+            }else{
+                // remove first, i.e. start anew
+                removeItem(insertedPathItem);
+                insertedPathItem=nullptr;
+            }
         }
         break;
     default:
