@@ -813,6 +813,7 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
         break;
     case QGraphicsItemGroup::Type:
     {
+        QPointF p=item->pos();
         QList<QGraphicsItem*>copied;
         for(auto *i:item->childItems()){
             auto *newItem=copy(i);
@@ -821,6 +822,7 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
             newItem->setFlag(QGraphicsItem::ItemIsMovable, true);
             newItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
             addItem(newItem);
+            newItem->moveBy(p.x(),p.y());
             copied<<newItem;
         }
         QGraphicsItemGroup *ig=createItemGroup(copied);
