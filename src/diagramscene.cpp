@@ -595,7 +595,8 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     switch (myMode){
     case InsertLine:
         if (insertedPathItem != nullptr) {
-            insertedPathItem->updateLast(onGrid(mouseEvent->scenePos()));
+            currentPoint=onGrid(mouseEvent->scenePos());
+            insertedPathItem->updateLast(currentPoint);
         }
         break;
     case InsertSpline:
@@ -1025,6 +1026,7 @@ void DiagramScene::backoutOne()
     case InsertLine:
         if(insertedPathItem){
             insertedPathItem->remove();
+            insertedPathItem->updateLast(currentPoint);
         }
         break;
     default:

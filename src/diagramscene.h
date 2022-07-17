@@ -184,6 +184,7 @@ private:
     Mode myMode;
     bool leftButtonDown;
     QPointF startPoint;
+    QPointF currentPoint;
     QFont myFont;
     DiagramTextItem *textItem;
     QColor myTextColor;
