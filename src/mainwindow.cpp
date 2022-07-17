@@ -773,6 +773,11 @@ void MainWindow::createActions()
     connect(escShortcut,&QShortcut::activated,this,&MainWindow::abort);
     listOfShortcuts.append(escShortcut);
 
+    backoutOneShortcut = new QShortcut(QKeySequence(Qt::Key_Backspace),
+                                this);
+    connect(backoutOneShortcut,&QShortcut::activated,this,&MainWindow::backoutOne);
+    listOfShortcuts.append(backoutOneShortcut);
+
     dotShortcut = new QShortcut(QKeySequence("."),
                                 this);
     connect(dotShortcut,&QShortcut::activated,this,&MainWindow::insertDot);
@@ -875,9 +880,9 @@ void MainWindow::createMenus()
     fileMenu->addAction(exitAction);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
+    viewMenu->addAction(zoomAction);
     viewMenu->addAction(zoomInAction);
     viewMenu->addAction(zoomOutAction);
-    viewMenu->addAction(zoomAction);
     viewMenu->addAction(zoomFitAction);
     viewMenu->addSeparator();
     viewMenu->addAction(finerGridAction);
@@ -1089,9 +1094,9 @@ void MainWindow::createToolbars()
 
     zoomToolbar = addToolBar(tr("Zoom"));
     zoomToolbar->setObjectName("zoom");
+    zoomToolbar->addAction(zoomAction);
     zoomToolbar->addAction(zoomInAction);
     zoomToolbar->addAction(zoomOutAction);
-    zoomToolbar->addAction(zoomAction);
     zoomToolbar->addAction(zoomFitAction);
 }
 /*!
@@ -1303,6 +1308,11 @@ void MainWindow::abort()
     scene->abort();
     pointerButton->setChecked(true);
     pointerGroupClicked(pointerButton);
+}
+
+void MainWindow::backoutOne()
+{
+    //scene->backoutOne();
 }
 /*!
  * \brief abort triggered from scene

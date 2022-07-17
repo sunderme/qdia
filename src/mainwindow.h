@@ -150,6 +150,7 @@ private slots:
    void openRecentFile();
    void moveItems();
    void abort();
+   void backoutOne();
    void abortFromScene();
    void insertDot();
    void switchToWire();
@@ -223,6 +224,7 @@ private:
    QShortcut *escShortcut;
    QShortcut *dotShortcut;
    QShortcut *wireShortcut;
+   QShortcut *backoutOneShortcut;
 
    QMenu *fileMenu;
    QMenu *m_recentFilesMenu;
