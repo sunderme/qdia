@@ -1218,24 +1218,25 @@ QGraphicsItem *DiagramScene::getElementFromJSON(QJsonObject json)
         break;
     case QGraphicsItemGroup::Type:
     {
-        QGraphicsItemGroup *group=new QGraphicsItemGroup;
         QPointF p;
         p.setX(json["x"].toDouble());
         p.setY(json["y"].toDouble());
-        group->setPos(p);
-        group->setZValue(json["z"].toDouble());
-
-        qreal m11=json["m11"].toDouble();
-        qreal m12=json["m12"].toDouble();
-        qreal m21=json["m21"].toDouble();
-        qreal m22=json["m22"].toDouble();
         qreal dx=json["dx"].toDouble();
         qreal dy=json["dy"].toDouble();
-        QTransform tf(m11,m12,m21,m22,dx,dy);
-        group->setTransform(tf);
-        group->setFlag(QGraphicsItem::ItemIsMovable, true);
-        group->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        item=group;
+        if(json["children"].isArray()){
+            QList<QGraphicsItem*>children;
+            QJsonArray array=json["children"].toArray();
+            for(int i=0;i<array.size();++i){
+                QJsonObject json=array[i].toObject();
+                QGraphicsItem *it=getElementFromJSON(json);
+                it->moveBy(p.x(),p.y());
+                children<<it;
+            }
+            QGraphicsItemGroup *ig=createItemGroup(children);
+            ig->setFlag(QGraphicsItem::ItemIsMovable, true);
+            ig->setFlag(QGraphicsItem::ItemIsSelectable, true);
+            return ig;
+        }
     }
         break;
     default:
