@@ -84,6 +84,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     setCentralWidget(widget);
     setUnifiedTitleAndToolBarOnMac(true);
 
+    view->setFocus();
+
     // update font combo
     fontCombo->setCurrentFont(QFont(fontName));
     fontSizeCombo->setCurrentText(QString("%1").arg(fontSize));
