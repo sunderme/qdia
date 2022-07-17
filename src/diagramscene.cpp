@@ -1015,6 +1015,22 @@ int DiagramScene::getSnapshotSize()
 {
     return m_snapshots.size();
 }
+/*!
+ * \brief in inserting several points, remove last one
+ * Usually employed when setting lines
+ */
+void DiagramScene::backoutOne()
+{
+    switch(myMode){
+    case InsertLine:
+        if(insertedPathItem){
+            insertedPathItem->remove();
+        }
+        break;
+    default:
+        ;
+    }
+}
 
 void DiagramScene::editorReceivedFocus(DiagramTextItem *item)
 {

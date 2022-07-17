@@ -1312,7 +1312,7 @@ void MainWindow::abort()
 
 void MainWindow::backoutOne()
 {
-    //scene->backoutOne();
+    scene->backoutOne();
 }
 /*!
  * \brief abort triggered from scene

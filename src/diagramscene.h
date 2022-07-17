@@ -136,6 +136,8 @@ public:
     int getSnaphotPosition();
     int getSnapshotSize();
 
+    void backoutOne();
+
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);
     void abort(bool keepSelection=false);
