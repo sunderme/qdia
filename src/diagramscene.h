@@ -114,8 +114,8 @@ public:
         myGridScale=k;
     }
 
-    bool save_json(QFile *file);
-    QJsonDocument create_json_save();
+    bool save_json(QFile *file,bool selectedItemsOnly=false);
+    QJsonDocument create_json_save(bool selectedItemsOnly=false);
     bool load_json(QFile *file);
     void read_in_json(QJsonDocument doc);
     void addElementToJSON(QGraphicsItem* item,QJsonArray &array);

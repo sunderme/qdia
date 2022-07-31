@@ -624,6 +624,7 @@ void MainWindow::createToolBox()
 
         toolBox->addItem(itemWidget, names.value(i));
     }
+    // add user pane !
 
 }
 
@@ -693,6 +694,11 @@ void MainWindow::createActions()
     connect(ungroupAction, SIGNAL(triggered()),
             this, SLOT(ungroupItems()));
     listOfActions.append(ungroupAction);
+
+    makeElementAction  = new QAction(tr("&make user element"), this);
+    connect(makeElementAction, SIGNAL(triggered()),
+            this, SLOT(makeElement()));
+    listOfActions.append(makeElementAction);
 
     deleteAction = new QAction(tr("&Delete Item"), this);
     deleteAction->setShortcut(tr("Delete"));
@@ -931,6 +937,7 @@ void MainWindow::createMenus()
     itemMenu->addAction(flipYAction);
     itemMenu->addAction(groupAction);
     itemMenu->addAction(ungroupAction);
+    itemMenu->addAction(makeElementAction);
 
     aboutMenu = menuBar()->addMenu(tr("&Help"));
     aboutMenu->addAction(aboutAction);
@@ -1285,6 +1292,23 @@ void MainWindow::ungroupItems()
         }
     }
 }
+/*!
+ * \brief store selection as user element
+ * User elements are present in the tool box
+ */
+void MainWindow::makeElement()
+{
+    if (scene->selectedItems().isEmpty())
+        return;
+
+    qDebug()<<"to be implemented!";
+    QGraphicsItemGroup *test = scene->createItemGroup(scene->selectedItems());
+    test->setFlag(QGraphicsItem::ItemIsMovable, true);
+    test->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    test->setSelected(true);
+    // save selected in special path
+    fileSaveAs(true);
+}
 
 void MainWindow::activateShortcuts()
 {
@@ -1581,7 +1605,7 @@ void MainWindow::setGrid()
     }
 }
 
-void MainWindow::fileSaveAs()
+void MainWindow::fileSaveAs(bool selectedItemsOnly)
 {
     QFileDialog::Options options;
     QString selectedFilter;
@@ -1598,7 +1622,7 @@ void MainWindow::fileSaveAs()
         }
         else
         {
-            if(scene->save_json(&file)){
+            if(scene->save_json(&file,selectedItemsOnly)){
                 myFileName=fileName;
                 m_recentFiles.removeOne(myFileName);
                 m_recentFiles.prepend(myFileName);

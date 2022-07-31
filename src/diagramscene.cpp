@@ -1161,9 +1161,9 @@ void DiagramScene::abort(bool keepSelection)
     }
 }
 
-bool DiagramScene::save_json(QFile *file)
+bool DiagramScene::save_json(QFile *file, bool selectedItemsOnly)
 {
-    QJsonDocument doc=create_json_save();
+    QJsonDocument doc=create_json_save(selectedItemsOnly);
     file->write(doc.toJson());
     return true;
 }
@@ -1171,10 +1171,11 @@ bool DiagramScene::save_json(QFile *file)
  * \brief create json save data
  * \return
  */
-QJsonDocument DiagramScene::create_json_save()
+QJsonDocument DiagramScene::create_json_save(bool selectedItemsOnly)
 {
     QJsonArray array;
-    foreach(QGraphicsItem* item, items()){
+    QList<QGraphicsItem*> lst=selectedItemsOnly ? selectedItems() : items();
+    foreach(QGraphicsItem* item, lst){
         if(item->parentItem()) continue;
         addElementToJSON(item,array);
     }

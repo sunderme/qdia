@@ -108,6 +108,7 @@ private slots:
    void pasteFromClipboard();
    void groupItems();
    void ungroupItems();
+   void makeElement();
    void currentFontChanged(const QFont &font);
    void fontSizeChanged(const QString &size);
    void sceneScaleChanged(const QString &scale);
@@ -142,7 +143,7 @@ private slots:
    void toggleGrid(bool grid);
    void setGrid();
    void fileSave();
-   void fileSaveAs();
+   void fileSaveAs(bool selectedItemsOnly=false);
    void fileOpen();
    bool openFile(QString fileName);
    void openRecentFile();
@@ -210,6 +211,7 @@ private:
    QAction *moveAction;
    QAction *groupAction;
    QAction *ungroupAction;
+   QAction *makeElementAction;
 
    QAction *dotAction;
    QAction *lineAction;
