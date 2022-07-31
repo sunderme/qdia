@@ -36,6 +36,8 @@ public:
     QPainterPath getPath();
     QVector<QPointF> getPoints()
         { return myPoints; }
+    QLineF findLineSection(QPointF pt);
+
     int type() const
         { return Type;}
     void setHandlerWidth(const qreal width)

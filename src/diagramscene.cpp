@@ -771,7 +771,10 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     // path item, add text in center of line segment
                     textItem = makeTextItem(item);
                     textItem->setAlignment(Qt::AlignBottom|Qt::AlignHCenter);
-                    textItem->setCorrectedPos(item->boundingRect().center());
+                    // find correct position for tex
+                    DiagramPathItem *path=qgraphicsitem_cast<DiagramPathItem *>(item);
+                    QLineF line=path->findLineSection(mouseEvent->scenePos());
+                    textItem->setCorrectedPos(line.center());
 
                     emit textInserted(textItem);
                 }
@@ -1096,12 +1099,18 @@ void DiagramScene::abort(bool keepSelection)
             removeItem(insertedDrawItem);
         break;
     case InsertLine:
-        if(insertedPathItem)
+        if(insertedPathItem){
             removeItem(insertedPathItem);
+        }else{
+            myMode=MoveItem;
+        }
         break;
     case InsertSpline:
-        if(insertedSplineItem)
+        if(insertedSplineItem){
             removeItem(insertedSplineItem);
+        }else{
+            myMode=MoveItem;
+        }
         break;
     default:
         ;

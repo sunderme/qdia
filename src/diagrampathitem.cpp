@@ -129,6 +129,30 @@ QPainterPath DiagramPathItem::getPath()
     }
     return myPath;
 }
+/*!
+ * \brief find line section for a given point
+ * \param pt
+ * \return line section as QLineF
+ */
+QLineF DiagramPathItem::findLineSection(QPointF pt)
+{
+    QLineF line;
+    QPointF testpt=pt-pos();
+    for(int i=1;i<myPoints.count();++i){
+        line.setPoints(myPoints[i-1],myPoints[i]);
+        QLineF normal=line.normalVector();
+        QPointF pt_normal=normal.p2()-normal.p1();
+        qreal verticaldistanceSq=QPointF::dotProduct(testpt-normal.p1(),pt_normal);
+        qreal horizontaldistanceSq=QPointF::dotProduct(testpt-line.p1(),line.p2()-line.p1());
+        if(horizontaldistanceSq>=0 && horizontaldistanceSq<=std::pow(line.length(),2)){
+            if(verticaldistanceSq<3){
+                break;
+            }
+        }
+
+    }
+    return line;
+}
 
 QPainterPath DiagramPathItem::createArrow(QPointF p1, QPointF p2) const
 {
