@@ -775,6 +775,20 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     DiagramPathItem *path=qgraphicsitem_cast<DiagramPathItem *>(item);
                     QLineF line=path->findLineSection(mouseEvent->scenePos());
                     textItem->setCorrectedPos(line.center());
+                    // alignment dpending on line angle
+                    qreal angle=line.angle();
+                    if(angle>80 && angle<100){
+                        textItem->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+                    }
+                    if(angle<10 || (angle<190 && angle>170)){
+                        textItem->setAlignment(Qt::AlignBottom|Qt::AlignHCenter);
+                    }
+                    if(angle>260 && angle<280){
+                        textItem->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
+                    }
+                    if(angle>=10 && angle<=80){
+                        textItem->setAlignment(Qt::AlignBottom|Qt::AlignRight);
+                    }
 
                     emit textInserted(textItem);
                 }

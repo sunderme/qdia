@@ -145,7 +145,7 @@ QLineF DiagramPathItem::findLineSection(QPointF pt)
         qreal verticaldistanceSq=QPointF::dotProduct(testpt-normal.p1(),pt_normal);
         qreal horizontaldistanceSq=QPointF::dotProduct(testpt-line.p1(),line.p2()-line.p1());
         if(horizontaldistanceSq>=0 && horizontaldistanceSq<=std::pow(line.length(),2)){
-            if(verticaldistanceSq<3){
+            if(verticaldistanceSq/normal.length()<3){
                 break;
             }
         }
