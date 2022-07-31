@@ -223,6 +223,31 @@ void DiagramScene::enableAllItems(bool enable)
         item->setEnabled(enable);
     }
 }
+/*!
+ * \brief make a text item as child of item
+ * \param item
+ * \return text item
+ */
+DiagramTextItem *DiagramScene::makeTextItem(QGraphicsItem *item)
+{
+    textItem = new DiagramTextItem();
+    textItem->setFont(myFont);
+    textItem->setAlignment(m_textAlignment);
+    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
+    textItem->setZValue(1000.0);
+    connect(textItem, &DiagramTextItem::lostFocus,
+            this, &DiagramScene::editorLostFocus);
+    connect(textItem, &DiagramTextItem::receivedFocus,
+            this, &DiagramScene::editorReceivedFocus);
+    connect(textItem, &DiagramTextItem::selectedChange,
+            this, &DiagramScene::itemSelected);
+    //addItem(textItem);
+    textItem->setParentItem(item);
+    textItem->setDefaultTextColor(myTextColor);
+    textItem->setSelected(true);
+    textItem->setFocus();
+    return textItem;
+}
 
 void DiagramScene::setItemType(DiagramItem::DiagramType type)
 {
@@ -726,24 +751,27 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     textItem->setFocus();
                 }else{
                     // draw item, add text in center
-                    textItem = new DiagramTextItem();
-                    textItem->setFont(myFont);
-                    textItem->setAlignment(m_textAlignment);
-                    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
-                    textItem->setZValue(1000.0);
-                    connect(textItem, &DiagramTextItem::lostFocus,
-                            this, &DiagramScene::editorLostFocus);
-                    connect(textItem, &DiagramTextItem::receivedFocus,
-                            this, &DiagramScene::editorReceivedFocus);
-                    connect(textItem, &DiagramTextItem::selectedChange,
-                            this, &DiagramScene::itemSelected);
-                    //addItem(textItem);
-                    textItem->setParentItem(item);
-                    textItem->setDefaultTextColor(myTextColor);
+                    textItem = makeTextItem(item);
                     textItem->setAlignment(Qt::AlignVCenter|Qt::AlignHCenter);
                     textItem->setCorrectedPos(item->boundingRect().center());
+
+                    emit textInserted(textItem);
+                }
+                mouseEvent->accept();
+                break;
+            }
+            if(item->type()==DiagramPathItem::Type){
+                if(item->childItems().count()==1){
+                    // already has text item
+                    textItem=qgraphicsitem_cast<DiagramTextItem *>(item->childItems().first());
+                    textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
                     textItem->setSelected(true);
                     textItem->setFocus();
+                }else{
+                    // path item, add text in center of line segment
+                    textItem = makeTextItem(item);
+                    textItem->setAlignment(Qt::AlignBottom|Qt::AlignHCenter);
+                    textItem->setCorrectedPos(item->boundingRect().center());
 
                     emit textInserted(textItem);
                 }

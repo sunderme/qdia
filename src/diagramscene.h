@@ -174,6 +174,7 @@ protected:
     QGraphicsItem* copy(QGraphicsItem *item);
     void drawBackground(QPainter *p, const QRectF &r) override;
     void enableAllItems(bool enable=true);
+    DiagramTextItem *makeTextItem(QGraphicsItem *item);
 
 private:
 
