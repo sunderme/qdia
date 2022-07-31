@@ -1370,15 +1370,34 @@ void MainWindow::switchToText()
     pointerGroupClicked(textButton);
 }
 /*!
- * \brief place recatngle from shortcut
+ * \brief place rectangle from shortcut
  */
 void MainWindow::switchToRect()
 {
-    QWidget *wgt=toolBox->widget(0);
+    switchToDrawItem(DiagramDrawItem::Rectangle);
+}
+/*!
+ * \brief generalized direct inserting draw elements
+ * \param type
+ */
+void MainWindow::switchToDrawItem(int type)
+{
+    QWidget *wgt=toolBox->widget(0); // basic shapes
     QGridLayout *layout=qobject_cast<QGridLayout *>(wgt->layout());
-    wgt=dynamic_cast<QWidget *>(layout->itemAtPosition(0,0)->widget());
-    QLayout *lay=wgt->layout();
-    QToolButton *bt=qobject_cast<QToolButton *>(lay->itemAt(0)->widget());
+    // find right element
+    QToolButton *bt;
+    bool found=false;
+    for(int i=0;i<layout->count();++i){
+        wgt=dynamic_cast<QWidget *>(layout->itemAt(i)->widget());
+        QLayout *lay=wgt->layout();
+        bt=qobject_cast<QToolButton *>(lay->itemAt(0)->widget());
+        QButtonGroup *buttonGroup=bt->group();
+        if(buttonGroup->id(bt)-InsertDrawItemButton==type){
+            found=true;
+            break;
+        }
+    }
+    if(!found) return; // button not found -> program error
     bt->setChecked(true);
     buttonGroupClicked(bt);
 }

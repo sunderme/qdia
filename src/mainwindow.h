@@ -154,6 +154,7 @@ private slots:
    void switchToWire();
    void switchToText();
    void switchToRect();
+   void switchToDrawItem(int type);
 
 protected:
    void closeEvent(QCloseEvent *event);
