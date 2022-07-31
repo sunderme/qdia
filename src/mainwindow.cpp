@@ -1794,10 +1794,10 @@ QIcon MainWindow::createLinePatternIcon(const int i)
 QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
 {
     QPolygonF result;
-    foreach(QGraphicsItem *item,items){
+    foreach(const QGraphicsItem *item,items){
         if(!item) continue;
         if(item->type()==DiagramTextItem::Type){
-            DiagramTextItem *textItem=qgraphicsitem_cast<DiagramTextItem *>(item);
+            const DiagramTextItem *textItem=qgraphicsitem_cast<const DiagramTextItem *>(item);
             result.append(textItem->anchorPoint());
             continue;
         }
@@ -1820,6 +1820,11 @@ QPointF MainWindow::getFirstPoint(const QList<QGraphicsItem *> items) const
 {
     foreach(const QGraphicsItem *item,items){
         if(!item) continue;
+        if(item->type()==DiagramTextItem::Type){
+            const DiagramTextItem *textItem=dynamic_cast<const DiagramTextItem*>(item);
+            QPointF pt=textItem->anchorPoint();
+            return pt;
+        }
         if(item->type()==QGraphicsItemGroup::Type){
             QPointF pt=getFirstPoint(item->childItems());
             return pt;
