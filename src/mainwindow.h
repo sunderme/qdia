@@ -154,6 +154,8 @@ private slots:
    void abortFromScene();
    void insertDot();
    void switchToWire();
+   void switchToText();
+   void switchToRect();
 
 protected:
    void closeEvent(QCloseEvent *event);
@@ -210,6 +212,11 @@ private:
    QAction *groupAction;
    QAction *ungroupAction;
 
+   QAction *dotAction;
+   QAction *lineAction;
+   QAction *rectAction;
+   QAction *textAction;
+
    QAction *zoomInAction;
    QAction *zoomOutAction;
    QAction *zoomAction;
@@ -222,13 +229,12 @@ private:
    QAction *exportAction;
 
    QShortcut *escShortcut;
-   QShortcut *dotShortcut;
-   QShortcut *wireShortcut;
    QShortcut *backoutOneShortcut;
 
    QMenu *fileMenu;
    QMenu *m_recentFilesMenu;
    QMenu *viewMenu;
+   QMenu *createMenu;
    QMenu *itemMenu;
    QMenu *aboutMenu;
 
@@ -252,6 +258,7 @@ private:
    ColorPickerToolButton *fillColorToolButton;
    ColorPickerToolButton *lineColorToolButton;
    QToolButton *pointerButton;
+   QToolButton *textButton;
    QToolButton *linePointerButton;
    QToolButton *lineThicknessButton;
    QToolButton *linePatternButton;

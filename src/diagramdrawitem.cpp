@@ -127,6 +127,14 @@ QPainterPath DiagramDrawItem::createPath()
         path.lineTo(dx,dx/2);
         path.lineTo(0,0);
         break;
+    case Note:
+        path.moveTo(myRadius, 0);
+        path.lineTo(dx,0);
+        path.lineTo(dx,dy);
+        path.lineTo(0,dy);
+        path.lineTo(0,myRadius);
+        path.lineTo(myRadius,0);
+        break;
     default:
         break;
     }

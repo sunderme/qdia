@@ -518,7 +518,8 @@ void MainWindow::createToolBox()
         {tr("Rhombus"),DiagramDrawItem::Rhombus},
         {tr("Triangle"),DiagramDrawItem::Triangle},
         {tr("DA"),DiagramDrawItem::DA},
-        {tr("OTA"),DiagramDrawItem::OTA}
+        {tr("OTA"),DiagramDrawItem::OTA},
+        {tr("Note"),DiagramDrawItem::Note}
     };
     int row=0;
     int col=0;
@@ -780,15 +781,25 @@ void MainWindow::createActions()
     connect(backoutOneShortcut,&QShortcut::activated,this,&MainWindow::backoutOne);
     listOfShortcuts.append(backoutOneShortcut);
 
-    dotShortcut = new QShortcut(QKeySequence("."),
-                                this);
-    connect(dotShortcut,&QShortcut::activated,this,&MainWindow::insertDot);
-    listOfShortcuts.append(dotShortcut);
+    dotAction = new QAction(tr("Create &Dot"), this);
+    dotAction->setShortcut(QKeySequence("."));
+    connect(dotAction,&QAction::triggered,this,&MainWindow::insertDot);
+    listOfActions.append(dotAction);
 
-    wireShortcut = new QShortcut(QKeySequence("w"),
-                                this);
-    connect(wireShortcut,&QShortcut::activated,this,&MainWindow::switchToWire);
-    listOfShortcuts.append(wireShortcut);
+    lineAction = new QAction(tr("Create &Line"), this);
+    lineAction->setShortcut(QKeySequence("w"));
+    connect(lineAction,&QAction::triggered,this,&MainWindow::switchToWire);
+    listOfActions.append(lineAction);
+
+    rectAction = new QAction(tr("Create &Rect"), this);
+    rectAction->setShortcut(QKeySequence("b"));
+    connect(rectAction,&QAction::triggered,this,&MainWindow::switchToRect);
+    listOfActions.append(rectAction);
+
+    textAction = new QAction(tr("Create &Text"), this);
+    textAction->setShortcut(QKeySequence("t"));
+    connect(textAction,&QAction::triggered,this,&MainWindow::switchToText);
+    listOfActions.append(textAction);
 
     // Zoom in/out
     zoomInAction = new QAction(QIcon(":/images/zoomin.svg"),tr("Zoom &in"), this);
@@ -891,6 +902,12 @@ void MainWindow::createMenus()
     viewMenu->addAction(coarserGridAction);
     viewMenu->addSeparator();
     viewMenu->addAction(showGridAction);
+
+    createMenu = menuBar()->addMenu(tr("&Create"));
+    createMenu->addAction(dotAction);
+    createMenu->addAction(lineAction);
+    createMenu->addAction(rectAction);
+    createMenu->addAction(textAction);
 
     itemMenu = menuBar()->addMenu(tr("&Item"));
     itemMenu->addAction(undoAction);
@@ -1076,7 +1093,7 @@ void MainWindow::createToolbars()
     connect(linePointerButton, &QToolButton::clicked,
             this, &MainWindow::lineArrowButtonTriggered);
 
-    QToolButton *textButton = new QToolButton;
+    textButton = new QToolButton;
     textButton->setCheckable(true);
     textButton->setIcon(QIcon(":/images/kdenlive-add-text-clip.svg"));
 
@@ -1333,7 +1350,9 @@ void MainWindow::insertDot()
     QString fn=":/libs/analog/dot.json";
     scene->insertElementDirectly(fn);
 }
-
+/*!
+ * \brief activate line mode from shortcut
+ */
 void MainWindow::switchToWire()
 {
     scene->setArrow(0);
@@ -1341,6 +1360,21 @@ void MainWindow::switchToWire()
     linePointerButton->setIcon(createArrowIcon(0));
     linePointerButton->setChecked(true);
     scene->setMode(DiagramScene::InsertLine);
+}
+/*!
+ * \brief activate text mode from shortcut
+ */
+void MainWindow::switchToText()
+{
+    textButton->setChecked(true);
+    pointerGroupClicked(textButton);
+}
+/*!
+ * \brief place recatngle from shortcut
+ */
+void MainWindow::switchToRect()
+{
+    qDebug()<<"not yet implemented";
 }
 
 void MainWindow::exportImage()
@@ -1866,8 +1900,11 @@ void MainWindow::linePatternChanged()
 
 /* TODO
  * filling of DiagramElement wrong
+ * shortcuts for line/rectangle
  * click on line to add text / bus width ?
  * text notes
+ * rotate/flip text around anchor point (center,etc.)
+ * user generated elements
  * add/mult for signal processing
  * Align ?
  * import xcircuit/drawio?

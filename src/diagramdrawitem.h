@@ -45,7 +45,7 @@ class DiagramDrawItem : public DiagramItem
 {
 public:
     enum { Type = UserType + 16 };
-    enum DiagramType { Ellipse, Rectangle, Circle, RoundedRect, Rhombus, Triangle, DA , OTA};
+    enum DiagramType { Ellipse, Rectangle, Circle, RoundedRect, Rhombus, Triangle, DA , OTA, Note};
 
     DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
         QGraphicsItem *parent = 0);
