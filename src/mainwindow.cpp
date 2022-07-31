@@ -1925,7 +1925,6 @@ void MainWindow::linePatternChanged()
 
 /* TODO
  * filling of DiagramElement wrong
- * click on line to add text / bus width ?
  * text notes
  * rotate/flip text around anchor point (center,etc.)
  * user generated elements
