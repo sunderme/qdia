@@ -1794,8 +1794,13 @@ QIcon MainWindow::createLinePatternIcon(const int i)
 QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
 {
     QPolygonF result;
-    foreach(const QGraphicsItem *item,items){
+    foreach(QGraphicsItem *item,items){
         if(!item) continue;
+        if(item->type()==DiagramTextItem::Type){
+            DiagramTextItem *textItem=qgraphicsitem_cast<DiagramTextItem *>(item);
+            result.append(textItem->anchorPoint());
+            continue;
+        }
         if(item->type()==QGraphicsItemGroup::Type){
             QRectF groupRect=getTotalBoundary(item->childItems());
             result<<item->mapToParent(groupRect.bottomLeft())<<item->mapToParent(groupRect.topRight());
@@ -1851,10 +1856,6 @@ void MainWindow::transformItems(const QTransform transform, QList<QGraphicsItem 
         if(item->type()!=QGraphicsItemGroup::Type){
             QTransform trans=item->transform();
             QPointF shift=item->pos()-anchorPoint;
-            if(items.count()==1) {
-                shift.setX(0);
-                shift.setY(0);
-            }
             item->setTransform(trans*QTransform(1,0,0,1,shift.x(),shift.y())*transform*QTransform(1,0,0,1,-shift.x(),-shift.y()),false);
             // correct anchor point shift
             QTransform transform=item->transform();
