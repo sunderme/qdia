@@ -789,6 +789,15 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     if(angle>=10 && angle<=80){
                         textItem->setAlignment(Qt::AlignBottom|Qt::AlignRight);
                     }
+                    if(angle>=100 && angle<=170){
+                        textItem->setAlignment(Qt::AlignBottom|Qt::AlignLeft);
+                    }
+                    if(angle>=190 && angle<=260){
+                        textItem->setAlignment(Qt::AlignBottom|Qt::AlignRight);
+                    }
+                    if(angle>=280 && angle<=350){
+                        textItem->setAlignment(Qt::AlignBottom|Qt::AlignLeft);
+                    }
 
                     emit textInserted(textItem);
                 }
