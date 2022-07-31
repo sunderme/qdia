@@ -1932,7 +1932,6 @@ void MainWindow::linePatternChanged()
 /* TODO
  * filling of DiagramElement wrong
  * text notes
- * rotate/flip text around anchor point (center,etc.)
  * user generated elements
  * add/mult for signal processing
  * Align ?

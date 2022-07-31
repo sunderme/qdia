@@ -77,6 +77,7 @@ public:
     void setCorrectedPos(QPointF pt);
     QPointF anchorPoint() const;
     QPointF calcOffset() const;
+    QPointF getLastOffset() const;
 
     void setTouched(bool state=true);
     bool touched() const;
@@ -100,6 +101,7 @@ protected:
 
 private:
     QPointF m_anchorPoint;
+    QPointF m_offset;
     Qt::Alignment m_alignment;
     bool m_updateGeometry;
     bool m_touched;

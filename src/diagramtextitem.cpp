@@ -175,6 +175,15 @@ QPointF DiagramTextItem::calcOffset() const
     return offset;
 }
 /*!
+ * \brief get last calculated offset between anchor and pos
+ * Needed to keep track on moved element
+ * \return
+ */
+QPointF DiagramTextItem::getLastOffset() const
+{
+    return m_offset;
+}
+/*!
  * \brief set state for item as touched/tainted
  * Used in drawitem to check if it was manually offset from the center
  * \param state
@@ -248,8 +257,8 @@ Qt::Alignment DiagramTextItem::alignment() const
 void DiagramTextItem::setCorrectedPos(QPointF pt)
 {
     m_anchorPoint=pt;
-    QPointF offset=calcOffset();
-    setPos(pt+offset);
+    m_offset=calcOffset();
+    setPos(pt+m_offset);
 }
 /*!
  * \brief return anchor point
@@ -277,8 +286,8 @@ void DiagramTextItem::updateGeometry()
     qreal w=document()->idealWidth();
     setTextWidth(w);
     setAlignment(m_alignment);
-    QPointF offset=calcOffset();
-    setPos(m_anchorPoint+offset);
+    m_offset=calcOffset();
+    setPos(m_anchorPoint+m_offset);
     m_updateGeometry=false;
 }
 

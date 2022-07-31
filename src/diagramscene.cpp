@@ -718,8 +718,16 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         return;
     }
     if(myMode== MoveItem && !selectedItems().isEmpty()){
-        // try to detect dragging elements
-        // fails with area select ...
+        // update anchor points of textitems
+        for(QGraphicsItem* item:selectedItems()){
+            if(item->type()==DiagramTextItem::Type){
+                auto *textItem=qgraphicsitem_cast<DiagramTextItem*>(item);
+                QPointF offset=textItem->getLastOffset();
+                if(textItem->anchorPoint()+offset != textItem->pos()){
+                    textItem->setCorrectedPos(textItem->pos()-offset);
+                }
+            }
+        }
         takeSnapshot();
     }
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
