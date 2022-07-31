@@ -139,7 +139,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::buttonGroupClicked(QAbstractButton *button)
 {
-    QButtonGroup *buttonGroup=qobject_cast<QButtonGroup *>(sender());
+    QButtonGroup *buttonGroup=button->group();//qobject_cast<QButtonGroup *>(sender());
     for (QAbstractButton *button : pointerTypeGroup->buttons()) {
         button->setChecked(false);
     }
@@ -1374,7 +1374,13 @@ void MainWindow::switchToText()
  */
 void MainWindow::switchToRect()
 {
-    qDebug()<<"not yet implemented";
+    QWidget *wgt=toolBox->widget(0);
+    QGridLayout *layout=qobject_cast<QGridLayout *>(wgt->layout());
+    wgt=dynamic_cast<QWidget *>(layout->itemAtPosition(0,0)->widget());
+    QLayout *lay=wgt->layout();
+    QToolButton *bt=qobject_cast<QToolButton *>(lay->itemAt(0)->widget());
+    bt->setChecked(true);
+    buttonGroupClicked(bt);
 }
 
 void MainWindow::exportImage()

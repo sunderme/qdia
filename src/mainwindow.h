@@ -52,8 +52,6 @@
 #define MAINWINDOW_H
 
 #include "diagramitem.h"
-#include "diagramdrawitem.h"
-#include "diagrampathitem.h"
 #include "ColorPickerToolButton.h"
 #include <QMainWindow>
 #include <QShortcut>
