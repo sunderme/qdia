@@ -132,7 +132,7 @@ jobs:
       
   macosx:
     name: Mac OS X
-    runs-on: macos-10.15
+    runs-on: macos-latest
     if: true
 
     steps:
