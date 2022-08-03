@@ -1249,7 +1249,8 @@ void MainWindow::copyToClipboard()
     scene->setGridVisible(false);
     QClipboard *clipboard = QGuiApplication::clipboard();
     QRectF rect=scene->itemsBoundingRect();
-    QPixmap pixmap(rect.width(),rect.height());
+    rect.adjust(-1,-1,1,1);
+    QPixmap pixmap(rect.width()*4,rect.height()*4);
     pixmap.fill();
     QPainter painter(&pixmap);
     painter.setRenderHint(QPainter::Antialiasing);
