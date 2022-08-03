@@ -3,7 +3,7 @@ Simple schematic/diagram editor with focus on quick diagram generation with high
 
 Inspired by xcircuit.
 
-Initial code based on Qt/Example/diagramscne
+Initial code based on Qt/Example/diagramscene
 
 Build with cmake and qt6.
 
