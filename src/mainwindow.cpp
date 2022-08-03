@@ -1250,7 +1250,20 @@ void MainWindow::copyToClipboard()
     QClipboard *clipboard = QGuiApplication::clipboard();
     QRectF rect=scene->itemsBoundingRect();
     rect.adjust(-1,-1,1,1);
-    QPixmap pixmap(rect.width()*4,rect.height()*4);
+    qreal w=rect.width();
+    qreal h=rect.height();
+    if(w>h){
+        qreal target=w<1000 ? 1000 : w;
+        h=target/w*h;
+        w=1000;
+    }else{
+        qreal target=h<1000 ? 1000 : h;
+        w=target/h*w;
+        h=1000;
+    }
+    int width=int(w);
+    int height=int(h);
+    QPixmap pixmap(width,height);
     pixmap.fill();
     QPainter painter(&pixmap);
     painter.setRenderHint(QPainter::Antialiasing);
