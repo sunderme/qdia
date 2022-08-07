@@ -1,5 +1,9 @@
 <RCC>
 <qresource prefix="/">
+<file>libs/signal/add.json</file>
+<file>libs/signal/mult.json</file>
+<file>libs/signal/subtract.json</file>
+<file>libs/signal/div.json</file>
 <file>libs/rf/lpf.json</file>
 <file>libs/rf/mixer.json</file>
 <file>libs/rf/bpf.json</file>
