@@ -463,7 +463,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     case InsertElement:
         if(insertedItem==nullptr){
             insertedItem = new DiagramElement(mItemFileName, myItemMenu);
-            //insertedItem->setBrush(myItemColor);
+            insertedItem->setBrush(myItemColor);
             QPen p(myLineColor);
             p.setCapStyle(Qt::RoundCap);
             insertedItem->setPen(p);
@@ -478,6 +478,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         // add next item, same orientation if rotated/flipped
         {
             DiagramItem *item=new DiagramElement(mItemFileName, myItemMenu);
+            item->setBrush(myItemColor);
             QPen p{myLineColor};
             p.setCapStyle(Qt::RoundCap);
             item->setPen(p);
@@ -668,7 +669,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     case InsertElement:
         if(insertedItem==nullptr){
             insertedItem = new DiagramElement(mItemFileName, myItemMenu);
-            //insertedItem->setBrush(myItemColor);
+            insertedItem->setBrush(myItemColor);
             QPen p(myLineColor);
             p.setCapStyle(Qt::RoundCap);
             insertedItem->setPen(p);
