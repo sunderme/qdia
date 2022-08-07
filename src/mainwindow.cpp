@@ -593,6 +593,14 @@ void MainWindow::createToolBox()
                    "bpf.json",
                    "hpf.json"
     };
+    paths<<":/libs/signal/";
+    names<<tr("Signal Processing");
+    lstOfElements<<QStringList{
+                   "add.json",
+                   "subtract.json",
+                   "mult.json",
+                   "div.json"
+    };
 
     for(int i=0;i<paths.size();++i){
         bG = new QButtonGroup(this);
