@@ -1,0 +1,7 @@
+{
+  "name": "subtract",
+  "elements":[
+    {"type":"line","x0":-10,"y0":0,"x1":10,"y1":0},
+    {"type":"circle","x0":0,"y0":0,"r":20}
+  ]
+}
