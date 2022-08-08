@@ -1458,8 +1458,8 @@ void MainWindow::exportImage()
     QString selectedFilter;
     QString fileName = QFileDialog::getSaveFileName(this,
             tr("Export Diagram to ..."),
-            ".jpg",
-            tr("Jpg (*.jpg);;Png (*.png);;Pdf (*.pdf);;Postscript (*.ps)"),
+            "file.png",
+            tr("Png (*.png);;Jpg (*.jpg);;Pdf (*.pdf);;Postscript (*.ps)"),
             &selectedFilter,
             options);
     if (!fileName.isEmpty()){
