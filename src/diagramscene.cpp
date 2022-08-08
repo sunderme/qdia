@@ -552,8 +552,10 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
                 if(!insItem) continue;
                 addItem(insItem);
+                insItem->setZValue(item->zValue());
                 insItem->setPos(item->pos());
                 copiedItems.append(item);
+                // set Z of new item
                 item->setZValue(maxZ);
                 maxZ+=0.1;
                 //check for children but not group
@@ -565,6 +567,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                         addedItem->setPos(item_l1->pos());
                     }
                 }
+
                 //move original to knew position
                 item->setSelected(true);
             }
