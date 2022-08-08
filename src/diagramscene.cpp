@@ -654,7 +654,9 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         break;
     case MoveItem:
         QGraphicsScene::mouseMoveEvent(mouseEvent);
-        checkOnGrid();
+        if(mouseEvent->buttons()==Qt::LeftButton){
+            checkOnGrid();
+        }
         break;
     case MoveItems:
     {
