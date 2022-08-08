@@ -823,7 +823,7 @@ void MainWindow::createActions()
     listOfActions.append(zoomInAction);
 
     zoomOutAction = new QAction(QIcon(":/images/zoomout.svg"),tr("Zoom &out"), this);
-    //zoomOutAction->setShortcut(tr("Ctrl+z"));
+    zoomOutAction->setShortcut(tr("Shift+z"));
     connect(zoomOutAction, &QAction::triggered,
             this, &MainWindow::zoomOut);
     listOfActions.append(zoomOutAction);
