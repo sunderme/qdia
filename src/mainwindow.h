@@ -286,6 +286,8 @@ private:
 
    QString myFileName; // aktueller Filename
    QStringList m_recentFiles;
+
+   QString m_lastPath;
 };
 
 #endif // MAINWINDOW_H

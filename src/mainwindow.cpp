@@ -38,6 +38,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     // read config
     QSettings settings("QDia","QDia");
     m_recentFiles=settings.value("recentFiles").toStringList();
+    m_lastPath=settings.value("lastPath").toString();
     QString fontName=settings.value("font").toString();
     int fontSize=settings.value("fontsize").toInt();
     // setup GUI
@@ -134,6 +135,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     settings.setValue("recentFiles",m_recentFiles);
     settings.setValue("font",fontCombo->currentFont().toString());
     settings.setValue("fontsize",fontSizeCombo->currentText().toInt());
+    settings.setValue("lastPath",m_lastPath);
     event->accept();
 }
 
@@ -1456,9 +1458,10 @@ void MainWindow::exportImage()
     scene->setGridVisible(false);
     QFileDialog::Options options;
     QString selectedFilter;
+    QString path=m_lastPath.isEmpty() ? "" : m_lastPath+QDir::separator();
     QString fileName = QFileDialog::getSaveFileName(this,
             tr("Export Diagram to ..."),
-            "file.png",
+            path+"file.png",
             tr("Png (*.png);;Jpg (*.jpg);;Pdf (*.pdf);;Postscript (*.ps)"),
             &selectedFilter,
             options);
@@ -1500,6 +1503,8 @@ void MainWindow::exportImage()
 
             pixmap.save(fileName);
         }
+        QFileInfo fi(fileName);
+        m_lastPath= fi.absolutePath();
 
     }
     scene->setCursorVisible(true);
@@ -1631,9 +1636,10 @@ void MainWindow::fileSaveAs(bool selectedItemsOnly)
 {
     QFileDialog::Options options;
     QString selectedFilter;
+    QString path=m_lastPath.isEmpty() ? "" : m_lastPath+QDir::separator();
     QString fileName = QFileDialog::getSaveFileName(this,
             tr("Save Diagram as ..."),
-            ".json",
+            path+"dia.json",
             tr("QDiagram (*.json)"),
             &selectedFilter,
             options);
@@ -1659,6 +1665,8 @@ void MainWindow::fileSaveAs(bool selectedItemsOnly)
                 setWindowFilePath(myFileName);
             }
         }
+        QFileInfo fi(fileName);
+        m_lastPath= fi.absolutePath();
     }
 }
 
@@ -1683,9 +1691,10 @@ void MainWindow::fileOpen()
 {
     QFileDialog::Options options;
     QString selectedFilter;
+    QString path=m_lastPath.isEmpty() ? "" : m_lastPath+QDir::separator();
     QString fileName = QFileDialog::getOpenFileName(this,
             tr("Load Diagram"),
-            ".json",
+            path+"dia.json",
             tr("QDiagram (*.json)"),
             &selectedFilter,
             options);
@@ -1694,6 +1703,8 @@ void MainWindow::fileOpen()
         m_recentFiles.removeOne(fileName);
         m_recentFiles.prepend(fileName);
         populateRecentFiles();
+        QFileInfo fi(fileName);
+        m_lastPath= fi.absolutePath();
     }
 }
 /*!
