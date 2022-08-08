@@ -304,7 +304,9 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         return;
     }
 
+    bool middleButton=false;
     if (mouseEvent->button() == Qt::MiddleButton){
+        middleButton=true;
         switch (myMode) {
         case InsertLine:
             if (insertedPathItem != nullptr){
@@ -314,6 +316,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 insertedPathItem = nullptr;
                 mouseEvent->accept();
                 takeSnapshot();
+                return;
             }
             break;
         case InsertSpline:
@@ -323,6 +326,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 insertedSplineItem=nullptr;
                 mouseEvent->accept();
                 takeSnapshot();
+                return;
             }
             break;
         case InsertItem:
@@ -334,6 +338,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 takeSnapshot();
                 // switch toolbar !!
                 emit abortSignal();
+                return;
             }
             break;
         case InsertDrawItem:
@@ -346,15 +351,13 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 mouseEvent->accept();
                 // switch toolbar !!
                 emit abortSignal();
+                return;
             }
         default:
             ;
         }
-        return;
     }
 
-    if (mouseEvent->button() != Qt::LeftButton)
-        return;
     switch (myMode) {
     case InsertItem:
         if(insertedItem==nullptr){
@@ -490,6 +493,10 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             insertedItem=item;
         }
         takeSnapshot();
+        if(middleButton){
+            // switch toolbar !!
+            emit abortSignal();
+        }
         break;
     case MoveItems:
     {
@@ -525,6 +532,10 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 myDx=point.rx();
                 myDy=point.ry();
             }
+        }
+        if(middleButton){
+            // switch toolbar !!
+            emit abortSignal();
         }
         break;
     }
@@ -573,6 +584,10 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             }
             myMode=CopyingItem;
         }
+        if(middleButton){
+            // switch toolbar !!
+            emit abortSignal();
+        }
         break;
     case CopyingItem:
         if (copiedItems.count() > 0){
@@ -605,6 +620,10 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 }
             }
             takeSnapshot();
+        }
+        if(middleButton){
+            // switch toolbar !!
+            emit abortSignal();
         }
         break;
     case Zoom:
@@ -924,6 +943,15 @@ void DiagramScene::copyToBuffer()
     foreach(QGraphicsItem* item,selectedItems()){
         QGraphicsItem *insItem=copy(item);
         bufferedItems.append(insItem);
+        //check for children but not group
+        if(item->type()!=QGraphicsItemGroup::Type && item->childItems().count()>0){
+            foreach(QGraphicsItem* item_l1,item->childItems()){
+                QGraphicsItem* addedItem=copy(item_l1);
+                bufferedItems.append(addedItem);
+                addedItem->setParentItem(insItem);
+                addedItem->setPos(item_l1->pos());
+            }
+        }
     }
 }
 
