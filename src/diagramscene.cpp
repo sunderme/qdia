@@ -999,7 +999,7 @@ void DiagramScene::duplicateItems()
             newItem->setZValue(maxZ);
             maxZ+=0.1;
             // move to side/down
-            newItem->moveBy(10,10);
+            newItem->moveBy(myGrid,myGrid);
             newItem->setSelected(true);
             //check for children but not group
             if(item->type()!=QGraphicsItemGroup::Type && item->childItems().count()>0){
