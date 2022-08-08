@@ -1350,8 +1350,6 @@ QGraphicsItem *DiagramScene::getElementFromJSON(QJsonObject json)
         QPointF p;
         p.setX(json["x"].toDouble());
         p.setY(json["y"].toDouble());
-        qreal dx=json["dx"].toDouble();
-        qreal dy=json["dy"].toDouble();
         if(json["children"].isArray()){
             QList<QGraphicsItem*>children;
             QJsonArray array=json["children"].toArray();
