@@ -1356,45 +1356,18 @@ void MainWindow::tapItem()
         fontColorToolButton->setIcon(createColorToolButtonIcon(":/images/textpointer.png", m_textColor));
         return;
     }
-    if(item->type()==DiagramPathItem::Type){
-        auto *it=qgraphicsitem_cast<DiagramPathItem*>(item);
+    if((item->type()==DiagramPathItem::Type)||(item->type()==DiagramSplineItem::Type)){
+        auto *it=dynamic_cast<QGraphicsPathItem*>(item);
         m_lineColor=it->pen().color();
         lineColorToolButton->setIcon(createColorToolButtonIcon(
                                          ":/images/format-stroke-color.svg", m_lineColor));
         int w=it->pen().width();
-        QMenu *m=lineThicknessButton->menu();
-        QAction *act=nullptr;
-        if(w<3){
-            act=m->actions().value(w-1);
-        }else{
-            act=m->actions().value(2);
-        }
-        if(act){
-            lineThicknessButton->menu()->setDefaultAction(act);
-            lineThicknessButton->setIcon(createLineThicknesIcon(w));
-        }
+        thicknessAction->setData(w);
+        lineThicknessButton->setIcon(createLineThicknesIcon(w));
 
         return;
     }
-    if(item->type()==DiagramSplineItem::Type){
-        auto *it=qgraphicsitem_cast<DiagramSplineItem*>(item);
-        m_lineColor=it->pen().color();
-        lineColorToolButton->setIcon(createColorToolButtonIcon(
-                                         ":/images/format-stroke-color.svg", m_lineColor));
-        int w=it->pen().width();
-        QMenu *m=lineThicknessButton->menu();
-        QAction *act=nullptr;
-        if(w<3){
-            act=m->actions().value(w-1);
-        }else{
-            act=m->actions().value(2);
-        }
-        if(act){
-            lineThicknessButton->menu()->setDefaultAction(act);
-            lineThicknessButton->setIcon(createLineThicknesIcon(w));
-        }
-        return;
-    }
+
     auto *it=dynamic_cast<DiagramItem*>(item);
     if(!it) return;
     m_lineColor=it->pen().color();
@@ -1404,17 +1377,8 @@ void MainWindow::tapItem()
     fillColorToolButton->setIcon(createColorToolButtonIcon(
                                      ":/images/format-fill-color.svg", m_fillColor));
     int w=it->pen().width();
-    QMenu *m=lineThicknessButton->menu();
-    QAction *act=nullptr;
-    if(w<3){
-        act=m->actions().value(w-1);
-    }else{
-        act=m->actions().value(2);
-    }
-    if(act){
-        lineThicknessButton->menu()->setDefaultAction(act);
-        lineThicknessButton->setIcon(createLineThicknesIcon(w));
-    }
+    thicknessAction->setData(w);
+    lineThicknessButton->setIcon(createLineThicknesIcon(w));
 }
 
 void MainWindow::activateShortcuts()
