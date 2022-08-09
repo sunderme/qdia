@@ -96,7 +96,6 @@ private:
     QPointF getHandler(int i) const;
     DiagramType myDiagramType;
     QPainterPath mPainterPath;
-    QMenu *myContextMenu;
     QPointF myPos2;
     int myHoverPoint,mySelPoint;
     qreal myHandlerWidth;

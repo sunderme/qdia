@@ -15,7 +15,6 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
 {
     myPos2=pos();
     myDiagramType = diagramType;
-    myContextMenu = contextMenu;
     myRadius=5.0;
 
     mPainterPath=createPath();
