@@ -751,7 +751,7 @@ void MainWindow::createActions()
 
     printAction = new QAction(QIcon(":/images/document-print.svg"),tr("&Print"), this);
     printAction->setStatusTip(tr("Print Diagram"));
-    connect(printAction, SIGNAL(triggered()), this, SLOT(print()));
+    connect(printAction, &QAction::triggered, this, &MainWindow::print);
 
     exportAction = new QAction(tr("&Export Diagram"), this);
     exportAction->setStatusTip(tr("Export Diagram to image"));
@@ -759,15 +759,18 @@ void MainWindow::createActions()
 
     copyAction = new QAction(QIcon(":/images/edit-copy.svg"),tr("&Copy"), this);
     copyAction->setShortcut(tr("c"));
-    connect(copyAction, SIGNAL(triggered()),
-            this, SLOT(copyItems()));
+    connect(copyAction, &QAction::triggered,this, &MainWindow::copyItems);
     listOfActions.append(copyAction);
 
     duplicateAction = new QAction(tr("&Duplicate"), this);
     duplicateAction->setShortcut(tr("ctrl+d"));
-    connect(duplicateAction, SIGNAL(triggered()),
-            this, SLOT(duplicateItems()));
+    connect(duplicateAction,&QAction::triggered,this,&MainWindow::duplicateItems);
     listOfActions.append(duplicateAction);
+
+    tapAction = new QAction(tr("&Tap"), this);
+    tapAction->setShortcut(tr("shift+t"));
+    connect(tapAction,&QAction::triggered,this,&MainWindow::tapItem);
+    listOfActions.append(tapAction);
 
     moveAction = new QAction(QIcon(":/images/transform-move.svg"),tr("&Move"), this);
     moveAction->setShortcut(tr("m"));
@@ -948,6 +951,7 @@ void MainWindow::createMenus()
     itemMenu->addAction(flipYAction);
     itemMenu->addAction(groupAction);
     itemMenu->addAction(ungroupAction);
+    itemMenu->addAction(tapAction);
     itemMenu->addAction(makeElementAction);
 
     aboutMenu = menuBar()->addMenu(tr("&Help"));
@@ -1333,6 +1337,16 @@ void MainWindow::makeElement()
     test->setSelected(true);
     // save selected in special path
     fileSaveAs(true);
+}
+/*!
+ * \brief tap a selected item to extract color/style/pen/etc.
+ */
+void MainWindow::tapItem()
+{
+    if (scene->selectedItems().isEmpty())
+        return;
+
+    qDebug()<<"to be implemented!";
 }
 
 void MainWindow::activateShortcuts()
@@ -2005,7 +2019,9 @@ void MainWindow::linePatternChanged()
  * filling of DiagramElement wrong
  * text notes
  * user generated elements
- * add/mult for signal processing
+ * tap color/fill/style/pen size
+ * right click zoom when nothing selected
+ * fix no actions possible after load
  * Align ?
  * import xcircuit/drawio?
  */

@@ -109,6 +109,7 @@ private slots:
    void groupItems();
    void ungroupItems();
    void makeElement();
+   void tapItem();
    void currentFontChanged(const QFont &font);
    void fontSizeChanged(const QString &size);
    void sceneScaleChanged(const QString &scale);
@@ -217,6 +218,8 @@ private:
    QAction *lineAction;
    QAction *rectAction;
    QAction *textAction;
+
+   QAction *tapAction;
 
    QAction *zoomInAction;
    QAction *zoomOutAction;
