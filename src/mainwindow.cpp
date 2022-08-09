@@ -18,6 +18,7 @@
 #include <QtWidgets>
 #include <QtPrintSupport/QPrinter>
 #include <QtPrintSupport/QPrintDialog>
+#include <QtSvg/QSvgGenerator>
 
 const int InsertTextButton = 10;
 const int InsertDrawItemButton = 64;
@@ -1462,7 +1463,7 @@ void MainWindow::exportImage()
     QString fileName = QFileDialog::getSaveFileName(this,
             tr("Export Diagram to ..."),
             path+"file.png",
-            tr("Png (*.png);;Jpg (*.jpg);;Pdf (*.pdf);;Postscript (*.ps)"),
+            tr("Png (*.png);;Jpg (*.jpg);;SVG (*.svg);;Pdf (*.pdf);;Postscript (*.ps)"),
             &selectedFilter,
             options);
     if (!fileName.isEmpty()){
@@ -1479,7 +1480,21 @@ void MainWindow::exportImage()
             painter.setRenderHint(QPainter::Antialiasing);
             scene->render(&painter,QRectF(),rect);
         }
-        else {
+        if((selectedFilter=="SVG (*.svg)")) {
+            QRectF rect=scene->itemsBoundingRect(); // Bonding der Elemente in scene
+            QSvgGenerator generator;
+            generator.setFileName(fileName);
+            generator.setSize(rect.size().toSize());
+            QRectF target=rect;
+            target.moveTo(0,0);
+            generator.setViewBox(target);
+            generator.setTitle(tr("qdiagram"));
+
+            QPainter painter(&generator);// generate SVG
+            painter.setRenderHint(QPainter::Antialiasing);
+            scene->render(&painter,target,rect);
+        }
+        if((selectedFilter=="Png (*.png)")or(selectedFilter=="Jpg (*.jpg)")){
             QRectF rect=scene->itemsBoundingRect(); // Bonding der Elemente in scene
             qreal w=rect.width();
             qreal h=rect.height();

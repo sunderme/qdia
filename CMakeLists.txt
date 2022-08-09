@@ -22,7 +22,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Core Gui LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS PrintSupport REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS PrintSupport Svg REQUIRED)
 
 
 set(TS_FILES translation/qdia_en_US.ts translation/qdia_de.ts)
@@ -91,6 +91,7 @@ target_link_libraries(qdia PRIVATE
     Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::PrintSupport
+    Qt${QT_VERSION_MAJOR}::Svg
 )
 
 set_target_properties(qdia PROPERTIES
