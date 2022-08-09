@@ -406,7 +406,7 @@ void MainWindow::itemColorChanged(QColor color)
 {
     m_fillColor=color;
     fillColorToolButton->setIcon(createColorToolButtonIcon(
-                                     ":/images/floodfill.png",
+                                     ":/images/format-fill-color.svg",
                                      color));
     fillButtonTriggered();
 }
@@ -415,7 +415,7 @@ void MainWindow::lineColorChanged(QColor color)
 {
     m_lineColor=color;
     lineColorToolButton->setIcon(createColorToolButtonIcon(
-                                     ":/images/linecolor.png",
+                                     ":/images/format-stroke-color.svg",
                                      color));
     lineButtonTriggered();
 }
@@ -1347,6 +1347,30 @@ void MainWindow::tapItem()
         return;
 
     qDebug()<<"to be implemented!";
+    QGraphicsItem *item=scene->selectedItems().first();
+    if(item->type()==QGraphicsItemGroup::Type) return; // needs to be a single item
+    // check text item
+    if(item->type()==DiagramTextItem::Type){
+        DiagramTextItem *it=qgraphicsitem_cast<DiagramTextItem*>(item);
+        m_textColor=it->defaultTextColor();
+        fontColorToolButton->setIcon(createColorToolButtonIcon(":/images/textpointer.png", m_textColor));
+        return;
+    }
+    if(item->type()==DiagramPathItem::Type){
+        auto *it=qgraphicsitem_cast<DiagramPathItem*>(item);
+        m_lineColor=it->pen().color();
+        lineColorToolButton->setIcon(createColorToolButtonIcon(
+                                         ":/images/format-stroke-color.svg", m_lineColor));
+        return;
+    }
+    auto *it=dynamic_cast<DiagramItem*>(item);
+    if(!it) return;
+    m_lineColor=it->pen().color();
+    lineColorToolButton->setIcon(createColorToolButtonIcon(
+                                     ":/images/format-stroke-color.svg", m_lineColor));
+    m_fillColor=it->brush().color();
+    fillColorToolButton->setIcon(createColorToolButtonIcon(
+                                     ":/images/format-fill-color.svg", m_fillColor));
 }
 
 void MainWindow::activateShortcuts()
