@@ -99,8 +99,7 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json) : QGraphicsTextItem(nu
     p.setY(json["y"].toDouble());
 
     QColor color;
-    color.setNamedColor(json["pen"].toString());
-    color.setAlpha(json["pen_alpha"].toInt());
+    color.setNamedColor(json["color"].toString());
     setDefaultTextColor(color);
     setFont(QFont(json["font"].toString()));
     setHtml(json["text"].toString());
@@ -223,7 +222,7 @@ void DiagramTextItem::write(QJsonObject &json)
     json["text"]=toHtml();
     json["font"]=font().toString();
     json["alignment"]=static_cast<int>(m_alignment);
-    json["color"]=defaultTextColor().name();
+    json["color"]=defaultTextColor().name(QColor::HexArgb);
     json["m11"]=transform().m11();
     json["m12"]=transform().m12();
     json["m21"]=transform().m21();
