@@ -1,11 +1,7 @@
 #ifndef DIAGRAMSPLINEITEM_H
 #define DIAGRAMSPLINEITEM_H
 
-#include "diagramitem.h"
-
-QT_BEGIN_NAMESPACE
-class QMenu;
-QT_END_NAMESPACE
+#include <QGraphicsPathItem>
 
 class DiagramSplineItem : public QGraphicsPathItem
 {
