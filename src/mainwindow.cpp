@@ -1361,6 +1361,38 @@ void MainWindow::tapItem()
         m_lineColor=it->pen().color();
         lineColorToolButton->setIcon(createColorToolButtonIcon(
                                          ":/images/format-stroke-color.svg", m_lineColor));
+        int w=it->pen().width();
+        QMenu *m=lineThicknessButton->menu();
+        QAction *act=nullptr;
+        if(w<3){
+            act=m->actions().value(w-1);
+        }else{
+            act=m->actions().value(2);
+        }
+        if(act){
+            lineThicknessButton->menu()->setDefaultAction(act);
+            lineThicknessButton->setIcon(createLineThicknesIcon(w));
+        }
+
+        return;
+    }
+    if(item->type()==DiagramSplineItem::Type){
+        auto *it=qgraphicsitem_cast<DiagramSplineItem*>(item);
+        m_lineColor=it->pen().color();
+        lineColorToolButton->setIcon(createColorToolButtonIcon(
+                                         ":/images/format-stroke-color.svg", m_lineColor));
+        int w=it->pen().width();
+        QMenu *m=lineThicknessButton->menu();
+        QAction *act=nullptr;
+        if(w<3){
+            act=m->actions().value(w-1);
+        }else{
+            act=m->actions().value(2);
+        }
+        if(act){
+            lineThicknessButton->menu()->setDefaultAction(act);
+            lineThicknessButton->setIcon(createLineThicknesIcon(w));
+        }
         return;
     }
     auto *it=dynamic_cast<DiagramItem*>(item);
@@ -1371,6 +1403,18 @@ void MainWindow::tapItem()
     m_fillColor=it->brush().color();
     fillColorToolButton->setIcon(createColorToolButtonIcon(
                                      ":/images/format-fill-color.svg", m_fillColor));
+    int w=it->pen().width();
+    QMenu *m=lineThicknessButton->menu();
+    QAction *act=nullptr;
+    if(w<3){
+        act=m->actions().value(w-1);
+    }else{
+        act=m->actions().value(2);
+    }
+    if(act){
+        lineThicknessButton->menu()->setDefaultAction(act);
+        lineThicknessButton->setIcon(createLineThicknesIcon(w));
+    }
 }
 
 void MainWindow::activateShortcuts()
@@ -2042,8 +2086,9 @@ void MainWindow::linePatternChanged()
 /* TODO
  * filling of DiagramElement wrong
  * text notes
+ * fix changing font/font size after reload
  * user generated elements
- * tap color/fill/style/pen size
+ * tap style/pen size
  * right click zoom when nothing selected
  * fix no actions possible after load
  * Align ?
