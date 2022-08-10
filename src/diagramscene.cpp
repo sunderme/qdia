@@ -194,7 +194,7 @@ void DiagramScene::setFont(const QFont &font)
     myFont = font;
 
     foreach(QGraphicsItem *elem,selectedItems()){
-        QGraphicsTextItem *item = qgraphicsitem_cast<DiagramTextItem *>(elem);
+        DiagramTextItem *item = qgraphicsitem_cast<DiagramTextItem *>(elem);
         if (item)
             item->setFont(myFont);
     }

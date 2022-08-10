@@ -70,6 +70,7 @@ DiagramTextItem::DiagramTextItem(QGraphicsItem *parent)
              this, SLOT(updateGeometry(int,int,int)));
 }
 DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
+    : QGraphicsTextItem(nullptr)
 {
     //QGraphicsTextItem();
     m_alignment=textItem.m_alignment;
@@ -85,11 +86,12 @@ DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
     m_updateGeometry=false;
     m_touched=false;
     updateGeometry();
-    connect(document(), SIGNAL(contentsChanged()),
-             this, SLOT(updateGeometry()));
+    connect(document(), SIGNAL(contentsChange(int,int,int)),
+             this, SLOT(updateGeometry(int,int,int)));
 }
 
-DiagramTextItem::DiagramTextItem(const QJsonObject &json) : QGraphicsTextItem(nullptr)
+DiagramTextItem::DiagramTextItem(const QJsonObject &json)
+    : QGraphicsTextItem(nullptr)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -119,8 +121,9 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json) : QGraphicsTextItem(nu
     m_updateGeometry=false;
     m_touched=false;
     updateGeometry();
-    connect(document(), SIGNAL(contentsChanged()),
-             this, SLOT(updateGeometry()));
+    connect(document(), SIGNAL(contentsChange(int,int,int)),
+             this, SLOT(updateGeometry(int,int,int)));
+
 }
 QVariant DiagramTextItem::itemChange(GraphicsItemChange change,
                      const QVariant &value)
