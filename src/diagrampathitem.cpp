@@ -337,7 +337,7 @@ void DiagramPathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
      painter->setPen(pen());
      painter->setBrush(Qt::NoBrush);
      painter->drawPath(getPath());
-     painter->setBrush(brush());
+     painter->setBrush(pen().color());
      drawArrows(painter);
      // selected
      if(isSelected()){

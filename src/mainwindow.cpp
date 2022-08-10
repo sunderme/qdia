@@ -2052,7 +2052,7 @@ void MainWindow::linePatternChanged()
  * text notes
  * fix changing font/font size after reload
  * user generated elements
- * tap style/pen size
+ * tap style
  * right click zoom when nothing selected
  * fix no actions possible after load
  * Align ?
