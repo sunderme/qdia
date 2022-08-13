@@ -201,6 +201,7 @@ private:
     DiagramSplineItem *insertedSplineItem;
     QList<QGraphicsItem *> copiedItems;
     QList<QGraphicsItem *> bufferedItems;
+    QGraphicsRectItem *m_rubberbandItem;
     qreal myDx,myDy;
     int myArrow;
     DiagramPathItem::routingType myRouting;

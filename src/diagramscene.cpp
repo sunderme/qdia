@@ -72,6 +72,7 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     insertedDrawItem = nullptr;
     insertedPathItem = nullptr;
     insertedSplineItem = nullptr;
+    m_rubberbandItem = nullptr;
     myDx=0.0;
     myDy=0.0;
     maxZ=0;
@@ -303,6 +304,10 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             // zoom area instead
             startPoint=mouseEvent->scenePos();
             myMode=ZoomSingle;
+            QBrush brush;
+            brush.setColor(QColor(0,170,255,200));
+            brush.setStyle(Qt::SolidPattern);
+            m_rubberbandItem=addRect(QRectF(startPoint,startPoint),Qt::NoPen,brush);
         }else{
             abort();
         }
@@ -733,7 +738,11 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             }
         }
         break;
-
+    case ZoomSingle:
+        if(m_rubberbandItem){
+            m_rubberbandItem->setRect(QRectF(startPoint,mouseEvent->scenePos()));
+        }
+        break;
     default:
         ;
     }
@@ -752,6 +761,8 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     if(myMode== ZoomSingle){
         emit zoomRect(mouseEvent->scenePos(),startPoint);
         myMode=MoveItem;
+        removeItem(m_rubberbandItem);
+        m_rubberbandItem=nullptr;
         return;
     }
     if(myMode== MoveItem && !selectedItems().isEmpty()){
