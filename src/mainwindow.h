@@ -157,6 +157,7 @@ private slots:
    void switchToText();
    void switchToRect();
    void switchToDrawItem(int type);
+   void setRubberbandMode();
 
 protected:
    void closeEvent(QCloseEvent *event);

@@ -69,6 +69,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
             this, &MainWindow::zoomPointer);
     connect(scene, &DiagramScene::abortSignal,
             this, &MainWindow::abortFromScene);
+    connect(scene, &DiagramScene::setRubberbandMode,
+            this, &MainWindow::setRubberbandMode);
     createToolbars();
 
     QHBoxLayout *layout = new QHBoxLayout;
@@ -1497,6 +1499,11 @@ void MainWindow::switchToDrawItem(int type)
     buttonGroupClicked(bt);
 }
 
+void MainWindow::setRubberbandMode()
+{
+    view->setDragMode(QGraphicsView::RubberBandDrag);
+}
+
 void MainWindow::exportImage()
 {
     scene->setCursorVisible(false);
@@ -2050,11 +2057,12 @@ void MainWindow::linePatternChanged()
 /* TODO
  * filling of DiagramElement wrong
  * text notes
- * fix changing font/font size after reload
- * user generated elements
+ * fix changing font/font size after reload/copy
+ ** user generated elements
  * tap style
- * right click zoom when nothing selected
- * fix no actions possible after load
+ ** right click zoom when nothing selected
+ ** fix no actions possible after load
+ * scale elements ?
  * Align ?
  * import xcircuit/drawio?
  */

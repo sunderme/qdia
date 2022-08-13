@@ -299,7 +299,15 @@ void DiagramScene::wheelEvent(QGraphicsSceneWheelEvent *mouseEvent)
 void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (mouseEvent->button() == Qt::RightButton){
-        abort();
+        if(selectedItems().isEmpty() && myMode==MoveItem){
+            // zoom area instead
+            startPoint=mouseEvent->scenePos();
+            myMode=ZoomSingle;
+            emit setRubberbandMode();
+        }else{
+            abort();
+        }
+        QGraphicsScene::mousePressEvent(mouseEvent);
         mouseEvent->accept();
         return;
     }
@@ -740,6 +748,11 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
     if (myMode == InsertText) {
         mouseEvent->accept();
+        return;
+    }
+    if(myMode== ZoomSingle){
+        emit zoomRect(mouseEvent->scenePos(),startPoint);
+        myMode=MoveItem;
         return;
     }
     if(myMode== MoveItem && !selectedItems().isEmpty()){

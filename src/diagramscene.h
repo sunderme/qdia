@@ -77,7 +77,7 @@ class DiagramScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    enum Mode { InsertItem, InsertLine, InsertSpline, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem, Zoom , MoveItems, InsertElement };
+    enum Mode { InsertItem, InsertLine, InsertSpline, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem, Zoom , MoveItems, InsertElement , ZoomSingle};
 
     explicit DiagramScene(QMenu *itemMenu, QObject *parent = nullptr);
     QFont font() const { return myFont; }
@@ -163,6 +163,7 @@ signals:
     void zoomPointer(const qreal factor,QPointF pointer);
     void forceCursor(QPointF p);
     void abortSignal();
+    void setRubberbandMode();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
