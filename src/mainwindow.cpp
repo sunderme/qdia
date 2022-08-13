@@ -69,8 +69,6 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
             this, &MainWindow::zoomPointer);
     connect(scene, &DiagramScene::abortSignal,
             this, &MainWindow::abortFromScene);
-    connect(scene, &DiagramScene::setRubberbandMode,
-            this, &MainWindow::setRubberbandMode);
     createToolbars();
 
     QHBoxLayout *layout = new QHBoxLayout;
@@ -1497,11 +1495,6 @@ void MainWindow::switchToDrawItem(int type)
     if(!found) return; // button not found -> program error
     bt->setChecked(true);
     buttonGroupClicked(bt);
-}
-
-void MainWindow::setRubberbandMode()
-{
-    view->setDragMode(QGraphicsView::RubberBandDrag);
 }
 
 void MainWindow::exportImage()

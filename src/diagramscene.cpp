@@ -303,7 +303,6 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             // zoom area instead
             startPoint=mouseEvent->scenePos();
             myMode=ZoomSingle;
-            emit setRubberbandMode();
         }else{
             abort();
         }

@@ -163,7 +163,6 @@ signals:
     void zoomPointer(const qreal factor,QPointF pointer);
     void forceCursor(QPointF p);
     void abortSignal();
-    void setRubberbandMode();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) override;
