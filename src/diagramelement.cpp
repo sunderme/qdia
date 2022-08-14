@@ -209,6 +209,11 @@ QList<DiagramElement::Path> DiagramElement::createPainterPathFromJSON(QJsonObjec
             path.moveTo(x0,y0);
             path.lineTo(x1,y1);
         }
+        if(type=="lineTo") {
+            qreal x0=jsonObject["x"].toDouble();
+            qreal y0=jsonObject["y"].toDouble();
+            path.lineTo(x0,y0);
+        }
         if(type=="polygon") {
             QVector<QPointF>lst;
             QJsonArray jsonPoints=jsonObject["points"].toArray();
