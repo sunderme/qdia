@@ -1779,6 +1779,7 @@ bool MainWindow::openFile(QString fileName)
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
         return false;
     }
+    abort(); // force defined state
     scene->clear();
     scene->load_json(&file);
     myFileName=fileName;
