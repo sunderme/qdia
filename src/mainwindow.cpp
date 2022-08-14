@@ -2054,7 +2054,6 @@ void MainWindow::linePatternChanged()
  * fix changing font/font size after reload/copy
  ** user generated elements
  * tap style
- ** fix no actions possible after load
  * scale elements ?
  * Align ?
  * import xcircuit/drawio?

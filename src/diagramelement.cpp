@@ -246,6 +246,15 @@ QList<DiagramElement::Path> DiagramElement::createPainterPathFromJSON(QJsonObjec
             path.arcMoveTo(x-rx,y-ry,2*rx,2*ry,angle);
             path.arcTo(x-rx,y-ry,2*rx,2*ry,angle,length);
         }
+        if(type=="arcTo") {
+            qreal x=jsonObject["x"].toDouble();
+            qreal y=jsonObject["y"].toDouble();
+            qreal rx=jsonObject["rx"].toDouble();
+            qreal ry=jsonObject["ry"].toDouble();
+            qreal angle=jsonObject["angle"].toDouble();
+            qreal length=jsonObject["length"].toDouble();
+            path.arcTo(x-rx,y-ry,2*rx,2*ry,angle,length);
+        }
         if(type=="quad") {
             qreal x0=jsonObject["x0"].toDouble();
             qreal x1=jsonObject["x1"].toDouble();
@@ -276,6 +285,9 @@ QList<DiagramElement::Path> DiagramElement::createPainterPathFromJSON(QJsonObjec
             qreal cx1=jsonObject["cx1"].toDouble();
             qreal cy1=jsonObject["cy1"].toDouble();
             path.cubicTo(cx0,cy0,cx1,cy1,x1,y1);
+        }
+        if(type=="close") {
+            path.closeSubpath();
         }
         if(type=="text"){
             Path localPath;
