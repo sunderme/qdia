@@ -1923,9 +1923,13 @@ QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
         if(item->type()==QGraphicsItemGroup::Type){
             QRectF groupRect=getTotalBoundary(item->childItems());
             result<<item->mapToParent(groupRect.bottomLeft())<<item->mapToParent(groupRect.topRight());
-        }else{
-            result.append(item->pos());
+            continue;
         }
+        if(item->type()==DiagramDrawItem::Type){
+            const DiagramDrawItem* drawItem=qgraphicsitem_cast<const DiagramDrawItem*>(item);
+            result.append(drawItem->getPos2());
+        }
+        result.append(item->pos());
     }
     return result.boundingRect();
 }
