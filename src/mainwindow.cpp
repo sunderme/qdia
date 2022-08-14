@@ -1700,8 +1700,8 @@ void MainWindow::fileSaveAs(bool selectedItemsOnly)
     QString path=m_lastPath.isEmpty() ? "" : m_lastPath+QDir::separator();
     QString fileName = QFileDialog::getSaveFileName(this,
             tr("Save Diagram as ..."),
-            path+"dia.json",
-            tr("QDiagram (*.json)"),
+            path+"dia.qdia",
+            tr("QDiagram (*.qdia);;QDiagram old(*.json)"),
             &selectedFilter,
             options);
     if (!fileName.isEmpty()){
@@ -1756,7 +1756,7 @@ void MainWindow::fileOpen()
     QString fileName = QFileDialog::getOpenFileName(this,
             tr("Load Diagram"),
             path+"dia.json",
-            tr("QDiagram (*.json)"),
+            tr("QDiagram (*.qdia);;QDiagram old(*.json)"),
             &selectedFilter,
             options);
     if (!fileName.isEmpty()){
@@ -2053,7 +2053,6 @@ void MainWindow::linePatternChanged()
  * fix changing font/font size after reload/copy
  ** user generated elements
  * tap style
- ** right click zoom when nothing selected
  ** fix no actions possible after load
  * scale elements ?
  * Align ?
