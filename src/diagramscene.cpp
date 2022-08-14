@@ -914,7 +914,16 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
 {
     switch(item->type()){
     case DiagramTextItem::Type:
-        return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramTextItem*>(item)->copy());
+    {
+        DiagramTextItem *textItem=qgraphicsitem_cast<DiagramTextItem*>(item)->copy();
+        connect(textItem, &DiagramTextItem::lostFocus,
+                this, &DiagramScene::editorLostFocus);
+        connect(textItem, &DiagramTextItem::receivedFocus,
+                this, &DiagramScene::editorReceivedFocus);
+        connect(textItem, &DiagramTextItem::selectedChange,
+                this, &DiagramScene::itemSelected);
+        return qgraphicsitem_cast<QGraphicsItem*>(textItem);
+    }
         break;
     case DiagramPathItem::Type:
         return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramPathItem*>(item)->copy());

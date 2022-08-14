@@ -70,13 +70,12 @@ DiagramTextItem::DiagramTextItem(QGraphicsItem *parent)
              this, SLOT(updateGeometry(int,int,int)));
 }
 DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
-    : QGraphicsTextItem(nullptr)
 {
     //QGraphicsTextItem();
     m_alignment=textItem.m_alignment;
     setFont(textItem.font());
     setDefaultTextColor(textItem.defaultTextColor());
-    setHtml(textItem.toHtml());
+    setPlainText(textItem.toPlainText());
     setTransform(textItem.transform());
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -104,7 +103,12 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
     color.setNamedColor(json["color"].toString());
     setDefaultTextColor(color);
     setFont(QFont(json["font"].toString()));
-    setHtml(json["text"].toString());
+    QString text=json["text"].toString();
+    if(text.startsWith("<!")){
+        setHtml(text); // to keep compatibility, prefer plaintext from now
+    }else{
+        setPlainText(text);
+    }
     m_alignment=static_cast<Qt::Alignment>(json["alignment"].toInt());
     setCorrectedPos(p);
     setZValue(json["z"].toDouble());
@@ -222,7 +226,7 @@ void DiagramTextItem::write(QJsonObject &json)
     json["y"]=p.y();
     json["z"]=zValue();
     json["type"]=type();
-    json["text"]=toHtml();
+    json["text"]=toPlainText();
     json["font"]=font().toString();
     json["alignment"]=static_cast<int>(m_alignment);
     json["color"]=defaultTextColor().name(QColor::HexArgb);

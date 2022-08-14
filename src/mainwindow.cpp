@@ -2050,7 +2050,7 @@ void MainWindow::linePatternChanged()
 
 /* TODO
  * text notes
- * fix changing font/font size after reload/copy
+ * fix flip/rotate when moving several elements
  ** user generated elements
  * tap style
  * scale elements ?
