@@ -2049,7 +2049,6 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
- * filling of DiagramElement wrong
  * text notes
  * fix changing font/font size after reload/copy
  ** user generated elements

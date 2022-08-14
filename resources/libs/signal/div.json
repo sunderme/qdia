@@ -1,9 +1,9 @@
 {
   "name": "div",
   "elements":[
-    {"type":"circle","x0":0,"y0":8,"r":2},
-    {"type":"circle","x0":0,"y0":-7,"r":2},
     {"type":"line","x0":-10,"y0":0,"x1":10,"y1":0},
-    {"type":"circle","x0":0,"y0":0,"r":20}
+    {"type":"circle","x0":0,"y0":0,"r":20},
+    {"type":"element","x":0,"y":-8,"rotate":0,"name":"analog/dot"},
+    {"type":"element","x":0,"y":8,"rotate":0,"name":"analog/dot"}
   ]
 }
