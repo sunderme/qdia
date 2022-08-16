@@ -285,6 +285,8 @@ private:
 
    bool myShowGrid; // Grid visible ?
 
+   QPointF m_rotationCenter;
+
    QColor m_fillColor,m_lineColor,m_textColor;
 
    QString myFileName; // aktueller Filename

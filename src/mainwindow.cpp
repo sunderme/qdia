@@ -1965,7 +1965,14 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
     QPointF pt=bound.center();
     if(forceOnGrid){
         // just use first element as it stays the same on repeated call on rotate
-        pt=getFirstPoint(items);
+        pt=scene->onGrid(pt);
+        QLineF diff(pt,m_rotationCenter);
+        if(diff.length()<=1.5*scene->grid()){
+            pt=m_rotationCenter;
+        }else{
+            m_rotationCenter=pt;
+        }
+
     }
 
     transformItems(transform,items,pt);
@@ -2055,6 +2062,7 @@ void MainWindow::linePatternChanged()
 /* TODO
  * text notes
  * fix flip/rotate when moving several elements
+ * move/copy flip/rotate
  ** user generated elements
  * tap style
  * scale elements ?
