@@ -1046,6 +1046,9 @@ QList<QGraphicsItem *> DiagramScene::activeItems() const
     if(!selectedItems().isEmpty()){
         return selectedItems();
     }
+    if(!myMoveItems.isEmpty()){
+        return myMoveItems;
+    }
     return (QList<QGraphicsItem*>()<<insertedItem);
 }
 /*!
