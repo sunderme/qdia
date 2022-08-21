@@ -1049,6 +1049,9 @@ QList<QGraphicsItem *> DiagramScene::activeItems() const
     if(!myMoveItems.isEmpty()){
         return myMoveItems;
     }
+    if(!copiedItems.isEmpty()){
+        return copiedItems;
+    }
     return (QList<QGraphicsItem*>()<<insertedItem);
 }
 /*!
