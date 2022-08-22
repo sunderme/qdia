@@ -509,7 +509,7 @@ void MainWindow::createToolBox()
 
     QButtonGroup *bG = new QButtonGroup(this);
     bG->setExclusive(false);
-    connect(bG, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
+    connect(bG, &QButtonGroup::buttonClicked,
             this, &MainWindow::buttonGroupClicked);
     QGridLayout *layout = new QGridLayout;
     // added DrawItem
@@ -608,7 +608,7 @@ void MainWindow::createToolBox()
     for(int i=0;i<paths.size();++i){
         bG = new QButtonGroup(this);
         bG->setExclusive(false);
-        connect(bG, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
+        connect(bG, &QButtonGroup::buttonClicked,
                 this, &MainWindow::buttonGroupClicked);
         layout = new QGridLayout;
         // added DrawItem
@@ -636,7 +636,42 @@ void MainWindow::createToolBox()
         toolBox->addItem(itemWidget, names.value(i));
     }
     // add user pane !
+#ifdef Q_OS_WIN
+    const QString elementPath="%appdata%/.config/QDia/userElements";
+   #else
+    const QString elementPath=QDir::homePath()+"/.config/QDia/userElements/";
+#endif
+    QDir dir(elementPath);
+    QStringList userElements=dir.entryList({"*.qdia"},QDir::Files);
+    if(!userElements.isEmpty()){
+        // add pane and fill
+        bG = new QButtonGroup(this);
+        bG->setExclusive(false);
+        connect(bG, &QButtonGroup::buttonClicked,
+                this, &MainWindow::buttonGroupClicked);
+        layout = new QGridLayout;
+        // added DrawItem
+        row=0;
+        col=0;
+        for (const QString &fn: userElements) {
+            QWidget *bt=createCellWidget(elementPath+fn,256,bG);
+            layout->addWidget(bt, row, col);
+            ++col;
+            if(col>2){
+                col=0;
+                ++row;
+            }
+        }
+        if(col>0) ++row;
 
+        layout->setRowStretch(row, 10);
+        layout->setColumnStretch(2, 10);
+
+        itemWidget = new QWidget;
+        itemWidget->setLayout(layout);
+
+        toolBox->addItem(itemWidget, "user");
+    }
 }
 
 void MainWindow::createActions()
@@ -868,8 +903,7 @@ void MainWindow::createActions()
 
     saveAsAction = new QAction(QIcon(":/images/document-save-as.svg"),tr("Save &As ..."), this);
     saveAsAction->setShortcut(tr("Ctrl+s"));
-    connect(saveAsAction, &QAction::triggered,
-            this, &MainWindow::fileSaveAs);
+    connect(saveAsAction, &QAction::triggered,[this]{fileSaveAs();});
     listOfActions.append(saveAsAction);
 
     copyToClipboardAction=new QAction(QIcon(":/images/edit-copy.svg"),tr("&Copy to clipboard"), this);
@@ -1154,15 +1188,23 @@ QWidget *MainWindow::createCellWidget(const QString &text,
         button->setProperty("fn",text);
         name=item.getName();
     }else{
-        if(type>63){
-            DiagramDrawItem item(static_cast<DiagramDrawItem::DiagramType>(type-64), itemMenu);
-            item.setPos2(230,230);
-            QIcon icon(item.image());
+        if(type==256){
+            QIcon icon(":/images/textpointer.png");
             button->setIcon(icon);
+            button->setProperty("fn",text);
+            QFileInfo fi(text);
+            name=fi.baseName();
         }else{
-            DiagramItem item(static_cast<DiagramItem::DiagramType>(type), itemMenu);
-            QIcon icon(item.image());
-            button->setIcon(icon);
+            if(type>63){
+                DiagramDrawItem item(static_cast<DiagramDrawItem::DiagramType>(type-64), itemMenu);
+                item.setPos2(230,230);
+                QIcon icon(item.image());
+                button->setIcon(icon);
+            }else{
+                DiagramItem item(static_cast<DiagramItem::DiagramType>(type), itemMenu);
+                QIcon icon(item.image());
+                button->setIcon(icon);
+            }
         }
     }
     button->setIconSize(QSize(50, 50));
@@ -1319,13 +1361,17 @@ void MainWindow::makeElement()
     if (scene->selectedItems().isEmpty())
         return;
 
-    qDebug()<<"to be implemented!";
-    QGraphicsItemGroup *test = scene->createItemGroup(scene->selectedItems());
-    test->setFlag(QGraphicsItem::ItemIsMovable, true);
-    test->setFlag(QGraphicsItem::ItemIsSelectable, true);
-    test->setSelected(true);
     // save selected in special path
-    fileSaveAs(true);
+#ifdef Q_OS_WIN
+    QString elemenPath="%appdata%/.config/QDia/userElements";
+#else
+    QString elemenPath=QDir::homePath()+"/.config/QDia/userElements/";
+#endif
+    QDir dir(elemenPath);
+    if(!dir.exists()){
+        dir.mkdir(elemenPath);
+    }
+    fileSaveAs(true,elemenPath);
 }
 /*!
  * \brief tap a selected item to extract color/style/pen/etc.
@@ -1335,7 +1381,6 @@ void MainWindow::tapItem()
     if (scene->selectedItems().isEmpty())
         return;
 
-    qDebug()<<"to be implemented!";
     QGraphicsItem *item=scene->selectedItems().first();
     if(item->type()==QGraphicsItemGroup::Type) return; // needs to be a single item
     // check text item
@@ -1682,11 +1727,14 @@ void MainWindow::setGrid()
     }
 }
 
-void MainWindow::fileSaveAs(bool selectedItemsOnly)
+void MainWindow::fileSaveAs(bool selectedItemsOnly,QString pathSuggestion)
 {
     QFileDialog::Options options;
     QString selectedFilter;
     QString path=m_lastPath.isEmpty() ? "" : m_lastPath+QDir::separator();
+    if(!pathSuggestion.isEmpty()){
+        path=pathSuggestion;
+    }
     QString fileName = QFileDialog::getSaveFileName(this,
             tr("Save Diagram as ..."),
             path+"dia.qdia",

@@ -144,7 +144,7 @@ private slots:
    void toggleGrid(bool grid);
    void setGrid();
    void fileSave();
-   void fileSaveAs(bool selectedItemsOnly=false);
+   void fileSaveAs(bool selectedItemsOnly=false, QString pathSuggestion="");
    void fileOpen();
    bool openFile(QString fileName);
    void openRecentFile();
