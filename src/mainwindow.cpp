@@ -161,13 +161,18 @@ void MainWindow::buttonGroupClicked(QAbstractButton *button)
             scene->setMode(DiagramScene::InsertDrawItem);
         }
         else {
-            if(id==128){
-                QString fn=button->property("fn").toString();
-                scene->setItemType(fn);
-                scene->setMode(DiagramScene::InsertElement);
+            if(id==256){
+                // user element
+                qDebug()<<"to be implemented";
             }else{
-                scene->setItemType(DiagramItem::DiagramType(id));
-                scene->setMode(DiagramScene::InsertItem);
+                if(id==128){
+                    QString fn=button->property("fn").toString();
+                    scene->setItemType(fn);
+                    scene->setMode(DiagramScene::InsertElement);
+                }else{
+                    scene->setItemType(DiagramItem::DiagramType(id));
+                    scene->setMode(DiagramScene::InsertItem);
+                }
             }
         }
     }
@@ -509,7 +514,7 @@ void MainWindow::createToolBox()
 
     QButtonGroup *bG = new QButtonGroup(this);
     bG->setExclusive(false);
-    connect(bG, &QButtonGroup::buttonClicked,
+    connect(bG, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
             this, &MainWindow::buttonGroupClicked);
     QGridLayout *layout = new QGridLayout;
     // added DrawItem
@@ -608,7 +613,7 @@ void MainWindow::createToolBox()
     for(int i=0;i<paths.size();++i){
         bG = new QButtonGroup(this);
         bG->setExclusive(false);
-        connect(bG, &QButtonGroup::buttonClicked,
+        connect(bG, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
                 this, &MainWindow::buttonGroupClicked);
         layout = new QGridLayout;
         // added DrawItem
@@ -647,7 +652,7 @@ void MainWindow::createToolBox()
         // add pane and fill
         bG = new QButtonGroup(this);
         bG->setExclusive(false);
-        connect(bG, &QButtonGroup::buttonClicked,
+        connect(bG, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
                 this, &MainWindow::buttonGroupClicked);
         layout = new QGridLayout;
         // added DrawItem
