@@ -991,11 +991,20 @@ void DiagramScene::copyToBuffer()
 void DiagramScene::pasteFromBuffer()
 {
     copiedItems.clear();
+    selectedItems().clear();
+    QRectF bnd=getTotalBoundary(bufferedItems);
+    myDx=myCursor.pos().x()-bnd.center().x();
+    myDy=myCursor.pos().y()-bnd.center().y();
     foreach(QGraphicsItem* item,bufferedItems){
         QGraphicsItem *newItem=copy(item);
         addItem(newItem);
         copiedItems.append(newItem);
+        newItem->moveBy(myDx,myDy);
     }
+
+    myDx=myCursor.pos().x();
+    myDy=myCursor.pos().y();
+
     myMode=CopyingItem;
 }
 
