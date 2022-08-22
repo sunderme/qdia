@@ -1493,6 +1493,34 @@ void DiagramScene::setArrow(const int i)
             }
         }
     }
+}
 
-
+/*!
+ * \brief get total boundary
+ * Uses positions of elements and boundary of draw elements
+ * \param items
+ * \return
+ */
+QRectF DiagramScene::getTotalBoundary(const QList<QGraphicsItem *> items) const
+{
+    QPolygonF result;
+    foreach(const QGraphicsItem *item,items){
+        if(!item) continue;
+        if(item->type()==DiagramTextItem::Type){
+            const DiagramTextItem *textItem=qgraphicsitem_cast<const DiagramTextItem *>(item);
+            result.append(textItem->anchorPoint());
+            continue;
+        }
+        if(item->type()==QGraphicsItemGroup::Type){
+            QRectF groupRect=getTotalBoundary(item->childItems());
+            result<<item->mapToParent(groupRect.bottomLeft())<<item->mapToParent(groupRect.topRight());
+            continue;
+        }
+        if(item->type()==DiagramDrawItem::Type){
+            const DiagramDrawItem* drawItem=qgraphicsitem_cast<const DiagramDrawItem*>(item);
+            result.append(drawItem->getPos2());
+        }
+        result.append(item->pos());
+    }
+    return result.boundingRect();
 }

@@ -1910,58 +1910,10 @@ QIcon MainWindow::createLinePatternIcon(const int i)
     return QIcon(pixmap);
 }
 
-QRectF MainWindow::getTotalBoundary(const QList<QGraphicsItem *> items) const
-{
-    QPolygonF result;
-    foreach(const QGraphicsItem *item,items){
-        if(!item) continue;
-        if(item->type()==DiagramTextItem::Type){
-            const DiagramTextItem *textItem=qgraphicsitem_cast<const DiagramTextItem *>(item);
-            result.append(textItem->anchorPoint());
-            continue;
-        }
-        if(item->type()==QGraphicsItemGroup::Type){
-            QRectF groupRect=getTotalBoundary(item->childItems());
-            result<<item->mapToParent(groupRect.bottomLeft())<<item->mapToParent(groupRect.topRight());
-            continue;
-        }
-        if(item->type()==DiagramDrawItem::Type){
-            const DiagramDrawItem* drawItem=qgraphicsitem_cast<const DiagramDrawItem*>(item);
-            result.append(drawItem->getPos2());
-        }
-        result.append(item->pos());
-    }
-    return result.boundingRect();
-}
-/*!
- * \brief look through the list and get the first reasonable position
- * Used as rotation anchor. QGraphicsItemGroup does not give an reasonable point but children, mapped to scene do
- * \param items
- * \return found Point
- */
-QPointF MainWindow::getFirstPoint(const QList<QGraphicsItem *> items) const
-{
-    foreach(const QGraphicsItem *item,items){
-        if(!item) continue;
-        if(item->type()==DiagramTextItem::Type){
-            const DiagramTextItem *textItem=dynamic_cast<const DiagramTextItem*>(item);
-            QPointF pt=textItem->anchorPoint();
-            return pt;
-        }
-        if(item->type()==QGraphicsItemGroup::Type){
-            QPointF pt=getFirstPoint(item->childItems());
-            return pt;
-        }else{
-            return item->pos();
-        }
-    }
-    return QPointF(); // should never be reached
-}
-
 void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsItem *> items, bool forceOnGrid)
 {
     if(items.isEmpty()) return;
-    QRectF bound = getTotalBoundary(items);
+    QRectF bound = scene->getTotalBoundary(items);
     QPointF pt=bound.center();
     if(forceOnGrid){
         // just use first element as it stays the same on repeated call on rotate
@@ -2062,7 +2014,6 @@ void MainWindow::linePatternChanged()
 /* TODO
  * text notes
  * fix flip/rotate when moving several elements
- * copy improve rotate
  ** user generated elements
  * tap style
  * scale elements ?

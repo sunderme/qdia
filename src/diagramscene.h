@@ -138,6 +138,8 @@ public:
 
     void backoutOne();
 
+    QRectF getTotalBoundary(const QList<QGraphicsItem*> items) const;
+
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);
     void abort(bool keepSelection=false);
