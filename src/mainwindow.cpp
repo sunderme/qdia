@@ -678,37 +678,32 @@ void MainWindow::createActions()
                                     tr("rotate &Right"), this);
     rotateRightAction->setShortcut(tr("R"));
     rotateRightAction->setStatusTip(tr("rotate item 90 degrees right"));
-    connect(rotateRightAction, SIGNAL(triggered()),
-            this, SLOT(rotateRight()));
+    connect(rotateRightAction, &QAction::triggered, this, &MainWindow::rotateRight);
     listOfActions.append(rotateRightAction);
 
     rotateLeftAction = new QAction(QIcon(":/images/object-rotate-left.svg"),
                                    tr("rotate &Left"), this);
     rotateLeftAction->setShortcut(tr("Shift+R"));
     rotateLeftAction->setStatusTip(tr("rotate item 90 degrees left"));
-    connect(rotateLeftAction, SIGNAL(triggered()),
-            this, SLOT(rotateLeft()));
+    connect(rotateLeftAction, &QAction::triggered, this, &MainWindow::rotateLeft);
     listOfActions.append(rotateLeftAction);
 
     groupAction = new QAction(QIcon(":/images/object-group.svg"),
                               tr("&group Items"), this);
     groupAction->setShortcut(tr("Ctrl+G"));
     groupAction->setStatusTip(tr("group Items"));
-    connect(groupAction, SIGNAL(triggered()),
-            this, SLOT(groupItems()));
+    connect(groupAction, &QAction::triggered, this, &MainWindow::groupItems);
     listOfActions.append(groupAction);
 
     ungroupAction = new QAction(QIcon(":/images/object-ungroup.svg"),
                                 tr("&ungroup Item"), this);
     ungroupAction->setShortcut(tr("Shift+Ctrl+G"));
     ungroupAction->setStatusTip(tr("ungroup Items"));
-    connect(ungroupAction, SIGNAL(triggered()),
-            this, SLOT(ungroupItems()));
+    connect(ungroupAction, &QAction::triggered, this, &MainWindow::ungroupItems);
     listOfActions.append(ungroupAction);
 
     makeElementAction  = new QAction(tr("&make user element"), this);
-    connect(makeElementAction, SIGNAL(triggered()),
-            this, SLOT(makeElement()));
+    connect(makeElementAction, &QAction::triggered, this, &MainWindow::makeElement);
     listOfActions.append(makeElementAction);
 
     deleteAction = new QAction(tr("&Delete Item"), this);
@@ -781,14 +776,12 @@ void MainWindow::createActions()
     flipXAction = new QAction(QIcon(":/images/object-flip-horizontal.svg"),
                               tr("Flip &X"), this);
     flipXAction->setShortcut(tr("f"));
-    connect(flipXAction, SIGNAL(triggered()),
-            this, SLOT(flipX()));
+    connect(flipXAction, &QAction::triggered,this, &MainWindow::flipX);
     listOfActions.append(flipXAction);
 
     flipYAction = new QAction(QIcon(":/images/object-flip-vertical.svg"),tr("Flip &Y"), this);
     flipYAction->setShortcut(tr("Shift+F"));
-    connect(flipYAction, SIGNAL(triggered()),
-            this, SLOT(flipY()));
+    connect(flipYAction, &QAction::triggered,this, &MainWindow::flipY);
     listOfActions.append(flipYAction);
 
     escShortcut = new QShortcut(QKeySequence(Qt::Key_Escape),
@@ -824,20 +817,17 @@ void MainWindow::createActions()
     // Zoom in/out
     zoomInAction = new QAction(QIcon(":/images/zoomin.svg"),tr("Zoom &in"), this);
     //zoomInAction->setShortcut(tr("Shift+z"));
-    connect(zoomInAction, &QAction::triggered,
-            this, &MainWindow::zoomIn);
+    connect(zoomInAction, &QAction::triggered, this, &MainWindow::zoomIn);
     listOfActions.append(zoomInAction);
 
     zoomOutAction = new QAction(QIcon(":/images/zoomout.svg"),tr("Zoom &out"), this);
     zoomOutAction->setShortcut(tr("Shift+z"));
-    connect(zoomOutAction, &QAction::triggered,
-            this, &MainWindow::zoomOut);
+    connect(zoomOutAction, &QAction::triggered, this, &MainWindow::zoomOut);
     listOfActions.append(zoomOutAction);
 
     zoomAction = new QAction(QIcon(":/images/zoom.svg"),tr("&Zoom area"), this);
     zoomAction->setShortcut(tr("z"));
-    connect(zoomAction, &QAction::triggered,
-            this, &MainWindow::zoomRect);
+    connect(zoomAction, &QAction::triggered,            this, &MainWindow::zoomRect);
     listOfActions.append(zoomAction);
 
     zoomFitAction = new QAction(QIcon(":/images/zoompage.svg"),tr("Zoom &Fit"), this);
@@ -2013,7 +2003,6 @@ void MainWindow::linePatternChanged()
 
 /* TODO
  * text notes
- * paste: fix off grid
  * fix flip/rotate when moving several elements
  ** user generated elements
  * tap style
