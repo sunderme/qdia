@@ -567,8 +567,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             QGraphicsItem *insItem;
             insItem=myList.first();
             QPointF point=onGrid(mouseEvent->scenePos());
-            myDx=insItem->pos().rx()-point.rx();
-            myDy=insItem->pos().ry()-point.ry();
+            myDx=point.rx();
+            myDy=point.ry();
             // copy
             foreach(QGraphicsItem* item,myList){
                 insItem=copy(item);
@@ -603,15 +603,14 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         break;
     case CopyingItem:
         if (copiedItems.count() > 0){
-            insertedItem=static_cast<DiagramItem*>(copiedItems.first());
             QPointF point=onGrid(mouseEvent->scenePos());
-            qreal dx=insertedItem->pos().rx()-point.rx()-myDx;
-            qreal dy=insertedItem->pos().ry()-point.ry()-myDy;
+            qreal dx=point.rx()-myDx;
+            qreal dy=point.ry()-myDy;
             foreach(QGraphicsItem* item,copiedItems){
                 if(item->parentItem()){
-                    if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
+                    if(!item->parentItem()->isSelected()) item->moveBy(dx,dy);
                 }else{
-                    item->moveBy(-dx,-dy);
+                    item->moveBy(dx,dy);
                 }
             }
             // place copy of the items and keep the currents items in copyList
@@ -723,19 +722,19 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         break;
     case CopyingItem:
         if (copiedItems.count() > 0){
-            //copiedItems->setPos(onGrid(mouseEvent->scenePos()));
-            insertedItem=static_cast<DiagramItem*>(copiedItems.first());
             QPointF point=onGrid(mouseEvent->scenePos());
-            qreal dx=insertedItem->pos().rx()-point.rx()-myDx;
-            qreal dy=insertedItem->pos().ry()-point.ry()-myDy;
+            qreal dx=point.rx()-myDx;
+            qreal dy=point.ry()-myDy;
             foreach(QGraphicsItem* item,copiedItems){
                 if(item->parentItem()!=0){
-                    if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
+                    if(!item->parentItem()->isSelected()) item->moveBy(dx,dy);
                 }
                 else {
-                    item->moveBy(-dx,-dy);
+                    item->moveBy(dx,dy);
                 }
             }
+            myDx=point.rx();
+            myDy=point.ry();
         }
         break;
     case ZoomSingle:

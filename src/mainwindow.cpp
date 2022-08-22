@@ -2062,7 +2062,7 @@ void MainWindow::linePatternChanged()
 /* TODO
  * text notes
  * fix flip/rotate when moving several elements
- * move/copy flip/rotate
+ * copy improve rotate
  ** user generated elements
  * tap style
  * scale elements ?
