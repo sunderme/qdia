@@ -769,8 +769,7 @@ void MainWindow::createActions()
 
     moveAction = new QAction(QIcon(":/images/transform-move.svg"),tr("&Move"), this);
     moveAction->setShortcut(tr("m"));
-    connect(moveAction, SIGNAL(triggered()),
-            this, SLOT(moveItems()));
+    connect(moveAction, &QAction::triggered, this, &MainWindow::moveItems);
     listOfActions.append(moveAction);
 
     flipXAction = new QAction(QIcon(":/images/object-flip-horizontal.svg"),
