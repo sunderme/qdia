@@ -2013,6 +2013,7 @@ void MainWindow::linePatternChanged()
 
 /* TODO
  * text notes
+ * paste: fix off grid
  * fix flip/rotate when moving several elements
  ** user generated elements
  * tap style

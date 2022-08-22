@@ -993,8 +993,9 @@ void DiagramScene::pasteFromBuffer()
     copiedItems.clear();
     selectedItems().clear();
     QRectF bnd=getTotalBoundary(bufferedItems);
-    myDx=myCursor.pos().x()-bnd.center().x();
-    myDy=myCursor.pos().y()-bnd.center().y();
+    QPointF center=onGrid(bnd.center());
+    myDx=myCursor.pos().x()-center.x();
+    myDy=myCursor.pos().y()-center.y();
     foreach(QGraphicsItem* item,bufferedItems){
         QGraphicsItem *newItem=copy(item);
         addItem(newItem);
