@@ -102,6 +102,7 @@ DiagramSplineItem::DiagramSplineItem(const DiagramSplineItem &diagram)
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setAcceptHoverEvents(true);
+    setPos(diagram.pos());
 }
 
 
