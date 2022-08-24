@@ -1868,11 +1868,11 @@ QIcon MainWindow::createArrowIcon(const int i)
 {
     QPixmap pixmap(50, 80);
     if(i<4){
-        DiagramPathItem* item=new DiagramPathItem(DiagramPathItem::DiagramType(i),0,0);
+        DiagramPathItem* item=new DiagramPathItem(DiagramPathItem::DiagramType(i),nullptr,nullptr);
         pixmap=item->icon();
         delete item;
     }else{
-        DiagramSplineItem* item=new DiagramSplineItem(DiagramSplineItem::DiagramType(i%4),0,0);
+        DiagramSplineItem* item=new DiagramSplineItem(DiagramSplineItem::DiagramType(i%4),nullptr,nullptr);
         pixmap=item->icon();
         delete item;
     }

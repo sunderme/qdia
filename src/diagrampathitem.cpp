@@ -193,9 +193,17 @@ QPixmap DiagramPathItem::icon()
     myPoints.clear();
     myPoints.append(QPointF(5,40));
     myPoints.append(QPointF(45,40));
-    len=10.0;
-    breite=1.0;
-    painter.drawPath(getPath());
+    len=40.0;
+    breite=20.0;
+    painter.drawLine(5,40,45,40);
+    QList<QLine>lines;
+    if(myDiagramType>Start){
+        lines<<QLine(45,40,35,30)<<QLine(35,30,35,50)<<QLine(35,50,45,40);
+    }
+    if(myDiagramType==Start || myDiagramType==StartEnd){
+        lines<<QLine(5,40,15,30)<<QLine(15,30,15,50)<<QLine(15,50,5,40);
+    }
+    painter.drawLines(lines);
     return pixmap;
 }
 
