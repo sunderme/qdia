@@ -222,7 +222,7 @@ QPixmap DiagramSplineItem::icon()
     QPainter painter(&pixmap);
     painter.setPen(QPen(Qt::black, 8));
     painter.drawArc(QRect(-55,40,120,90),60*16,30*16);
-    QList<QLine>lines;
+    QVector<QLine>lines;
     if(myDiagramType>cubicStart){
         lines<<QLine(45,45,35,35)<<QLine(35,35,30,55)<<QLine(30,55,45,45);
     }

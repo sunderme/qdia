@@ -196,7 +196,7 @@ QPixmap DiagramPathItem::icon()
     len=40.0;
     breite=20.0;
     painter.drawLine(5,40,45,40);
-    QList<QLine>lines;
+    QVector<QLine>lines;
     if(myDiagramType>Start){
         lines<<QLine(45,40,35,30)<<QLine(35,30,35,50)<<QLine(35,50,45,40);
     }
