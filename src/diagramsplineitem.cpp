@@ -221,14 +221,15 @@ QPixmap DiagramSplineItem::icon()
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
     painter.setPen(QPen(Qt::black, 8));
-    p0=QPointF(5,40);
-    c0=QPointF(25.,30.);
-    c1=QPointF(40.,40.);
-    p1=QPointF(45.,60.);
-    len=20.;
-    breite=20.;
-    createPath();
-    painter.drawPath(path());
+    painter.drawArc(QRect(-55,40,120,90),60*16,30*16);
+    QList<QLine>lines;
+    if(myDiagramType>cubicStart){
+        lines<<QLine(45,45,35,35)<<QLine(35,35,30,55)<<QLine(30,55,45,45);
+    }
+    if(myDiagramType==cubicStart || myDiagramType==cubicStartEnd){
+        lines<<QLine(5,40,15,30)<<QLine(15,30,15,50)<<QLine(15,50,5,40);
+    }
+    painter.drawLines(lines);
     return pixmap;
 }
 
