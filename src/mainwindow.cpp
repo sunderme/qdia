@@ -1122,7 +1122,7 @@ void MainWindow::createToolbars()
     linePatternButton->setPopupMode(QToolButton::MenuButtonPopup);
     linePatternButton->setMenu(createLinePatternMenu(SLOT(linePatternChanged()),
                                                1));
-    thicknessAction = linePatternButton->menu()->defaultAction();
+    patternAction = linePatternButton->menu()->defaultAction();
     connect(linePatternButton, &QToolButton::clicked,
             this, &MainWindow::linePatternButtonTriggered);
 
