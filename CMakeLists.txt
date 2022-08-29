@@ -24,6 +24,7 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Core Gui LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS PrintSupport Svg REQUIRED)
 
+set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/resources/win.rc")
 
 set(TS_FILES translation/qdia_en_US.ts translation/qdia_de.ts)
 set_source_files_properties(${TS_FILES}
@@ -52,6 +53,7 @@ set(PROJECT_SOURCES
         src/ColorPickerToolButton.cpp src/ColorPickerToolButton.h
         resources/images.qrc
         resources/libs.qrc
+        ${APP_ICON_RESOURCE_WINDOWS}
         #${TS_FILES}
 )
 
