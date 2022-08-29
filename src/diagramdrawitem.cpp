@@ -26,6 +26,8 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     mySelPoint=-1;
     myHandlerWidth=2.0;
     myRadius=5.0;
+    m_startAngle=0;
+    m_angle=90;
 }
 
 DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
@@ -34,6 +36,8 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
 
     myDiagramType=diagram.myDiagramType;
     myRadius=diagram.myRadius;
+    m_startAngle=diagram.m_startAngle;
+    m_angle=diagram.m_angle;
     // copy from general GraphcsItem
     setBrush(diagram.brush());
     setPen(diagram.pen());
@@ -48,6 +52,7 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
+
 }
 
 DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):DiagramItem(json,contextMenu)
@@ -57,6 +62,8 @@ DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):Di
     qreal height=json["height"].toDouble();
     myPos2=QPointF(width,height);
     myRadius=5.0;
+    m_startAngle=json["aux0"].toDouble();
+    m_angle=json["aux1"].toDouble();
 
     mPainterPath=createPath();
     setPath(mPainterPath);
@@ -134,6 +141,9 @@ QPainterPath DiagramDrawItem::createPath()
         path.lineTo(0,myRadius);
         path.lineTo(myRadius,0);
         break;
+    case Pie:
+        path.arcMoveTo(0,0,dx,dy,m_startAngle);
+        path.arcTo(0,0,dx,dy,m_startAngle,m_angle);
     default:
         break;
     }
@@ -196,6 +206,10 @@ void DiagramDrawItem::write(QJsonObject &json)
     json["diagramtype"]=static_cast<int>(myDiagramType);
     json["width"]=myPos2.x();
     json["height"]=myPos2.y();
+    if(myDiagramType==Pie){
+        json["aux0"]=m_startAngle;
+        json["aux1"]=m_angle;
+    }
 
 }
 

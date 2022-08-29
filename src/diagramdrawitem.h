@@ -45,7 +45,7 @@ class DiagramDrawItem : public DiagramItem
 {
 public:
     enum { Type = UserType + 16 };
-    enum DiagramType { Ellipse, Rectangle, Circle, RoundedRect, Rhombus, Triangle, DA , OTA, Note};
+    enum DiagramType { Ellipse, Rectangle, Circle, RoundedRect, Rhombus, Triangle, DA , OTA, Note, Pie};
 
     DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
         QGraphicsItem *parent = 0);
@@ -100,6 +100,7 @@ private:
     int myHoverPoint,mySelPoint;
     qreal myHandlerWidth;
     qreal myRadius;
+    qreal m_startAngle,m_angle;
     Rect mRect;
 };
 

@@ -523,6 +523,7 @@ void MainWindow::createToolBox()
         {tr("Ellipse"),DiagramDrawItem::Ellipse},
         {tr("Circle"),DiagramDrawItem::Circle},
         {tr("RoundedRect"),DiagramDrawItem::RoundedRect},
+        {tr("Arc"),DiagramDrawItem::Pie},
         {tr("Rhombus"),DiagramDrawItem::Rhombus},
         {tr("Triangle"),DiagramDrawItem::Triangle},
         {tr("DA"),DiagramDrawItem::DA},
@@ -2056,6 +2057,7 @@ void MainWindow::linePatternChanged()
 /* TODO
  * text notes
  * fix flip/rotate when moving/dragging several elements
+ ** pie
  ** user generated elements
  * tap style
  * scale elements ?
