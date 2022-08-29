@@ -27,7 +27,7 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     myHandlerWidth=2.0;
     myRadius=5.0;
     m_startAngle=0;
-    m_angle=90;
+    m_angle=360;
 }
 
 DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
@@ -283,6 +283,15 @@ QPointF DiagramDrawItem::getHandler(int i) const
 QPointF DiagramDrawItem::getDimension()
 {
     return myPos2;
+}
+
+void DiagramDrawItem::setAngles(const qreal startAngle, const qreal angle)
+{
+    m_startAngle=startAngle;
+    m_angle=angle;
+    if(myDiagramType==Pie){
+        mPainterPath=createPath();
+    }
 }
 
 void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,

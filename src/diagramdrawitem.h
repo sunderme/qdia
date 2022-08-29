@@ -65,7 +65,7 @@ public:
 
     void setPos2(qreal x,qreal y);
     void setPos2(QPointF pos);
-    QPointF getPos2() const
+        QPointF getPos2() const
         { return mapToScene(myPos2); }
 
     void setDimension(QPointF newPos);
@@ -75,6 +75,8 @@ public:
         { myRadius=radius; }
     qreal getRadius()
         { return myRadius; }
+
+    void setAngles(const qreal startAngle,const qreal angle);
 
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
