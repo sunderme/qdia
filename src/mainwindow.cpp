@@ -182,9 +182,13 @@ void MainWindow::deleteItem()
 {
     QList<QGraphicsItem *> selectedItems = scene->selectedItems();
 
-    for (QGraphicsItem *item : selectedItems) {
-         scene->deleteItem(item);
-         delete item;
+    for (int i=0;i<selectedItems.length();++i) {
+        QGraphicsItem *it=selectedItems[i];
+        scene->deleteItem(it);
+        for(QGraphicsItem *item:it->childItems()){
+            selectedItems.removeAll(item);
+        }
+        delete it;
     }
     scene->takeSnapshot();
 }
