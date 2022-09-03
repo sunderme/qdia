@@ -665,6 +665,7 @@ void MainWindow::createToolBox()
         col=0;
         for (const QString &fn: userElements) {
             QWidget *bt=createCellWidget(elementPath+fn,256,bG);
+            if(!bt) continue; // skip invalid entries
             layout->addWidget(bt, row, col);
             ++col;
             if(col>2){
