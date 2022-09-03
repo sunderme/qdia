@@ -177,7 +177,7 @@ protected:
     void drawBackground(QPainter *p, const QRectF &r) override;
     void enableAllItems(bool enable=true);
     DiagramTextItem *makeTextItem(QGraphicsItem *item);
-    QGraphicsItem *load_userElement(const QString &fn);
+    DiagramItem *load_userElement(const QString &fn);
 
 private:
 
@@ -198,7 +198,6 @@ private:
     Qt::PenStyle myPenStyle;
     Qt::Alignment m_textAlignment;
 
-    QGraphicsItem *insertedElement;
     DiagramItem *insertedItem;
     DiagramDrawItem *insertedDrawItem;
     DiagramPathItem *insertedPathItem;

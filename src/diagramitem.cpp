@@ -59,8 +59,8 @@
 //! [0]
 DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
                          QGraphicsItem *parent)
-    : QGraphicsPathItem(parent), myDiagramType(diagramType)
-    , myContextMenu(contextMenu)
+    : QGraphicsPathItem(parent), myContextMenu(contextMenu)
+    , myDiagramType(diagramType)
 {
     mPainterPath = createPath();
     setPath(mPainterPath);
@@ -151,11 +151,21 @@ QPixmap DiagramItem::image() const
     return pixmap;
 }
 
+void DiagramItem::setBoundingBox(QRectF rect)
+{
+    QPainterPath path;
+    path.addRect(rect);
+    mPainterPath=path;
+    setPath(path);
+}
+
 void DiagramItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     scene()->clearSelection();
     setSelected(true);
-    myContextMenu->exec(event->screenPos());
+    if(myContextMenu){
+        myContextMenu->exec(event->screenPos());
+    }
 }
 
 QVariant DiagramItem::itemChange(GraphicsItemChange change, const QVariant &value)

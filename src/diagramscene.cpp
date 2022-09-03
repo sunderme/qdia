@@ -68,7 +68,6 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     myMode = MoveItem;
     myItemType = DiagramItem::Step;
     textItem = nullptr;
-    insertedElement=nullptr;
     insertedItem = nullptr;
     insertedDrawItem = nullptr;
     insertedPathItem = nullptr;
@@ -256,7 +255,7 @@ DiagramTextItem *DiagramScene::makeTextItem(QGraphicsItem *item)
  * \param fn
  * \return
  */
-QGraphicsItem *DiagramScene::load_userElement(const QString &fn)
+DiagramItem *DiagramScene::load_userElement(const QString &fn)
 {
     QFile file(fn);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -264,14 +263,14 @@ QGraphicsItem *DiagramScene::load_userElement(const QString &fn)
     }
     QByteArray data = file.readAll();
 
-    auto *element=new QGraphicsItemGroup(nullptr);
+    auto *element=new DiagramItem(nullptr,nullptr);
     element->setFlag(QGraphicsItem::ItemIsMovable);
     element->setFlag(QGraphicsItem::ItemIsSelectable);
-    addItem(element);
 
     QJsonDocument doc=QJsonDocument::fromJson(data);
     QJsonArray array=doc.array();
     QPointF offset;
+    QRectF rect;
     for(int i=0;i<array.size();++i){
         QJsonObject json=array[i].toObject();
         QGraphicsItem *item=getElementFromJSON(json);
@@ -282,7 +281,11 @@ QGraphicsItem *DiagramScene::load_userElement(const QString &fn)
         item->setFlag(QGraphicsItem::ItemIsSelectable,false);
         item->setFlag(QGraphicsItem::ItemIsMovable,false);
         item->setParentItem(element);
+        if(i==1)
+            rect=rect.united(item->boundingRect());
     }
+    qDebug()<<rect;
+    element->setBoundingBox(rect);
     return element;
 }
 
@@ -379,6 +382,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             break;
         case InsertItem:
         case InsertElement:
+        case InsertUserElement:
             if (insertedItem){
                 insertedItem=nullptr;
                 myMode=MoveItem;
@@ -397,16 +401,6 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 myMode=MoveItem;
                 takeSnapshot();
                 mouseEvent->accept();
-                // switch toolbar !!
-                emit abortSignal();
-                return;
-            }
-        case InsertUserElement:
-            if (insertedElement){
-                insertedElement=nullptr;
-                myMode=MoveItem;
-                mouseEvent->accept();
-                takeSnapshot();
                 // switch toolbar !!
                 emit abortSignal();
                 return;
@@ -541,7 +535,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         {
             DiagramItem *item=new DiagramElement(mItemFileName, myItemMenu);
             item->setBrush(myItemColor);
-            QPen p{myLineColor};
+            QPen p(myLineColor);
             p.setCapStyle(Qt::RoundCap);
             item->setPen(p);
             item->setZValue(maxZ);
@@ -558,33 +552,29 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         }
         break;
     case InsertUserElement:
-        if(insertedElement==nullptr){
-            insertedElement = load_userElement(mItemFileName);
-            /*insertedElement->setBrush(myItemColor);
-            QPen p(myLineColor);
-            p.setCapStyle(Qt::RoundCap);
-            insertedItem->setPen(p);*/
-            insertedElement->setZValue(maxZ);
+        if(insertedItem==nullptr){
+            insertedItem = load_userElement(mItemFileName);
+            insertedItem->setPen(Qt::NoPen);
+            insertedItem->setBrush(Qt::NoBrush);
+            insertedItem->setZValue(maxZ);
             maxZ+=0.1;
-            addItem(insertedElement);
+            addItem(insertedItem);
         }
-        insertedElement->setPos(onGrid(mouseEvent->scenePos()));
+        insertedItem->setPos(onGrid(mouseEvent->scenePos()));
         //emit itemInserted(insertedItem);
-        insertedElement->setSelected(false);
-        insertedElement->setEnabled(false);
+        insertedItem->setSelected(false);
+        insertedItem->setEnabled(false);
         // add next item, same orientation if rotated/flipped
         {
-            QGraphicsItem *item= load_userElement(mItemFileName);
-            /*item->setBrush(myItemColor);
-            QPen p{myLineColor};
-            p.setCapStyle(Qt::RoundCap);
-            item->setPen(p);*/
+            auto *item= load_userElement(mItemFileName);
+            insertedItem->setPen(Qt::NoPen);
+            insertedItem->setBrush(Qt::NoBrush);
             item->setZValue(maxZ);
-            item->setTransform(insertedElement->transform());
+            item->setTransform(insertedItem->transform());
             item->setSelected(true);
             maxZ+=0.1;
             addItem(item);
-            insertedElement=item;
+            insertedItem=item;
         }
         takeSnapshot();
         if(middleButton){
@@ -798,14 +788,16 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         insertedItem->setPos(onGrid(mouseEvent->scenePos()));
         break;
     case InsertUserElement:
-        if(insertedElement==nullptr){
-            insertedElement = load_userElement(mItemFileName);
-            insertedElement->setSelected(true);
-            insertedElement->setZValue(maxZ);
+        if(insertedItem==nullptr){
+            insertedItem = load_userElement(mItemFileName);
+            insertedItem->setPen(Qt::NoPen);
+            insertedItem->setBrush(Qt::NoBrush);
+            insertedItem->setSelected(true);
+            insertedItem->setZValue(maxZ);
             maxZ+=0.1;
-            addItem(insertedElement);
+            addItem(insertedItem);
         }
-        insertedElement->setPos(onGrid(mouseEvent->scenePos()));
+        insertedItem->setPos(onGrid(mouseEvent->scenePos()));
         break;
     case InsertDrawItem:
         if (insertedDrawItem){
@@ -1295,12 +1287,9 @@ void DiagramScene::abort(bool keepSelection)
         break;
     case InsertItem:
     case InsertElement:
+    case InsertUserElement:
         if(insertedItem)
             removeItem(insertedItem);
-        break;
-    case InsertUserElement:
-        if(insertedElement)
-            removeItem(insertedElement);
         break;
     case InsertDrawItem:
         if(insertedDrawItem)
@@ -1327,7 +1316,6 @@ void DiagramScene::abort(bool keepSelection)
         myMode=MoveItem;
     }
     insertedItem=nullptr;
-    insertedElement=nullptr;
     insertedDrawItem=nullptr;
     insertedPathItem=nullptr;
     insertedSplineItem=nullptr;

@@ -85,6 +85,8 @@ public:
     QPixmap image() const;
     int type() const override { return Type; }
 
+    void setBoundingBox(QRectF rect);
+
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
