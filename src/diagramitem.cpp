@@ -135,8 +135,9 @@ DiagramItem::DiagramItem(const QJsonObject &json, QMenu *contextMenu)
 
     mPainterPath = createPath();
     setPath(mPainterPath);
-    setFlag(QGraphicsItem::ItemIsMovable, true);
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+
+    setFlag(QGraphicsItem::ItemIsMovable, json["moveable"].toBool(true));
+    setFlag(QGraphicsItem::ItemIsSelectable, json["selectable"].toBool(true));
 }
 
 QPixmap DiagramItem::image() const
@@ -200,6 +201,8 @@ void DiagramItem::write(QJsonObject &json)
     json["m22"]=transform().m22();
     json["dx"]=transform().dx();
     json["dy"]=transform().dy();
+    json["moveable"]=flags().testFlag(QGraphicsItem::ItemIsMovable);
+    json["selectable"]=flags().testFlag(QGraphicsItem::ItemIsSelectable);
 }
 
 QPainterPath DiagramItem::createPath()

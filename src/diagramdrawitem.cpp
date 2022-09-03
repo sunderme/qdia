@@ -386,6 +386,14 @@ QPainterPath DiagramDrawItem::shape() const {
     return myPath;
 }
 
+QRectF DiagramDrawItem::boundingRect() const
+{
+    qreal extra = isSelected() ? pen().width()+20 / 2.0 + myHandlerWidth : 0.0;
+
+    QRectF newRect = path().boundingRect().adjusted(-extra, -extra, extra, extra);
+    return newRect;
+}
+
 void DiagramDrawItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
     if(isSelected()){
         if (e -> buttons() & Qt::LeftButton) {
