@@ -1199,8 +1199,23 @@ QWidget *MainWindow::createCellWidget(const QString &text,
         name=item.getName();
     }else{
         if(type==256){
-            QIcon icon(":/images/textpointer.png");
-            button->setIcon(icon);
+            auto *virtScene = new DiagramScene(itemMenu, this);
+            virtScene->setSceneRect(QRectF(0, 0, 5000, 5000));
+            virtScene->setGridVisible(false);
+            virtScene->setCursorVisible(false);
+            QFile file(text);
+            if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+                return nullptr;
+            }
+            virtScene->load_json(&file);
+            QRectF rect=virtScene->itemsBoundingRect(); // Bonding der Elemente in scene
+            QRectF target(0,0,250,250);
+
+            QPixmap pixmap(250, 250);
+            pixmap.fill(Qt::transparent);
+            QPainter painter(&pixmap);
+            virtScene->render(&painter,target,rect);
+            button->setIcon(pixmap);
             button->setProperty("fn",text);
             QFileInfo fi(text);
             name=fi.baseName();
