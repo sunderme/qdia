@@ -281,10 +281,8 @@ DiagramItem *DiagramScene::load_userElement(const QString &fn)
         item->setFlag(QGraphicsItem::ItemIsSelectable,false);
         item->setFlag(QGraphicsItem::ItemIsMovable,false);
         item->setParentItem(element);
-        if(i==1)
-            rect=rect.united(item->boundingRect());
+        rect=rect.united(item->boundingRect().translated(item->pos()));
     }
-    qDebug()<<rect;
     element->setBoundingBox(rect);
     return element;
 }
