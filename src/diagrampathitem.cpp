@@ -229,8 +229,6 @@ void DiagramPathItem::append(const QPointF point)
     }
     else
     {
-        /*myPoints.append(point-pos());
-        myPoints.append(point-pos());*/
         myPoints.append(mapFromScene(point));
         myPoints.append(mapFromScene(point));
         if(myRoutingType!=free){
