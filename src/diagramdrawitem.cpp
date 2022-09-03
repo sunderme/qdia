@@ -67,8 +67,6 @@ DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):Di
 
     mPainterPath=createPath();
     setPath(mPainterPath);
-    setFlag(QGraphicsItem::ItemIsMovable, true);
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
     setAcceptHoverEvents(true);
     myHoverPoint=-1;
     mySelPoint=-1;
