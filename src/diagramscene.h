@@ -77,7 +77,7 @@ class DiagramScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    enum Mode { InsertItem, InsertLine, InsertSpline, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem, Zoom , MoveItems, InsertElement , ZoomSingle};
+    enum Mode { InsertItem, InsertLine, InsertSpline, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem, Zoom , MoveItems, InsertElement , ZoomSingle, InsertUserElement};
 
     explicit DiagramScene(QMenu *itemMenu, QObject *parent = nullptr);
     QFont font() const { return myFont; }
@@ -177,6 +177,7 @@ protected:
     void drawBackground(QPainter *p, const QRectF &r) override;
     void enableAllItems(bool enable=true);
     DiagramTextItem *makeTextItem(QGraphicsItem *item);
+    QGraphicsItem *load_userElement(const QString &fn);
 
 private:
 
@@ -197,6 +198,7 @@ private:
     Qt::PenStyle myPenStyle;
     Qt::Alignment m_textAlignment;
 
+    QGraphicsItem *insertedElement;
     DiagramItem *insertedItem;
     DiagramDrawItem *insertedDrawItem;
     DiagramPathItem *insertedPathItem;

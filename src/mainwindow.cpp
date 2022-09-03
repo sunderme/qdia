@@ -49,36 +49,36 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
 
     currentToolButton=nullptr; // none selected at start
 
-    scene = new DiagramScene(itemMenu, this);
-    scene->setSceneRect(QRectF(0, 0, 5000, 5000));
-    scene->setGridVisible(configuration.showGrid);
-    connect(scene, &DiagramScene::itemSelected,
+    m_scene = new DiagramScene(itemMenu, this);
+    m_scene->setSceneRect(QRectF(0, 0, 5000, 5000));
+    m_scene->setGridVisible(configuration.showGrid);
+    connect(m_scene, &DiagramScene::itemSelected,
             this, &MainWindow::itemSelected);
-    connect(scene, &DiagramScene::forceCursor,
+    connect(m_scene, &DiagramScene::forceCursor,
             this, &MainWindow::moveCursor);
     // activate/deactivate shortcuts when text is edited in scene
-    connect(scene, &DiagramScene::editorHasReceivedFocus,
+    connect(m_scene, &DiagramScene::editorHasReceivedFocus,
             this, &MainWindow::deactivateShortcuts);
-    connect(scene, &DiagramScene::editorHasLostFocus,
+    connect(m_scene, &DiagramScene::editorHasLostFocus,
             this, &MainWindow::activateShortcuts);
-    connect(scene, &DiagramScene::zoomRect,
+    connect(m_scene, &DiagramScene::zoomRect,
             this, &MainWindow::doZoomRect);
-    connect(scene, &DiagramScene::zoom,
+    connect(m_scene, &DiagramScene::zoom,
             this, &MainWindow::zoom);
-    connect(scene, &DiagramScene::zoomPointer,
+    connect(m_scene, &DiagramScene::zoomPointer,
             this, &MainWindow::zoomPointer);
-    connect(scene, &DiagramScene::abortSignal,
+    connect(m_scene, &DiagramScene::abortSignal,
             this, &MainWindow::abortFromScene);
     createToolbars();
 
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(toolBox);
-    view = new QGraphicsView(scene);
-    view->setDragMode(QGraphicsView::RubberBandDrag);
-    view->setCacheMode(QGraphicsView::CacheBackground);
-    view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-    view->setMouseTracking(true);
-    layout->addWidget(view);
+    m_view = new QGraphicsView(m_scene);
+    m_view->setDragMode(QGraphicsView::RubberBandDrag);
+    m_view->setCacheMode(QGraphicsView::CacheBackground);
+    m_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    m_view->setMouseTracking(true);
+    layout->addWidget(m_view);
 
     QWidget *widget = new QWidget;
     widget->setLayout(layout);
@@ -86,7 +86,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     setCentralWidget(widget);
     setUnifiedTitleAndToolBarOnMac(true);
 
-    view->setFocus();
+    m_view->setFocus();
 
     // update font combo
     fontCombo->setCurrentFont(QFont(fontName));
@@ -110,7 +110,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
  */
 void MainWindow::undo()
 {
-    scene->restoreSnapshot();
+    m_scene->restoreSnapshot();
 }
 /*!
  * \brief redo operation
@@ -118,10 +118,10 @@ void MainWindow::undo()
  */
 void MainWindow::redo()
 {
-    int max=scene->getSnapshotSize();
-    int current=scene->getSnaphotPosition();
+    int max=m_scene->getSnapshotSize();
+    int current=m_scene->getSnaphotPosition();
     if(current+1<max){
-        scene->restoreSnapshot(current+1);
+        m_scene->restoreSnapshot(current+1);
     }
 }
 /*!
@@ -154,24 +154,26 @@ void MainWindow::buttonGroupClicked(QAbstractButton *button)
     currentToolButton=button;
     const int id = buttonGroup->id(button);
     if (id == InsertTextButton) {
-        scene->setMode(DiagramScene::InsertText);
+        m_scene->setMode(DiagramScene::InsertText);
     } else {
         if ((id&192) == InsertDrawItemButton){
-            scene->setItemType(DiagramDrawItem::DiagramType(id&63));
-            scene->setMode(DiagramScene::InsertDrawItem);
+            m_scene->setItemType(DiagramDrawItem::DiagramType(id&63));
+            m_scene->setMode(DiagramScene::InsertDrawItem);
         }
         else {
             if(id==256){
                 // user element
-                qDebug()<<"to be implemented";
+                QString fn=button->property("fn").toString();
+                m_scene->setItemType(fn);
+                m_scene->setMode(DiagramScene::InsertUserElement);
             }else{
                 if(id==128){
                     QString fn=button->property("fn").toString();
-                    scene->setItemType(fn);
-                    scene->setMode(DiagramScene::InsertElement);
+                    m_scene->setItemType(fn);
+                    m_scene->setMode(DiagramScene::InsertElement);
                 }else{
-                    scene->setItemType(DiagramItem::DiagramType(id));
-                    scene->setMode(DiagramScene::InsertItem);
+                    m_scene->setItemType(DiagramItem::DiagramType(id));
+                    m_scene->setMode(DiagramScene::InsertItem);
                 }
             }
         }
@@ -180,17 +182,17 @@ void MainWindow::buttonGroupClicked(QAbstractButton *button)
 
 void MainWindow::deleteItem()
 {
-    QList<QGraphicsItem *> selectedItems = scene->selectedItems();
+    QList<QGraphicsItem *> selectedItems = m_scene->selectedItems();
 
     for (int i=0;i<selectedItems.length();++i) {
         QGraphicsItem *it=selectedItems[i];
-        scene->deleteItem(it);
+        m_scene->deleteItem(it);
         for(QGraphicsItem *item:it->childItems()){
             selectedItems.removeAll(item);
         }
         delete it;
     }
-    scene->takeSnapshot();
+    m_scene->takeSnapshot();
 }
 
 void MainWindow::pointerGroupClicked(QAbstractButton *button)
@@ -206,9 +208,9 @@ void MainWindow::pointerGroupClicked(QAbstractButton *button)
             mButton->setChecked(false);
         }
     }
-    if(pointerTypeGroup->checkedId()!=DiagramScene::MoveItem) view->setDragMode(QGraphicsView::NoDrag);
-    else view->setDragMode(QGraphicsView::RubberBandDrag);
-    scene->setMode(DiagramScene::Mode(pointerTypeGroup->checkedId()));
+    if(pointerTypeGroup->checkedId()!=DiagramScene::MoveItem) m_view->setDragMode(QGraphicsView::NoDrag);
+    else m_view->setDragMode(QGraphicsView::RubberBandDrag);
+    m_scene->setMode(DiagramScene::Mode(pointerTypeGroup->checkedId()));
 }
 /*!
  * \brief set horizontal text Align
@@ -217,9 +219,9 @@ void MainWindow::pointerGroupClicked(QAbstractButton *button)
 void MainWindow::horzAlignGroupClicked(QAbstractButton *button)
 {
     int id=horzAlignGroup->checkedId();
-    int align=static_cast<int>(scene->textAlignment());
+    int align=static_cast<int>(m_scene->textAlignment());
     align=align & 0xf0;
-    scene->setTextAlignment(static_cast<Qt::Alignment>(id|align));
+    m_scene->setTextAlignment(static_cast<Qt::Alignment>(id|align));
 }
 /*!
  * \brief set vertical text Align
@@ -228,18 +230,18 @@ void MainWindow::horzAlignGroupClicked(QAbstractButton *button)
 void MainWindow::vertAlignGroupClicked(QAbstractButton *button)
 {
     int id=vertAlignGroup->checkedId();
-    int align=static_cast<int>(scene->textAlignment());
+    int align=static_cast<int>(m_scene->textAlignment());
     align=align & 0xf;
-    scene->setTextAlignment(static_cast<Qt::Alignment>(id | align));
+    m_scene->setTextAlignment(static_cast<Qt::Alignment>(id | align));
 }
 
 void MainWindow::bringToFront()
 {
-    if (scene->selectedItems().isEmpty())
+    if (m_scene->selectedItems().isEmpty())
         return;
-    scene->setCursorVisible(false);
+    m_scene->setCursorVisible(false);
 
-    QGraphicsItem *selectedItem = scene->selectedItems().first();
+    QGraphicsItem *selectedItem = m_scene->selectedItems().first();
     const QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
 
     qreal zValue = 0;
@@ -248,17 +250,17 @@ void MainWindow::bringToFront()
             zValue = item->zValue() + 0.1;
     }
     selectedItem->setZValue(zValue);
-    scene->takeSnapshot();
-    scene->setCursorVisible(true);
+    m_scene->takeSnapshot();
+    m_scene->setCursorVisible(true);
 }
 
 void MainWindow::bringUp()
 {
-    if (scene->selectedItems().isEmpty())
+    if (m_scene->selectedItems().isEmpty())
         return;
-    scene->setCursorVisible(false);
+    m_scene->setCursorVisible(false);
 
-    QGraphicsItem *selectedItem = scene->selectedItems().first();
+    QGraphicsItem *selectedItem = m_scene->selectedItems().first();
     const QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
 
     qreal zValue=selectedItem->zValue();
@@ -282,18 +284,18 @@ void MainWindow::bringUp()
     }else{
         if(found) zValue+=0.1;
     }
-    scene->setMaxZ(zValue);
+    m_scene->setMaxZ(zValue);
     selectedItem->setZValue(zValue);
-    scene->takeSnapshot();
-    scene->setCursorVisible(true);
+    m_scene->takeSnapshot();
+    m_scene->setCursorVisible(true);
 }
 
 void MainWindow::sendToBack()
 {
-    if (scene->selectedItems().isEmpty())
+    if (m_scene->selectedItems().isEmpty())
         return;
-    scene->setCursorVisible(false);
-    QGraphicsItem *selectedItem = scene->selectedItems().first();
+    m_scene->setCursorVisible(false);
+    QGraphicsItem *selectedItem = m_scene->selectedItems().first();
     const QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
 
     qreal zValue = 0;
@@ -302,17 +304,17 @@ void MainWindow::sendToBack()
             zValue = item->zValue() - 0.1;
     }
     selectedItem->setZValue(zValue);
-    scene->takeSnapshot();
-    scene->setCursorVisible(true);
+    m_scene->takeSnapshot();
+    m_scene->setCursorVisible(true);
 }
 
 void MainWindow::sendDown()
 {
-    if (scene->selectedItems().isEmpty())
+    if (m_scene->selectedItems().isEmpty())
         return;
-    scene->setCursorVisible(false);
+    m_scene->setCursorVisible(false);
 
-    QGraphicsItem *selectedItem = scene->selectedItems().first();
+    QGraphicsItem *selectedItem = m_scene->selectedItems().first();
     const QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
 
     qreal zValue=selectedItem->zValue();
@@ -337,8 +339,8 @@ void MainWindow::sendDown()
         if(found) zValue-=0.1;
     }
     selectedItem->setZValue(zValue);
-    scene->takeSnapshot();
-    scene->setCursorVisible(true);
+    m_scene->takeSnapshot();
+    m_scene->setCursorVisible(true);
 }
 /*!
  * \brief select all item
@@ -346,41 +348,41 @@ void MainWindow::sendDown()
  */
 void MainWindow::selectAll()
 {
-    for(auto *item:scene->items()){
+    for(auto *item:m_scene->items()){
         item->setSelected(true);
     }
 }
 
 void MainWindow::rotateRight()
 {
-    if (scene->activeItems().isEmpty())
+    if (m_scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform().rotate(90),scene->activeItems(),true);
+    transformSelected(QTransform().rotate(90),m_scene->activeItems(),true);
 }
 
 void MainWindow::rotateLeft()
 {
-    if (scene->activeItems().isEmpty())
+    if (m_scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform().rotate(-90),scene->activeItems(),true);
+    transformSelected(QTransform().rotate(-90),m_scene->activeItems(),true);
 }
 
 void MainWindow::flipX()
 {
-    if (scene->activeItems().isEmpty())
+    if (m_scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform(-1,0,0,1,0,0),scene->activeItems());
+    transformSelected(QTransform(-1,0,0,1,0,0),m_scene->activeItems());
 }
 
 void MainWindow::flipY()
 {
-    if (scene->activeItems().isEmpty())
+    if (m_scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform(1,0,0,-1,0,0),scene->activeItems());
+    transformSelected(QTransform(1,0,0,-1,0,0),m_scene->activeItems());
 }
 
 void MainWindow::currentFontChanged(const QFont &)
@@ -396,10 +398,10 @@ void MainWindow::fontSizeChanged(const QString &)
 void MainWindow::sceneScaleChanged(const QString &scale)
 {
     double newScale = scale.left(scale.indexOf(tr("%"))).toDouble() / 100.0;
-    QTransform oldMatrix = view->transform();
-    view->resetTransform();
-    view->translate(oldMatrix.dx(), oldMatrix.dy());
-    view->scale(newScale, newScale);
+    QTransform oldMatrix = m_view->transform();
+    m_view->resetTransform();
+    m_view->translate(oldMatrix.dx(), oldMatrix.dy());
+    m_view->scale(newScale, newScale);
 }
 
 void MainWindow::textColorChanged(QColor color)
@@ -431,30 +433,30 @@ void MainWindow::lineColorChanged(QColor color)
 
 void MainWindow::textButtonTriggered()
 {
-    scene->setTextColor(m_textColor);
+    m_scene->setTextColor(m_textColor);
 }
 
 void MainWindow::fillButtonTriggered()
 {
-    scene->setItemColor(m_fillColor);
+    m_scene->setItemColor(m_fillColor);
 }
 
 void MainWindow::lineButtonTriggered()
 {
-    scene->setLineColor(m_lineColor);
+    m_scene->setLineColor(m_lineColor);
 }
 
 void MainWindow::lineThicknessButtonTriggered()
 {
     int w=thicknessAction->data().toInt();
-    scene->setLineWidth(w);
+    m_scene->setLineWidth(w);
 }
 
 void MainWindow::linePatternButtonTriggered()
 {
     int w=patternAction->data().toInt();
     Qt::PenStyle style=static_cast<Qt::PenStyle>(w);
-    scene->setLinePattern(style);
+    m_scene->setLinePattern(style);
 }
 
 void MainWindow::handleFontChange()
@@ -465,7 +467,7 @@ void MainWindow::handleFontChange()
     font.setItalic(italicAction->isChecked());
     font.setUnderline(underlineAction->isChecked());
 
-    scene->setFont(font);
+    m_scene->setFont(font);
 }
 
 void MainWindow::itemSelected(QGraphicsItem *item)
@@ -1299,8 +1301,8 @@ QIcon MainWindow::createColorIcon(QColor color)
  */
 void MainWindow::copyItems()
 {
-    scene->setMode(DiagramScene::CopyItem);
-    view->setDragMode(QGraphicsView::RubberBandDrag);
+    m_scene->setMode(DiagramScene::CopyItem);
+    m_view->setDragMode(QGraphicsView::RubberBandDrag);
 }
 
 /*!
@@ -1309,19 +1311,19 @@ void MainWindow::copyItems()
  */
 void MainWindow::duplicateItems()
 {
-    scene->duplicateItems();
+    m_scene->duplicateItems();
 }
 
 void MainWindow::copyToClipboard()
 {
     // TODO: only selected whould be exported to clipboard
-    scene->setCursorVisible(false);
-    scene->copyToBuffer();
-    scene->abort();
-    bool gridVisible=scene->isGridVisible();
-    scene->setGridVisible(false);
+    m_scene->setCursorVisible(false);
+    m_scene->copyToBuffer();
+    m_scene->abort();
+    bool gridVisible=m_scene->isGridVisible();
+    m_scene->setGridVisible(false);
     QClipboard *clipboard = QGuiApplication::clipboard();
-    QRectF rect=scene->itemsBoundingRect();
+    QRectF rect=m_scene->itemsBoundingRect();
     rect.adjust(-1,-1,1,1);
     qreal w=rect.width();
     qreal h=rect.height();
@@ -1340,39 +1342,39 @@ void MainWindow::copyToClipboard()
     pixmap.fill();
     QPainter painter(&pixmap);
     painter.setRenderHint(QPainter::Antialiasing);
-    scene->render(&painter,QRectF(),rect);
+    m_scene->render(&painter,QRectF(),rect);
     painter.end();
     clipboard->setPixmap(pixmap);
-    scene->setCursorVisible(true);
-    scene->setGridVisible(gridVisible);
+    m_scene->setCursorVisible(true);
+    m_scene->setGridVisible(gridVisible);
 }
 
 void MainWindow::pasteFromClipboard()
 {
-    scene->pasteFromBuffer();
+    m_scene->pasteFromBuffer();
 }
 
 void MainWindow::groupItems()
 {
-    if (scene->selectedItems().isEmpty())
+    if (m_scene->selectedItems().isEmpty())
         return;
 
-    QGraphicsItemGroup *test = scene->createItemGroup(scene->selectedItems());
+    QGraphicsItemGroup *test = m_scene->createItemGroup(m_scene->selectedItems());
     test->setFlag(QGraphicsItem::ItemIsMovable, true);
     test->setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
 
 void MainWindow::ungroupItems()
 {
-    if (scene->selectedItems().isEmpty())
+    if (m_scene->selectedItems().isEmpty())
         return;
 
-    foreach (QGraphicsItem *item, scene->selectedItems()) {
+    foreach (QGraphicsItem *item, m_scene->selectedItems()) {
         if (item->type()==QGraphicsItemGroup::Type) {
             QGraphicsItemGroup *group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
             group->setSelected(false);
             QList<QGraphicsItem*>lst=group->childItems();
-            scene->destroyItemGroup(group);
+            m_scene->destroyItemGroup(group);
             for(auto *i:lst){
                 i->setSelected(false);
             }
@@ -1385,7 +1387,7 @@ void MainWindow::ungroupItems()
  */
 void MainWindow::makeElement()
 {
-    if (scene->selectedItems().isEmpty())
+    if (m_scene->selectedItems().isEmpty())
         return;
 
     // save selected in special path
@@ -1405,10 +1407,10 @@ void MainWindow::makeElement()
  */
 void MainWindow::tapItem()
 {
-    if (scene->selectedItems().isEmpty())
+    if (m_scene->selectedItems().isEmpty())
         return;
 
-    QGraphicsItem *item=scene->selectedItems().first();
+    QGraphicsItem *item=m_scene->selectedItems().first();
     if(item->type()==QGraphicsItemGroup::Type) return; // needs to be a single item
     // check text item
     if(item->type()==DiagramTextItem::Type){
@@ -1468,26 +1470,26 @@ void MainWindow::print()
     if (QPrintDialog(&printer).exec() == QDialog::Accepted) {
         QPainter painter(&printer);
         painter.setRenderHint(QPainter::Antialiasing);
-        scene->render(&painter);
+        m_scene->render(&painter);
     }
 }
 
 void MainWindow::moveItems()
 {
-    scene->setMode(DiagramScene::MoveItems);
-    view->setDragMode(QGraphicsView::RubberBandDrag);
+    m_scene->setMode(DiagramScene::MoveItems);
+    m_view->setDragMode(QGraphicsView::RubberBandDrag);
 }
 
 void MainWindow::abort()
 {
-    scene->abort();
+    m_scene->abort();
     pointerButton->setChecked(true);
     pointerGroupClicked(pointerButton);
 }
 
 void MainWindow::backoutOne()
 {
-    scene->backoutOne();
+    m_scene->backoutOne();
 }
 /*!
  * \brief abort triggered from scene
@@ -1504,18 +1506,18 @@ void MainWindow::abortFromScene()
 void MainWindow::insertDot()
 {
     QString fn=":/libs/analog/dot.json";
-    scene->insertElementDirectly(fn);
+    m_scene->insertElementDirectly(fn);
 }
 /*!
  * \brief activate line mode from shortcut
  */
 void MainWindow::switchToWire()
 {
-    scene->setArrow(0);
+    m_scene->setArrow(0);
     pointerTypeGroup->button(int(DiagramScene::MoveItem))->setChecked(false);
     linePointerButton->setIcon(createArrowIcon(0));
     linePointerButton->setChecked(true);
-    scene->setMode(DiagramScene::InsertLine);
+    m_scene->setMode(DiagramScene::InsertLine);
 }
 /*!
  * \brief activate text mode from shortcut
@@ -1560,10 +1562,10 @@ void MainWindow::switchToDrawItem(int type)
 
 void MainWindow::exportImage()
 {
-    scene->setCursorVisible(false);
-    scene->abort();
-    bool gridVisible=scene->isGridVisible();
-    scene->setGridVisible(false);
+    m_scene->setCursorVisible(false);
+    m_scene->abort();
+    bool gridVisible=m_scene->isGridVisible();
+    m_scene->setGridVisible(false);
     QFileDialog::Options options;
     QString selectedFilter;
     QString path=m_lastPath.isEmpty() ? "" : m_lastPath+QDir::separator();
@@ -1576,7 +1578,7 @@ void MainWindow::exportImage()
     if (!fileName.isEmpty()){
 
         if((selectedFilter=="Pdf (*.pdf)")or(selectedFilter=="Postscript (*.ps)")) {
-            QRectF rect=scene->itemsBoundingRect(); // Bonding der Elemente in scene
+            QRectF rect=m_scene->itemsBoundingRect(); // Bonding der Elemente in scene
             QPrinter printer;
             printer.setOutputFileName(fileName);
             QRectF size=printer.pageRect(QPrinter::Millimeter); // definiere Paper mit gleichen Aspectratio wie rect
@@ -1585,10 +1587,10 @@ void MainWindow::exportImage()
             //printer.setPageMargins(0,0,0,0,QPrinter::Millimeter);
             QPainter painter(&printer);// generate PDF/PS
             painter.setRenderHint(QPainter::Antialiasing);
-            scene->render(&painter,QRectF(),rect);
+            m_scene->render(&painter,QRectF(),rect);
         }
         if((selectedFilter=="SVG (*.svg)")) {
-            QRectF rect=scene->itemsBoundingRect(); // Bonding der Elemente in scene
+            QRectF rect=m_scene->itemsBoundingRect(); // Bonding der Elemente in scene
             QSvgGenerator generator;
             generator.setFileName(fileName);
             generator.setSize(rect.size().toSize());
@@ -1599,10 +1601,10 @@ void MainWindow::exportImage()
 
             QPainter painter(&generator);// generate SVG
             painter.setRenderHint(QPainter::Antialiasing);
-            scene->render(&painter,target,rect);
+            m_scene->render(&painter,target,rect);
         }
         if((selectedFilter=="Png (*.png)")or(selectedFilter=="Jpg (*.jpg)")){
-            QRectF rect=scene->itemsBoundingRect(); // Bonding der Elemente in scene
+            QRectF rect=m_scene->itemsBoundingRect(); // Bonding der Elemente in scene
             qreal w=rect.width();
             qreal h=rect.height();
             if(w>h){
@@ -1620,7 +1622,7 @@ void MainWindow::exportImage()
             pixmap.fill();
             QPainter painter(&pixmap);
             painter.setRenderHint(QPainter::Antialiasing);
-            scene->render(&painter,QRectF(),rect);
+            m_scene->render(&painter,QRectF(),rect);
             painter.end();
 
             pixmap.save(fileName);
@@ -1629,8 +1631,8 @@ void MainWindow::exportImage()
         m_lastPath= fi.absolutePath();
 
     }
-    scene->setCursorVisible(true);
-    scene->setGridVisible(gridVisible);
+    m_scene->setCursorVisible(true);
+    m_scene->setGridVisible(gridVisible);
 }
 
 void MainWindow::zoomIn()
@@ -1645,16 +1647,16 @@ void MainWindow::zoomOut()
 
 void MainWindow::zoom(const qreal factor)
 {
-    QPointF topLeft     = view->mapToScene( 0, 0 );
-    QPointF bottomRight = view->mapToScene( view->viewport()->width() - 1, view->viewport()->height() - 1 );
+    QPointF topLeft     = m_view->mapToScene( 0, 0 );
+    QPointF bottomRight = m_view->mapToScene( m_view->viewport()->width() - 1, m_view->viewport()->height() - 1 );
     qreal width=bottomRight.x()-topLeft.x();
     qreal height=bottomRight.y()-topLeft.y();
     if((width/factor<=5000)&&(height/factor<=5000)){
-        QTransform oldMatrix = view->transform();
+        QTransform oldMatrix = m_view->transform();
         qreal newScale=oldMatrix.m11()*factor;
-        view->resetTransform();
-        view->translate(oldMatrix.dx(), oldMatrix.dy());
-        view->scale(newScale, newScale);
+        m_view->resetTransform();
+        m_view->translate(oldMatrix.dx(), oldMatrix.dy());
+        m_view->scale(newScale, newScale);
 
         setGrid();
     }
@@ -1666,7 +1668,7 @@ void MainWindow::zoom(const qreal factor)
  */
 void MainWindow::zoomPointer(const qreal factor, QPointF pointer)
 {
-    QRectF r=view->mapToScene(view->viewport()->rect()).boundingRect();
+    QRectF r=m_view->mapToScene(m_view->viewport()->rect()).boundingRect();
     if(r.contains(pointer)){
         r=r.translated(-pointer);
         r.setRect(r.x()/factor,r.y()/factor,r.width()/factor,r.height()/factor);
@@ -1678,23 +1680,23 @@ void MainWindow::zoomPointer(const qreal factor, QPointF pointer)
 
 void MainWindow::zoomRect()
 {
-    scene->setMode(DiagramScene::Zoom);
-    view->setDragMode(QGraphicsView::RubberBandDrag);
+    m_scene->setMode(DiagramScene::Zoom);
+    m_view->setDragMode(QGraphicsView::RubberBandDrag);
     setGrid();
 }
 
 void MainWindow::doZoomRect(QPointF p1,QPointF p2)
 {
     QRectF r(p1,p2);
-    view->fitInView(r.normalized(),Qt::KeepAspectRatio);
+    m_view->fitInView(r.normalized(),Qt::KeepAspectRatio);
     setGrid();
 }
 
 void MainWindow::zoomFit()
 {
-    scene->setCursorVisible(false);
-    view->fitInView(scene->itemsBoundingRect(),Qt::KeepAspectRatio);
-    scene->setCursorVisible(true);
+    m_scene->setCursorVisible(false);
+    m_view->fitInView(m_scene->itemsBoundingRect(),Qt::KeepAspectRatio);
+    m_scene->setCursorVisible(true);
     setGrid();
 }
 /*!
@@ -1702,10 +1704,10 @@ void MainWindow::zoomFit()
  */
 void MainWindow::changeGridFiner()
 {
-    qreal g=scene->grid();
+    qreal g=m_scene->grid();
     g/=2.;
     if(g<1) return; // limit grid to minimum of 1
-    scene->setGrid(g);
+    m_scene->setGrid(g);
     setGrid();
 }
 /*!
@@ -1713,10 +1715,10 @@ void MainWindow::changeGridFiner()
  */
 void MainWindow::changeGridCoarser()
 {
-    qreal g=scene->grid();
+    qreal g=m_scene->grid();
     g*=2.;
     if(g>200.) return; // limit grid to 160
-    scene->setGrid(g);
+    m_scene->setGrid(g);
     setGrid();
 }
 /*!
@@ -1725,10 +1727,10 @@ void MainWindow::changeGridCoarser()
  */
 void MainWindow::toggleGrid(bool grid)
 {
-    scene->setGridVisible(grid);
-    QPointF topLeft     = view->mapToScene( 0, 0 );
-    QPointF bottomRight = view->mapToScene( view->viewport()->width() - 1, view->viewport()->height() - 1 );
-    scene->invalidate(topLeft.x(),topLeft.y(),bottomRight.x()-topLeft.x(),bottomRight.y()-topLeft.y());
+    m_scene->setGridVisible(grid);
+    QPointF topLeft     = m_view->mapToScene( 0, 0 );
+    QPointF bottomRight = m_view->mapToScene( m_view->viewport()->width() - 1, m_view->viewport()->height() - 1 );
+    m_scene->invalidate(topLeft.x(),topLeft.y(),bottomRight.x()-topLeft.x(),bottomRight.y()-topLeft.y());
     configuration.showGrid=grid;
 }
 /*!
@@ -1736,21 +1738,21 @@ void MainWindow::toggleGrid(bool grid)
  */
 void MainWindow::setGrid()
 {
-    if(scene->isGridVisible()){
-        QPointF topLeft     = view->mapToScene( 0, 0 );
-        QPointF bottomRight = view->mapToScene( view->viewport()->width() - 1, view->viewport()->height() - 1 );
+    if(m_scene->isGridVisible()){
+        QPointF topLeft     = m_view->mapToScene( 0, 0 );
+        QPointF bottomRight = m_view->mapToScene( m_view->viewport()->width() - 1, m_view->viewport()->height() - 1 );
         qreal width=bottomRight.x()-topLeft.x();
         qreal height=bottomRight.y()-topLeft.y();
         qreal zw=width;
         if(zw<height) zw=height;
-        int n=int(zw)/int(scene->grid());
+        int n=int(zw)/int(m_scene->grid());
         int k=1;
         while(n/k>50)
         {
             k=k*2;
         }
-        scene->setGridScale(k);
-        view->resetCachedContent();
+        m_scene->setGridScale(k);
+        m_view->resetCachedContent();
     }
 }
 
@@ -1775,10 +1777,10 @@ void MainWindow::fileSaveAs(bool selectedItemsOnly,QString pathSuggestion)
         }
         else
         {
-            if(scene->save_json(&file,selectedItemsOnly)){
-                myFileName=fileName;
-                m_recentFiles.removeOne(myFileName);
-                m_recentFiles.prepend(myFileName);
+            if(m_scene->save_json(&file,selectedItemsOnly)){
+                m_fileName=fileName;
+                m_recentFiles.removeOne(m_fileName);
+                m_recentFiles.prepend(m_fileName);
                 populateRecentFiles();
             }
             file.close();
@@ -1787,7 +1789,7 @@ void MainWindow::fileSaveAs(bool selectedItemsOnly,QString pathSuggestion)
                 << file.fileName()
                 << file.errorString();
             }else{
-                setWindowFilePath(myFileName);
+                setWindowFilePath(m_fileName);
             }
         }
         QFileInfo fi(fileName);
@@ -1797,16 +1799,16 @@ void MainWindow::fileSaveAs(bool selectedItemsOnly,QString pathSuggestion)
 
 void MainWindow::fileSave()
 {
-    if (!myFileName.isEmpty()){
-        QFile file(myFileName);
+    if (!m_fileName.isEmpty()){
+        QFile file(m_fileName);
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
             QMessageBox::warning(this,tr("File operation error"),file.errorString());
         }
         else
         {
-            scene->save_json(&file);
-            m_recentFiles.removeOne(myFileName);
-            m_recentFiles.prepend(myFileName);
+            m_scene->save_json(&file);
+            m_recentFiles.removeOne(m_fileName);
+            m_recentFiles.prepend(m_fileName);
             populateRecentFiles();
         }
     }
@@ -1844,10 +1846,10 @@ bool MainWindow::openFile(QString fileName)
         return false;
     }
     abort(); // force defined state
-    scene->clear();
-    scene->load_json(&file);
-    myFileName=fileName;
-    setWindowFilePath(myFileName);
+    m_scene->clear();
+    m_scene->load_json(&file);
+    m_fileName=fileName;
+    setWindowFilePath(m_fileName);
     return true;
 }
 /*!
@@ -1977,13 +1979,13 @@ QIcon MainWindow::createLinePatternIcon(const int i)
 void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsItem *> items, bool forceOnGrid)
 {
     if(items.isEmpty()) return;
-    QRectF bound = scene->getTotalBoundary(items);
+    QRectF bound = m_scene->getTotalBoundary(items);
     QPointF pt=bound.center();
     if(forceOnGrid){
         // just use first element as it stays the same on repeated call on rotate
-        pt=scene->onGrid(pt);
+        pt=m_scene->onGrid(pt);
         QLineF diff(pt,m_rotationCenter);
-        if(diff.length()<=1.5*scene->grid()){
+        if(diff.length()<=1.5*m_scene->grid()){
             pt=m_rotationCenter;
         }else{
             m_rotationCenter=pt;
@@ -1992,7 +1994,7 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
     }
 
     transformItems(transform,items,pt);
-    scene->takeSnapshot();
+    m_scene->takeSnapshot();
 }
 /*!
  * \brief perform the transformation of items around an anchor point
@@ -2032,24 +2034,24 @@ void MainWindow::transformItems(const QTransform transform, QList<QGraphicsItem 
 void MainWindow::lineArrowButtonTriggered()
 {
     int tp=arrowAction->data().toInt();
-    scene->setArrow(tp%4);
+    m_scene->setArrow(tp%4);
     pointerTypeGroup->button(int(DiagramScene::MoveItem))->setChecked(false);
     if(tp<4){
-        scene->setMode(DiagramScene::InsertLine);
+        m_scene->setMode(DiagramScene::InsertLine);
     }else{
-        scene->setMode(DiagramScene::InsertSpline);
+        m_scene->setMode(DiagramScene::InsertSpline);
     }
 }
 
 void MainWindow::textAddButtonTriggered()
 {
-    scene->setMode(DiagramScene::InsertText);
+    m_scene->setMode(DiagramScene::InsertText);
 }
 
 void MainWindow::moveCursor(QPointF p)
 {
-    QPoint np=view->mapFromScene(p.toPoint());
-    np=view->mapToGlobal(np);
+    QPoint np=m_view->mapFromScene(p.toPoint());
+    np=m_view->mapToGlobal(np);
     QCursor c;
     c.setPos(np);
 }

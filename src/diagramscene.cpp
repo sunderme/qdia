@@ -68,6 +68,7 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     myMode = MoveItem;
     myItemType = DiagramItem::Step;
     textItem = nullptr;
+    insertedElement=nullptr;
     insertedItem = nullptr;
     insertedDrawItem = nullptr;
     insertedPathItem = nullptr;
@@ -249,6 +250,41 @@ DiagramTextItem *DiagramScene::makeTextItem(QGraphicsItem *item)
     textItem->setFocus();
     return textItem;
 }
+/*!
+ * \brief load user element
+ * User element is basically a qdia save file with is inserted as new item
+ * \param fn
+ * \return
+ */
+QGraphicsItem *DiagramScene::load_userElement(const QString &fn)
+{
+    QFile file(fn);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        return nullptr;
+    }
+    QByteArray data = file.readAll();
+
+    auto *element=new QGraphicsItemGroup(nullptr);
+    element->setFlag(QGraphicsItem::ItemIsMovable);
+    element->setFlag(QGraphicsItem::ItemIsSelectable);
+    addItem(element);
+
+    QJsonDocument doc=QJsonDocument::fromJson(data);
+    QJsonArray array=doc.array();
+    QPointF offset;
+    for(int i=0;i<array.size();++i){
+        QJsonObject json=array[i].toObject();
+        QGraphicsItem *item=getElementFromJSON(json);
+        if(i==0){
+            offset=item->pos();
+        }
+        item->setPos(item->pos()-offset);
+        item->setFlag(QGraphicsItem::ItemIsSelectable,false);
+        item->setFlag(QGraphicsItem::ItemIsMovable,false);
+        item->setParentItem(element);
+    }
+    return element;
+}
 
 void DiagramScene::setItemType(DiagramItem::DiagramType type)
 {
@@ -365,6 +401,17 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 emit abortSignal();
                 return;
             }
+        case InsertUserElement:
+            if (insertedElement){
+                insertedElement=nullptr;
+                myMode=MoveItem;
+                mouseEvent->accept();
+                takeSnapshot();
+                // switch toolbar !!
+                emit abortSignal();
+                return;
+            }
+            break;
         default:
             ;
         }
@@ -503,6 +550,41 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             maxZ+=0.1;
             addItem(item);
             insertedItem=item;
+        }
+        takeSnapshot();
+        if(middleButton){
+            // switch toolbar !!
+            emit abortSignal();
+        }
+        break;
+    case InsertUserElement:
+        if(insertedElement==nullptr){
+            insertedElement = load_userElement(mItemFileName);
+            /*insertedElement->setBrush(myItemColor);
+            QPen p(myLineColor);
+            p.setCapStyle(Qt::RoundCap);
+            insertedItem->setPen(p);*/
+            insertedElement->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedElement);
+        }
+        insertedElement->setPos(onGrid(mouseEvent->scenePos()));
+        //emit itemInserted(insertedItem);
+        insertedElement->setSelected(false);
+        insertedElement->setEnabled(false);
+        // add next item, same orientation if rotated/flipped
+        {
+            QGraphicsItem *item= load_userElement(mItemFileName);
+            /*item->setBrush(myItemColor);
+            QPen p{myLineColor};
+            p.setCapStyle(Qt::RoundCap);
+            item->setPen(p);*/
+            item->setZValue(maxZ);
+            item->setTransform(insertedElement->transform());
+            item->setSelected(true);
+            maxZ+=0.1;
+            addItem(item);
+            insertedElement=item;
         }
         takeSnapshot();
         if(middleButton){
@@ -714,6 +796,16 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             addItem(insertedItem);
         }
         insertedItem->setPos(onGrid(mouseEvent->scenePos()));
+        break;
+    case InsertUserElement:
+        if(insertedElement==nullptr){
+            insertedElement = load_userElement(mItemFileName);
+            insertedElement->setSelected(true);
+            insertedElement->setZValue(maxZ);
+            maxZ+=0.1;
+            addItem(insertedElement);
+        }
+        insertedElement->setPos(onGrid(mouseEvent->scenePos()));
         break;
     case InsertDrawItem:
         if (insertedDrawItem){
@@ -1206,6 +1298,10 @@ void DiagramScene::abort(bool keepSelection)
         if(insertedItem)
             removeItem(insertedItem);
         break;
+    case InsertUserElement:
+        if(insertedElement)
+            removeItem(insertedElement);
+        break;
     case InsertDrawItem:
         if(insertedDrawItem)
             removeItem(insertedDrawItem);
@@ -1231,6 +1327,7 @@ void DiagramScene::abort(bool keepSelection)
         myMode=MoveItem;
     }
     insertedItem=nullptr;
+    insertedElement=nullptr;
     insertedDrawItem=nullptr;
     insertedPathItem=nullptr;
     insertedSplineItem=nullptr;

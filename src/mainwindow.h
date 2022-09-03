@@ -185,8 +185,8 @@ private:
    void transformSelected(const QTransform transform,QList<QGraphicsItem*> items,bool forceOnGrid=false);
    void transformItems(const QTransform transform,QList<QGraphicsItem*> items,QPointF anchorPoint);
 
-   DiagramScene *scene;
-   QGraphicsView *view;
+   DiagramScene *m_scene;
+   QGraphicsView *m_view;
 
    QAction *exitAction;
    QAction *addAction;
@@ -287,7 +287,7 @@ private:
 
    QColor m_fillColor,m_lineColor,m_textColor;
 
-   QString myFileName; // aktueller Filename
+   QString m_fileName; // aktueller Filename
    QStringList m_recentFiles;
 
    QString m_lastPath;
