@@ -1366,6 +1366,13 @@ void DiagramScene::read_in_json(QJsonDocument doc)
         QJsonObject json=array[i].toObject();
         QGraphicsItem *item=getElementFromJSON(json);
         addItem(item);
+        if(item->type()==DiagramItem::Type){
+            QRectF rect;
+            for(const auto* it:item->childItems()){
+                rect=rect.united(it->boundingRect().translated(it->pos()));
+            }
+            qgraphicsitem_cast<DiagramItem*>(item)->setBoundingBox(rect);
+        }
     }
     // Aufräumen
     insertedItem = nullptr;

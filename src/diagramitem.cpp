@@ -132,9 +132,10 @@ DiagramItem::DiagramItem(const QJsonObject &json, QMenu *contextMenu)
     setTransform(tf);
 
     myContextMenu=contextMenu;
-
-    mPainterPath = createPath();
-    setPath(mPainterPath);
+    if(myDiagramType!=None){
+        mPainterPath = createPath();
+        setPath(mPainterPath);
+    }
 
     setFlag(QGraphicsItem::ItemIsMovable, json["moveable"].toBool(true));
     setFlag(QGraphicsItem::ItemIsSelectable, json["selectable"].toBool(true));
