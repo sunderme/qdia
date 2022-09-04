@@ -152,14 +152,6 @@ QPixmap DiagramItem::image() const
     return pixmap;
 }
 
-void DiagramItem::setBoundingBox(QRectF rect)
-{
-    QPainterPath path;
-    path.addRect(rect);
-    mPainterPath=path;
-    setPath(path);
-}
-
 void DiagramItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     scene()->clearSelection();
@@ -174,6 +166,23 @@ QVariant DiagramItem::itemChange(GraphicsItemChange change, const QVariant &valu
 
     return value;
 }
+
+QRectF DiagramItem::boundingRect() const
+{
+    QRectF rect;
+    for(const QGraphicsItem* item:childItems()){
+        rect=rect.united(item->boundingRect().translated(item->pos()));
+    }
+    return rect;
+}
+
+QPainterPath DiagramItem::shape() const
+{
+    QPainterPath path;
+    path.addRect(boundingRect());
+    return path;
+}
+
 DiagramItem* DiagramItem::copy()
 {
     DiagramItem* newDiagramItem=new DiagramItem(*this);
