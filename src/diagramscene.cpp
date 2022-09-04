@@ -283,6 +283,7 @@ DiagramItem *DiagramScene::load_userElement(const QString &fn)
         item->setParentItem(element);
         rect=rect.united(item->boundingRect().translated(item->pos()));
     }
+    element->setBoundingBox(rect);
     return element;
 }
 
