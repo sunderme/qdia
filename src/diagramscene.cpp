@@ -286,6 +286,23 @@ DiagramItem *DiagramScene::load_userElement(const QString &fn)
     element->setBoundingBox(rect);
     return element;
 }
+/*!
+ * \brief filter selected child items
+ * If in the list parent and child are selected, child is removed from list to avoid
+ * the application of a transform twice
+ * \param lst
+ */
+void DiagramScene::filterSelectedChildItems(QList<QGraphicsItem *> &lst)
+{
+    foreach(QGraphicsItem* item,lst){
+        if(item->parentItem()){
+            if(item->parentItem()->isSelected()) {
+                item->setSelected(false);
+                lst.removeOne(item);
+            }
+        }
+    }
+}
 
 void DiagramScene::setItemType(DiagramItem::DiagramType type)
 {
@@ -603,13 +620,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             if(!selectedItems().isEmpty()){
                 // lösche doppelte Verweise (Child&selected)
                 myMoveItems=selectedItems();
-                foreach(QGraphicsItem* item,myMoveItems){
-                    if(item->parentItem())
-                        if(item->parentItem()->isSelected()) {
-                            item->setSelected(false);
-                            myMoveItems.removeOne(item);
-                        }
-                }
+                filterSelectedChildItems(myMoveItems);
                 // speichere Referenzpunkt
                 myDx=point.rx();
                 myDy=point.ry();

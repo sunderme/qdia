@@ -139,6 +139,7 @@ public:
     void backoutOne();
 
     QRectF getTotalBoundary(const QList<QGraphicsItem*> items) const;
+    static void filterSelectedChildItems(QList<QGraphicsItem*> &lst);
 
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);
@@ -178,6 +179,7 @@ protected:
     void enableAllItems(bool enable=true);
     DiagramTextItem *makeTextItem(QGraphicsItem *item);
     DiagramItem *load_userElement(const QString &fn);
+
 
 private:
 

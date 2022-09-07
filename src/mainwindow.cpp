@@ -1979,6 +1979,7 @@ QIcon MainWindow::createLinePatternIcon(const int i)
 void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsItem *> items, bool forceOnGrid)
 {
     if(items.isEmpty()) return;
+    m_scene->filterSelectedChildItems(items);
     QRectF bound = m_scene->getTotalBoundary(items);
     QPointF pt=bound.center();
     if(forceOnGrid){
@@ -2081,7 +2082,7 @@ void MainWindow::linePatternChanged()
  * text notes
  * fix flip/rotate when moving/dragging several elements
  ** pie
- ** user generated elements
+ * manage user generated elements
  * tap style
  * scale elements ?
  * Align ?
