@@ -9,7 +9,7 @@ git_wc_info(${PROJECT_SOURCE_DIR} VARPREFIX)
 
 message(STATUS "The current git hash is ${VARPREFIX_WC_REVISION_HASH}")
 
-add_definitions(-DQDIA_VERSION=\"${VARPREFIX_WC_LATEST_TAG_LONG}\")
+add_definitions(-DQDIA_VERSION="${VARPREFIX_WC_LATEST_TAG_LONG}")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
