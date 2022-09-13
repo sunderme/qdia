@@ -403,8 +403,8 @@ void DiagramPathItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
     }
 }
 
-QPainterPath DiagramPathItem::shape() {
-    QPainterPath myPath = getPath();
+QPainterPath DiagramPathItem::shape() const {
+    QPainterPath myPath = path();
     if(isSelected()){
              foreach (QPointF point, myPoints)
              {

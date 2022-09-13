@@ -38,7 +38,7 @@ public:
         { return myPoints; }
     QLineF findLineSection(QPointF pt);
 
-    int type() const
+    int type() const  override
         { return Type;}
     void setHandlerWidth(const qreal width)
     {
@@ -50,19 +50,19 @@ public:
     }
 
 protected:
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     void createPath();
     void drawArrows(QPainter *painter) const;
     QPainterPath createArrow(QPointF p1, QPointF p2) const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-    QRectF boundingRect() const;
-    QPainterPath shape();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
+    QRectF boundingRect() const override;
+    virtual QPainterPath shape() const override;
     bool hasClickedOn(QPointF press_point, QPointF point) const;
-    void mousePressEvent(QGraphicsSceneMouseEvent *e);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *e);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *e);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *e) override;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *e) override;
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *e) override;
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *e) override;
     QPointF onGrid(QPointF pos);
 
 private:
