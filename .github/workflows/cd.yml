@@ -147,7 +147,7 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        brew install qt6
+        brew install qt
 
     - name: Configure
       run: |
