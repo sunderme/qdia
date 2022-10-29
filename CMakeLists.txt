@@ -1,15 +1,22 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(qdia VERSION 0.7 LANGUAGES CXX)
+project(qdia VERSION 0.24 LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(GitInfo)
 git_wc_info(${PROJECT_SOURCE_DIR} VARPREFIX)
-
-message(STATUS "The current git hash is ${VARPREFIX_WC_REVISION_HASH}")
-
-add_definitions(-DQDIA_VERSION="${VARPREFIX_WC_LATEST_TAG_LONG}")
+if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+	git_wc_info(${PROJECT_SOURCE_DIR} VARPREFIX)
+    add_definitions(-DQDIA_VERSION="${VARPREFIX_WC_LATEST_TAG_LONG}")
+	message(STATUS "The current git hash is ${VARPREFIX_WC_REVISION_HASH}")
+	message(STATUS "The current git describe is ${VARPREFIX_WC_LATEST_TAG_LONG}")
+else()
+	add_definitions(-DQDIA_VERSION="N/A")
+	message(STATUS "No git present.")
+    unset(GIT_FOUND)
+	set(VARPREFIX_WC_LATEST_TAG_LONG "0.0.0+0+0")
+endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -69,6 +76,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 
     #qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+    #qt_add_lupdate(qdia TS_FILES ${TS_FILES})
     qt6_add_translations(qdia TS_FILES ${TS_FILES})
 
 else()

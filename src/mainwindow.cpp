@@ -2083,6 +2083,7 @@ void MainWindow::linePatternChanged()
  * fix flip/rotate when moving/dragging several elements
  ** pie
  * fix path click on detection
+ * merge path/arc/spline ?
  * manage user generated elements
  * tap style
  * scale elements ?
