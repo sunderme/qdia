@@ -2,7 +2,7 @@ Source: qdia
 Section: graphics
 Priority: extra
 Maintainer: J. Sundermeyer <sunderme@gmx.de>
-Build-Depends: debhelper (>= 7.0.50~),qtbase5-dev, cmake
+Build-Depends: debhelper (>= 7.0.50~),qtbase5-dev,qttools5-dev, cmake
 Standards-Version: 3.9.1
 Homepage: https://github.com/sunderme/qdia
 
