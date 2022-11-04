@@ -44,7 +44,7 @@ jobs:
           cd build
           VERSION_NAME=`git describe`
           ../.github/scripts/package_msys.sh
-          echo "::set-output name=VERSION_NAME::${VERSION_NAME}"
+          echo "VERSION_NAME=${VERSION_NAME}">> $GITHUB_OUTPUT
 
       - name: Upload zip to GitHub Artifacts
         if: github.event_name == 'push'
@@ -109,7 +109,7 @@ jobs:
         cd build
         VERSION_NAME=`git describe`
         . ../.github/scripts/package_linux.sh
-        echo "::set-output name=VERSION_NAME::${VERSION_NAME}"
+        echo "VERSION_NAME=${VERSION_NAME}">> $GITHUB_OUTPUT
         
     - name: Upload to Github Artifacts
       if: github.event_name == 'push'
@@ -176,9 +176,7 @@ jobs:
         /usr/local/opt/qt6/bin/macdeployqt qdia.app -dmg
         VERSION_NAME=`git describe`
         cp qdia.dmg qdia-osx-${VERSION_NAME}.dmg
-        echo "::set-output name=VERSION_NAME::${VERSION_NAME}"
-        echo "::set-output name=TXS_VERSION::${TXS_VERSION}"
-        echo "::set-output name=GIT_VERSION::${GIT_VERSION}"
+        echo "VERSION_NAME=${VERSION_NAME}">> $GITHUB_OUTPUT
         
     - name: Upload to Github artifacts
       if: github.event_name == 'push'
