@@ -12,7 +12,7 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       
@@ -48,14 +48,14 @@ jobs:
 
       - name: Upload zip to GitHub Artifacts
         if: github.event_name == 'push'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: qdia-win-qt6-zip
           path: ./build/package-zip/qdia-win-qt6-${{ steps.package.outputs.VERSION_NAME }}.zip
           
       - name: Upload to GitHub Artifacts
         if: github.event_name == 'push'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: qdia-win-qt6-exe
           path: ./build/qdia-win-qt6-${{ steps.package.outputs.VERSION_NAME }}.exe
@@ -79,7 +79,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
@@ -113,7 +113,7 @@ jobs:
         
     - name: Upload to Github Artifacts
       if: github.event_name == 'push'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: qdia-linux
         path: QDia-linux-${{ steps.package.outputs.VERSION_NAME }}-x86_64.AppImage
@@ -138,7 +138,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
@@ -182,7 +182,7 @@ jobs:
         
     - name: Upload to Github artifacts
       if: github.event_name == 'push'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: qdia-osx
         path: build/qdia-osx-${{ steps.package.outputs.VERSION_NAME }}.dmg
