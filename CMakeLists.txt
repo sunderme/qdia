@@ -26,10 +26,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(APPLE)
-    string(APPEND CMAKE_EXE_LINKER_FLAGS " -Wl,-rpath,@loader_path/../,-rpath,@executable_path/../,-rpath,@executable_path/../Frameworks")
-endif()
-
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Core Gui LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS PrintSupport Svg REQUIRED)
