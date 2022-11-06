@@ -168,8 +168,6 @@ jobs:
 
     - name: Workarounds
       run: |
-        mkdir -p texstudio.app/Contents/PlugIns/imageformats
-        cp /usr/local/opt/qt/share/qt/plugins/imageformats/libqsvg.dylib texstudio.app/Contents/PlugIns/imageformats
         mkdir -p texstudio.app/Contents/Frameworks
         cp /usr/local/lib/libbrotlicommon.1.dylib texstudio.app/Contents/Frameworks
 
@@ -177,7 +175,7 @@ jobs:
       id: package
       run: |
         cd build
-        /usr/local/opt/qt6/bin/macdeployqt qdia.app -dmg
+        macdeployqt qdia.app -dmg
         VERSION_NAME=`git describe`
         cp qdia.dmg qdia-osx-${VERSION_NAME}.dmg
         echo "VERSION_NAME=${VERSION_NAME}">> $GITHUB_OUTPUT
