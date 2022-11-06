@@ -147,18 +147,21 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        wget https://github.com/sunderme/homebrew-qt6/releases/download/6.4.0/qt6-base--6.4.0.big_sur.bottle.tar.gz
-        brew install ./qt6-base--6.4.0.big_sur.bottle.tar.gz
-        wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.0/qt6-svg--6.4.0.big_sur.bottle.tar.gz
-        brew install ./qt6-svg--6.4.0.big_sur.bottle.tar.gz
-        wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.0/qt6-tools--6.4.0.big_sur.bottle.tar.gz
-        brew install ./qt6-tools--6.4.0.big_sur.bottle.tar.gz
-
+        wget https://github.com/sunderme/homebrew-qt6/releases/download/6.4.0-1/QtBase-6.4.0-Darwin.tar.xz
+        sudo tar xvf ./QtBase-6.4.0-Darwin.tar.xz -C /usr/local
+        rm QtBase-6.4.0-Darwin.tar.xz
+        wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.0-1/QtSvg-6.4.0-Darwin.tar.xz
+        sudo tar xvf ./QtSvg-6.4.0-Darwin.tar.xz -C /usr/local/QtBase-6.4.0-Darwin --strip-components=1
+        rm QtSvg-6.4.0-Darwin.tar.xz
+        wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.0-1/QtTools-6.4.0-Darwin.tar.xz
+        sudo tar xvf ./QtTools-6.4.0-Darwin.tar.xz -C /usr/local/QtBase-6.4.0-Darwin --strip-components=1
+        rm QtTools-6.4.0-Darwin.tar.xz
+        
     - name: Configure
       run: |
         mkdir build
         cd build
-        cmake ..
+        /usr/local/QtBase-6.4.0-Darwin/bin/qt-cmake ..
 
     - name: Release translation
       run: cmake --build build --target qdia_lrelease
@@ -175,7 +178,7 @@ jobs:
       id: package
       run: |
         cd build
-        macdeployqt qdia.app -dmg
+        /usr/local/QtBase-6.4.0-Darwin/bin/macdeployqt qdia.app -dmg
         VERSION_NAME=`git describe`
         cp qdia.dmg qdia-osx-${VERSION_NAME}.dmg
         echo "VERSION_NAME=${VERSION_NAME}">> $GITHUB_OUTPUT
