@@ -178,7 +178,7 @@ jobs:
       id: package
       run: |
         cd build
-        /usr/local/QtBase-6.4.0-Darwin/bin/macdeployqt qdia.app -dmg -verbose=3
+        /usr/local/QtBase-6.4.0-Darwin/bin/macdeployqt qdia.app -dmg
         VERSION_NAME=`git describe`
         cp qdia.dmg qdia-osx-${VERSION_NAME}.dmg
         echo "VERSION_NAME=${VERSION_NAME}">> $GITHUB_OUTPUT
