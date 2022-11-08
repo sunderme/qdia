@@ -60,6 +60,7 @@ set(PROJECT_SOURCES
         resources/images.qrc
         resources/libs.qrc
         ${APP_ICON_RESOURCE_WINDOWS}
+	resources/qdia.icns
         #${TS_FILES}
 )
 
@@ -102,11 +103,12 @@ target_link_libraries(qdia PRIVATE
     Qt${QT_VERSION_MAJOR}::PrintSupport
     Qt${QT_VERSION_MAJOR}::Svg
 )
-
+set_source_files_properties(resources/qdia.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 set_target_properties(qdia PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE_ICON_FILE qdia.icns
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
