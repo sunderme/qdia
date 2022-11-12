@@ -452,6 +452,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             QPen pen(myLineColor);
             pen.setWidth(myLineWidth);
             pen.setStyle(myPenStyle);
+            pen.setCapStyle(Qt::RoundCap);
             insertedPathItem->setPen(pen);
             insertedPathItem->setBrush(myLineColor);
             insertedPathItem->setZValue(maxZ);
@@ -469,6 +470,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             QPen pen(myLineColor);
             pen.setWidth(myLineWidth);
             pen.setStyle(myPenStyle);
+            pen.setCapStyle(Qt::RoundCap);
             insertedSplineItem->setPen(pen);
             //insertedSplineItem->setBrush(myLineColor);
             insertedSplineItem->setZValue(maxZ);
