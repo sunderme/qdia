@@ -519,6 +519,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             QPen pen(myLineColor);
             pen.setWidth(myLineWidth);
             pen.setStyle(myPenStyle);
+            pen.setCapStyle(Qt::RoundCap);
             insertedDrawItem->setPen(pen);
             insertedDrawItem->setZValue(maxZ);
             maxZ+=0.1;
