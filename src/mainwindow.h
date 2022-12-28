@@ -157,6 +157,7 @@ private slots:
    void switchToText();
    void switchToRect();
    void switchToDrawItem(int type);
+   void fileExit();
 
 protected:
    void closeEvent(QCloseEvent *event);
@@ -291,6 +292,7 @@ private:
    QStringList m_recentFiles;
 
    QString m_lastPath;
+   int m_lastSavedSnapshot = -1;
 };
 
 #endif // MAINWINDOW_H

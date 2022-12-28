@@ -762,8 +762,8 @@ void MainWindow::createActions()
 
     exitAction = new QAction(tr("E&xit"), this);
     exitAction->setShortcuts(QKeySequence::Quit);
-    exitAction->setStatusTip(tr("Quit Scenediagram example"));
-    connect(exitAction, &QAction::triggered, this, &QWidget::close);
+    exitAction->setStatusTip(tr("Quit QDia"));
+    connect(exitAction, &QAction::triggered, this, &MainWindow::fileExit);
     listOfActions.append(exitAction);
 
     selectAllAction = new QAction(tr("Select &All"), this);
@@ -1559,6 +1559,35 @@ void MainWindow::switchToDrawItem(int type)
     bt->setChecked(true);
     buttonGroupClicked(bt);
 }
+/*!
+ * \brief exiting application
+ * Check if modified content needs to be saved
+ */
+void MainWindow::fileExit()
+{
+    bool canQuit=true;
+    recheck:
+    int i=m_scene->getSnaphotPosition();
+    if(i!=m_lastSavedSnapshot){
+        int ret = QMessageBox::warning(this, tr("QDia"),
+                                       tr("The document has been modified.\n"
+                                          "Do you want to save your changes?"),
+                                       QMessageBox::Save | QMessageBox::Discard
+                                       | QMessageBox::Cancel,
+                                       QMessageBox::Save);
+        if(ret==QMessageBox::Save){
+            fileSave();
+            goto recheck;
+        }
+        if(ret==QMessageBox::Cancel){
+            canQuit=false;
+        }
+
+    }
+    if(canQuit){
+        qApp->quit();
+    }
+}
 
 void MainWindow::exportImage()
 {
@@ -1782,6 +1811,7 @@ void MainWindow::fileSaveAs(bool selectedItemsOnly,QString pathSuggestion)
                 m_recentFiles.removeOne(m_fileName);
                 m_recentFiles.prepend(m_fileName);
                 populateRecentFiles();
+                m_lastSavedSnapshot=m_scene->getSnaphotPosition();
             }
             file.close();
             if(file.error()){
@@ -1810,7 +1840,10 @@ void MainWindow::fileSave()
             m_recentFiles.removeOne(m_fileName);
             m_recentFiles.prepend(m_fileName);
             populateRecentFiles();
+            m_lastSavedSnapshot=m_scene->getSnaphotPosition();
         }
+    }else{
+        fileSaveAs();
     }
 }
 
