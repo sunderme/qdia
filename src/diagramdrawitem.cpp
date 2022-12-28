@@ -16,6 +16,8 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     myPos2=pos();
     myDiagramType = diagramType;
     myRadius=5.0;
+    mStartPoint=QPointF(1,0);
+    mEndPoint=QPointF(1,0);
 
     mPainterPath=createPath();
     setPath(mPainterPath);
@@ -26,8 +28,6 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     mySelPoint=-1;
     myHandlerWidth=2.0;
     myRadius=5.0;
-    m_startAngle=0;
-    m_angle=360;
 }
 
 DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
@@ -36,8 +36,8 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
 
     myDiagramType=diagram.myDiagramType;
     myRadius=diagram.myRadius;
-    m_startAngle=diagram.m_startAngle;
-    m_angle=diagram.m_angle;
+    mStartPoint=diagram.mStartPoint;
+    mEndPoint=diagram.mEndPoint;
     // copy from general GraphcsItem
     setBrush(diagram.brush());
     setPen(diagram.pen());
@@ -62,8 +62,12 @@ DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):Di
     qreal height=json["height"].toDouble();
     myPos2=QPointF(width,height);
     myRadius=5.0;
-    m_startAngle=json["aux0"].toDouble();
-    m_angle=json["aux1"].toDouble();
+    qreal x0=json["start_x"].toDouble();
+    qreal y0=json["start_y"].toDouble();
+    qreal x1=json["end_x"].toDouble();
+    qreal y1=json["end_y"].toDouble();
+    mStartPoint=QPointF(x0,y0);
+    mEndPoint=QPointF(x1,y1);
 
     mPainterPath=createPath();
     setPath(mPainterPath);
@@ -140,8 +144,16 @@ QPainterPath DiagramDrawItem::createPath()
         path.lineTo(myRadius,0);
         break;
     case Pie:
-        path.arcMoveTo(0,0,dx,dy,m_startAngle);
-        path.arcTo(0,0,dx,dy,m_startAngle,m_angle);
+    {
+        QLineF ln(QPointF(0,0),mStartPoint);
+        qreal startAngle=ln.angle();
+        QLineF ln2(QPointF(0,0),mEndPoint);
+        qreal angle=ln.angleTo(ln2);
+        if(abs(angle)<0.1) angle=360;
+        path.arcMoveTo(0,0,dx,dy,startAngle);
+        path.arcTo(0,0,dx,dy,startAngle,angle);
+        break;
+    }
     default:
         break;
     }
@@ -205,8 +217,10 @@ void DiagramDrawItem::write(QJsonObject &json)
     json["width"]=myPos2.x();
     json["height"]=myPos2.y();
     if(myDiagramType==Pie){
-        json["aux0"]=m_startAngle;
-        json["aux1"]=m_angle;
+        json["x0"]=mStartPoint.x();
+        json["y0"]=mStartPoint.y();
+        json["x1"]=mEndPoint.x();
+        json["y1"]=mEndPoint.y();
     }
 
 }
@@ -275,22 +289,51 @@ QPointF DiagramDrawItem::getHandler(int i) const
     if(i==3) point=QPointF(rect.right(),rect.bottom()-rect.height()/2);
     if(i>3 && i<7) point=QPointF(rect.left()+rect.width()/2*(i-4),rect.bottom());
     if(i==7) point=QPointF(rect.left(),rect.bottom()-rect.height()/2);
+    if(i==8) point=mStartPoint+myPos2/2;
+    if(i==9) point=mEndPoint+myPos2/2;
     return point;
+}
+/*!
+ * \brief return number of used handles
+ * \return
+ */
+int DiagramDrawItem::getNumberOfHandles() const
+{
+    int nHandles=8;
+    if(myDiagramType==Pie){
+        nHandles=10;
+    }
+    return nHandles;
 }
 
 QPointF DiagramDrawItem::getDimension()
 {
     return myPos2;
 }
-
-void DiagramDrawItem::setAngles(const qreal startAngle, const qreal angle)
+/*!
+ * \brief set start point for pie/arc and similar
+ * \param pt
+ */
+void DiagramDrawItem::setStartPoint(const QPointF pt)
 {
-    m_startAngle=startAngle;
-    m_angle=angle;
+    mStartPoint=pt;
     if(myDiagramType==Pie){
         mPainterPath=createPath();
     }
 }
+
+/*!
+ * \brief set end point for pie/arc and similar
+ * \param pt
+ */
+void DiagramDrawItem::setEndPoint(const QPointF pt)
+{
+    mEndPoint=pt;
+    if(myDiagramType==Pie){
+        mPainterPath=createPath();
+    }
+}
+
 
 void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
            QWidget *)
@@ -314,7 +357,12 @@ void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
          painter->setBrush(selBrush);
          painter->setPen(selPen);
          QPointF point;
-         for(int i=0;i<8;i++)
+         int nPoints=getNumberOfHandles();
+         if(myDiagramType==Pie){
+             // extra lines for pie/arc
+             qDebug()<<"fix";
+         }
+         for(int i=0;i<nPoints;i++)
          {
              point=getHandler(i);
              if(i==myHoverPoint){
@@ -333,11 +381,12 @@ void DiagramDrawItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
     if (isSelected()) {
         QPointF hover_point = e -> pos();
         QPointF point;
-        for(myHoverPoint=0;myHoverPoint<8;myHoverPoint++){
+        int numberOfHandles=getNumberOfHandles();
+        for(myHoverPoint=0;myHoverPoint<numberOfHandles;myHoverPoint++){
             point=getHandler(myHoverPoint);
             if(hasClickedOn(hover_point,point)) break;
         }//for
-        if(myHoverPoint==8) myHoverPoint=-1;
+        if(myHoverPoint==numberOfHandles) myHoverPoint=-1;
         else update();
     }
     DiagramItem::hoverMoveEvent(e);
@@ -374,7 +423,8 @@ QPainterPath DiagramDrawItem::shape() const {
     myPath=path();
     if(isSelected()){
         QPointF point;
-        for(int i=0;i<8;i++)
+        int numberOfHandles=getNumberOfHandles();
+        for(int i=0;i<numberOfHandles;i++)
         {
             point=getHandler(i);
             // Rect around valid point
@@ -397,7 +447,8 @@ void DiagramDrawItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
         if (e -> buttons() & Qt::LeftButton) {
             QPointF mouse_point = e -> pos();
             QPointF point;
-            for(mySelPoint=0;mySelPoint<8;mySelPoint++){
+            int numberOfHandles=getNumberOfHandles();
+            for(mySelPoint=0;mySelPoint<numberOfHandles;mySelPoint++){
                 point=getHandler(mySelPoint);
                 if(hasClickedOn(mouse_point,point)) break;
             }//for

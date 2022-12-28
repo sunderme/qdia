@@ -1226,7 +1226,7 @@ QWidget *MainWindow::createCellWidget(const QString &text,
             if(type>63){
                 DiagramDrawItem item(static_cast<DiagramDrawItem::DiagramType>(type-64), itemMenu);
                 item.setPos2(230,230);
-                item.setAngles(0,120);
+                item.setEndPoint(QPointF(-1,2));
                 QIcon icon(item.image());
                 button->setIcon(icon);
             }else{

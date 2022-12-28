@@ -76,7 +76,8 @@ public:
     qreal getRadius()
         { return myRadius; }
 
-    void setAngles(const qreal startAngle,const qreal angle);
+    void setStartPoint(const QPointF pt);
+    void setEndPoint(const QPointF pt);
 
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
@@ -96,13 +97,14 @@ protected:
 
 private:
     QPointF getHandler(int i) const;
+    int getNumberOfHandles() const;
     DiagramType myDiagramType;
     QPainterPath mPainterPath;
     QPointF myPos2;
     int myHoverPoint,mySelPoint;
     qreal myHandlerWidth;
     qreal myRadius;
-    qreal m_startAngle,m_angle;
+    QPointF mStartPoint,mEndPoint;
     Rect mRect;
 };
 
