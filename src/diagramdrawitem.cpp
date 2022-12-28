@@ -145,9 +145,10 @@ QPainterPath DiagramDrawItem::createPath()
         break;
     case Pie:
     {
-        QLineF ln(QPointF(0,0),mStartPoint);
+        qreal compression=myPos2.y()/myPos2.x(); // calculate compression because it is an ellipse instead of a circle
+        QLineF ln(0,0,mStartPoint.x(),mStartPoint.y()/compression);
         qreal startAngle=ln.angle();
-        QLineF ln2(QPointF(0,0),mEndPoint);
+        QLineF ln2(0,0,mEndPoint.x(),mEndPoint.y()/compression);
         qreal angle=ln.angleTo(ln2);
         if(abs(angle)<0.1) angle=360;
         path.arcMoveTo(0,0,dx,dy,startAngle);
