@@ -86,6 +86,7 @@ protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
     QPainterPath shape() const override;
     QRectF boundingRect() const override;
+    QRectF innerBoundingRect() const;
     void hoverMoveEvent(QGraphicsSceneHoverEvent *e) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *e) override;
     void mousePressEvent(QGraphicsSceneMouseEvent *e) override;

@@ -16,8 +16,8 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     myPos2=pos();
     myDiagramType = diagramType;
     myRadius=5.0;
-    mStartPoint=QPointF(1,0);
-    mEndPoint=QPointF(1,0);
+    mStartPoint=QPointF(20,0);
+    mEndPoint=QPointF(0,20);
 
     mPainterPath=createPath();
     setPath(mPainterPath);
@@ -283,7 +283,7 @@ void DiagramDrawItem::mySetDimension(QPointF newPos)
 QPointF DiagramDrawItem::getHandler(int i) const
 {
     QPointF point;
-    QRectF rect=path().boundingRect();
+    QRectF rect=innerBoundingRect();
 
     if(i<3) point=QPointF(rect.left()+rect.width()/2*i,rect.top());
     if(i==3) point=QPointF(rect.right(),rect.bottom()-rect.height()/2);
@@ -349,8 +349,13 @@ void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
          QBrush selBrush=QBrush(Qt::NoBrush);
          painter->setBrush(selBrush);
          painter->setPen(selPen);
-         QRectF rect=path().boundingRect();
+         QRectF rect=innerBoundingRect();
          painter->drawRect(rect);
+         if(myDiagramType==Pie){
+             // extra lines for pie/arc
+             painter->drawLine(myPos2/2,mStartPoint+myPos2/2);
+             painter->drawLine(myPos2/2,mEndPoint+myPos2/2);
+         }
          // Draghandles
          selBrush=QBrush(Qt::cyan,Qt::SolidPattern);
          selPen=QPen(Qt::cyan);
@@ -358,10 +363,7 @@ void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
          painter->setPen(selPen);
          QPointF point;
          int nPoints=getNumberOfHandles();
-         if(myDiagramType==Pie){
-             // extra lines for pie/arc
-             qDebug()<<"fix";
-         }
+
          for(int i=0;i<nPoints;i++)
          {
              point=getHandler(i);
@@ -433,12 +435,35 @@ QPainterPath DiagramDrawItem::shape() const {
     }// if
     return myPath;
 }
-
+/*!
+ * \brief return boundrect of actual structure plus helper structures
+ * Helperstructure are usually the handles in selected state
+ * \return
+ */
 QRectF DiagramDrawItem::boundingRect() const
 {
     qreal extra = isSelected() ? pen().width()+20 / 2.0 + myHandlerWidth : 0.0;
 
-    QRectF newRect = path().boundingRect().adjusted(-extra, -extra, extra, extra);
+    QRectF newRect = innerBoundingRect().adjusted(-extra, -extra, extra, extra);
+
+    if(myDiagramType==Pie){
+        QRectF helper(mStartPoint+myPos2/2,mEndPoint+myPos2/2);
+        newRect=newRect.united(helper);
+    }
+
+    return newRect;
+}
+/*!
+ * \brief return raw bounding rect without extra space fopr handlers
+ * \return
+ */
+QRectF DiagramDrawItem::innerBoundingRect() const
+{
+    QRectF newRect = path().boundingRect();
+    if(myDiagramType==Pie){
+        newRect=QRectF(QPointF(0,0),myPos2);
+    }
+
     return newRect;
 }
 
@@ -452,10 +477,12 @@ void DiagramDrawItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
                 point=getHandler(mySelPoint);
                 if(hasClickedOn(mouse_point,point)) break;
             }//for
-            if(mySelPoint==8){
+            if(mySelPoint==getNumberOfHandles()){
                 mySelPoint=-1;
             }else{
-                mRect=Rect(myPos2,mySelPoint);
+                if(mySelPoint<8){
+                    mRect=Rect(myPos2,mySelPoint);
+                }
                 e->accept();
             }
         }
@@ -468,11 +495,20 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
     if ((e -> buttons() & Qt::LeftButton)&&(mySelPoint>-1)) {
         QPointF mouse_point = onGrid(e -> pos());
         prepareGeometryChange();
-        mRect.movePoint(mouse_point);
-        QPointF anchorPoint=mRect.anchorPoint();
-        mRect.translate(-anchorPoint); // renormalize: anchor is at 0/0, the item is moved instead
-        mySetDimension(mRect.point());
-        setPos(mapToScene(anchorPoint));
+        if(mySelPoint<8){
+            mRect.movePoint(mouse_point);
+            QPointF anchorPoint=mRect.anchorPoint();
+            mRect.translate(-anchorPoint); // renormalize: anchor is at 0/0, the item is moved instead
+            mySetDimension(mRect.point());
+            setPos(mapToScene(anchorPoint));
+        }else{
+            if(mySelPoint==8){
+                mStartPoint=mouse_point-myPos2/2;
+            }
+            if(mySelPoint==9){
+                mEndPoint=mouse_point-myPos2/2;
+            }
+        }
         mPainterPath=createPath();
         setPath(mPainterPath);
         // update text position if present
