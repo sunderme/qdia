@@ -28,6 +28,9 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     mySelPoint=-1;
     myHandlerWidth=2.0;
     myRadius=5.0;
+    if(diagramType==Note){
+        myRadius=10.;
+    }
 }
 
 DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
