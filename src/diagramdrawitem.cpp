@@ -519,8 +519,13 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
         // currently only center
         for(auto *i:childItems()){
             DiagramTextItem *textItem=qgraphicsitem_cast<DiagramTextItem*>(i);
-            if(textItem && !textItem->touched()){
-                textItem->setCorrectedPos(boundingRect().center());
+            if(textItem && !textItem->touched() ){
+                if(textItem->getFixedGeometry()){
+                    // update text width for fixed text scenarios (e.g. Note)
+                    textItem->setTextWidth(myPos2.x());
+                }else{
+                    textItem->setCorrectedPos(boundingRect().center());
+                }
             }
         }
         e->setAccepted(true);
