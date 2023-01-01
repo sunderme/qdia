@@ -216,7 +216,7 @@ void MainWindow::pointerGroupClicked(QAbstractButton *button)
  * \brief set horizontal text Align
  * \param button
  */
-void MainWindow::horzAlignGroupClicked(QAbstractButton *button)
+void MainWindow::horzAlignGroupClicked(QAbstractButton *)
 {
     int id=horzAlignGroup->checkedId();
     int align=static_cast<int>(m_scene->textAlignment());
