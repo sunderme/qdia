@@ -82,6 +82,9 @@ public:
     void setTouched(bool state=true);
     bool touched() const;
 
+    void setFixedGeometry(bool state=true);
+    bool getFixedGeometry() const;
+
     int type() const override { return Type; }
 
 public slots:
@@ -105,6 +108,7 @@ private:
     Qt::Alignment m_alignment;
     bool m_updateGeometry;
     bool m_touched;
+    bool m_fixedGeometry=false;
 };
 
 #endif // DIAGRAMTEXTITEM_H

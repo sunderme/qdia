@@ -207,6 +207,23 @@ bool DiagramTextItem::touched() const
     return m_touched;
 }
 /*!
+ * \brief set fixed geometry
+ * Keeps item from changing position/geometry when changing alignment (for Note)
+ * \param state
+ */
+void DiagramTextItem::setFixedGeometry(bool state)
+{
+    m_fixedGeometry=state;
+}
+/*!
+ * \brief get fixed geometry state
+ * \return
+ */
+bool DiagramTextItem::getFixedGeometry() const
+{
+    return m_fixedGeometry;
+}
+/*!
  * \brief copy from this item
  * \return
  */
@@ -286,7 +303,7 @@ void DiagramTextItem::updateGeometry(int, int, int)
  */
 void DiagramTextItem::updateGeometry()
 {
-    if(m_updateGeometry) return;
+    if(m_updateGeometry || m_fixedGeometry) return;
     m_updateGeometry=true;
     setTextWidth(-1);
     qreal w=document()->idealWidth();

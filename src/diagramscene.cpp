@@ -903,8 +903,15 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 }else{
                     // draw item, add text in center
                     textItem = makeTextItem(item);
-                    textItem->setAlignment(Qt::AlignVCenter|Qt::AlignHCenter);
-                    textItem->setCorrectedPos(item->boundingRect().center());
+                    DiagramDrawItem *drawItem=dynamic_cast<DiagramDrawItem *>(item);
+                    if(drawItem && drawItem->diagramType()==DiagramDrawItem::Note){
+                        textItem->setFixedGeometry();
+                        QPointF pos2=drawItem->getDimension();
+                        textItem->setTextWidth(pos2.x());
+                    }else{
+                        textItem->setAlignment(Qt::AlignVCenter|Qt::AlignHCenter);
+                        textItem->setCorrectedPos(item->boundingRect().center());
+                    }
 
                     emit textInserted(textItem);
                 }
