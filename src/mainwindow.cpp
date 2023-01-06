@@ -2112,7 +2112,6 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
- * text notes
  * fix flip/rotate when moving/dragging several elements
  * fix path click on detection
  * merge path/arc/spline ?

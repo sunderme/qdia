@@ -3,6 +3,9 @@ on:
   - push
   - pull_request
 
+env:
+  OSX_QT_VERSION: 6.4.2
+
 jobs:
   build-win:
     name: win build (msys2)
@@ -147,21 +150,21 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        wget https://github.com/sunderme/homebrew-qt6/releases/download/6.4.1/QtBase-6.4.1-Darwin.tar.xz
-        sudo tar xvf ./QtBase-6.4.1-Darwin.tar.xz -C /usr/local
-        rm QtBase-6.4.1-Darwin.tar.xz
-        wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.1/QtSvg-6.4.1-Darwin.tar.xz
-        sudo tar xvf ./QtSvg-6.4.1-Darwin.tar.xz -C /usr/local/QtBase-6.4.1-Darwin --strip-components=1
-        rm QtSvg-6.4.1-Darwin.tar.xz
-        wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.1/QtTools-6.4.1-Darwin.tar.xz
-        sudo tar xvf ./QtTools-6.4.1-Darwin.tar.xz -C /usr/local/QtBase-6.4.1-Darwin --strip-components=1
-        rm QtTools-6.4.1-Darwin.tar.xz
+        wget https://github.com/sunderme/homebrew-qt6/releases/download/${{ env.OSX_QT_VERSION }}/QtBase-${{ env.OSX_QT_VERSION }}-Darwin.tar.xz
+        sudo tar xvf ./QtBase-${{ env.OSX_QT_VERSION }}-Darwin.tar.xz -C /usr/local
+        rm QtBase-${{ env.OSX_QT_VERSION }}-Darwin.tar.xz
+        wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/${{ env.OSX_QT_VERSION }}/QtSvg-${{ env.OSX_QT_VERSION }}-Darwin.tar.xz
+        sudo tar xvf ./QtSvg-${{ env.OSX_QT_VERSION }}-Darwin.tar.xz -C /usr/local/QtBase-${{ env.OSX_QT_VERSION }}-Darwin --strip-components=1
+        rm QtSvg-${{ env.OSX_QT_VERSION }}-Darwin.tar.xz
+        wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/${{ env.OSX_QT_VERSION }}/QtTools-${{ env.OSX_QT_VERSION }}-Darwin.tar.xz
+        sudo tar xvf ./QtTools-${{ env.OSX_QT_VERSION }}-Darwin.tar.xz -C /usr/local/QtBase-${{ env.OSX_QT_VERSION }}-Darwin --strip-components=1
+        rm QtTools-${{ env.OSX_QT_VERSION }}-Darwin.tar.xz
         
     - name: Configure
       run: |
         mkdir build
         cd build
-        /usr/local/QtBase-6.4.1-Darwin/bin/qt-cmake ..
+        /usr/local/QtBase-${{ env.OSX_QT_VERSION }}-Darwin/bin/qt-cmake ..
 
     - name: Release translation
       run: cmake --build build --target qdia_lrelease
@@ -178,7 +181,7 @@ jobs:
       id: package
       run: |
         cd build
-        /usr/local/QtBase-6.4.1-Darwin/bin/macdeployqt qdia.app -dmg
+        /usr/local/QtBase-${{ env.OSX_QT_VERSION }}-Darwin/bin/macdeployqt qdia.app -dmg
         VERSION_NAME=`git describe`
         cp qdia.dmg qdia-osx-${VERSION_NAME}.dmg
         echo "VERSION_NAME=${VERSION_NAME}">> $GITHUB_OUTPUT
