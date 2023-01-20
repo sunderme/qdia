@@ -1,5 +1,6 @@
 {
   "name": "resistor",
+  "dontFill":true,
   "elements":[
     {"type":"line","x0":0,"y0":-40,"x1":0,"y1":-24},
     {"type":"polygon",

@@ -29,6 +29,7 @@ protected:
     struct Path {
         QPainterPath path;
         bool filled=false;
+        bool dontFill=false;
         QTransform t;
     };
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
@@ -38,7 +39,6 @@ protected:
 
     QString mFileName;
     QString mName;
-    bool mFilled;
     QList<Path> lstPaths;
 
     QList<Path> importPathFromFile(const QString &fn);

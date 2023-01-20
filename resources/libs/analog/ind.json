@@ -1,5 +1,6 @@
 {
   "name": "ind",
+  "dontFill":true,
   "elements":[
     {"type":"line","x0":0,"y0":-40,"x1":0,"y1":-22},
     {"type":"cubic","x0":0,"y0":-21,"x1":0,"y1":-9,"cx0":10,"cy0":-19,"cx1":10,"cy1":-11},

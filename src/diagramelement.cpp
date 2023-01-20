@@ -7,7 +7,7 @@
 #include <QJsonArray>
 
 
-DiagramElement::DiagramElement(const QString fileName, QMenu *contextMenu, QGraphicsItem *parent): DiagramItem(contextMenu,parent),mFilled(false)
+DiagramElement::DiagramElement(const QString fileName, QMenu *contextMenu, QGraphicsItem *parent): DiagramItem(contextMenu,parent)
 {
     mFileName=fileName;
     lstPaths=importPathFromFile(mFileName);
@@ -29,7 +29,6 @@ DiagramElement::DiagramElement(const DiagramElement& diagram)
 {
     mFileName=diagram.mFileName;
     mName=diagram.mName;
-    mFilled=diagram.mFilled;
     lstPaths=importPathFromFile(mFileName);
     if(!lstPaths.isEmpty()){
         QPainterPath p;
@@ -75,9 +74,6 @@ QPixmap DiagramElement::image() const
 
     QPainter painter(&pixmap);
     painter.setPen(QPen(Qt::black, 1));
-    if(mFilled){
-        painter.setBrush(Qt::black);
-    }
     painter.translate(center);
     painter.scale(scale,scale);
     foreach(Path lPath,lstPaths){
@@ -101,6 +97,9 @@ void DiagramElement::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
         painter->save();
         if(lPath.filled){
             painter->setBrush(pen().color());
+        }
+        if(lPath.dontFill){
+            painter->setBrush(Qt::NoBrush);
         }
         painter->setTransform(lPath.t,true);
         painter->drawPath(lPath.path);
@@ -172,6 +171,7 @@ QList<DiagramElement::Path> DiagramElement::createPainterPathFromJSON(QJsonObjec
 {
     QString elementName=json["name"].toString();
     bool filled=json["filled"].toBool();
+    bool dontFill=json["dontFill"].toBool();
     QList<DiagramElement::Path> result;
     QPainterPath path;
     QJsonArray array=json["elements"].toArray();
@@ -326,6 +326,7 @@ QList<DiagramElement::Path> DiagramElement::createPainterPathFromJSON(QJsonObjec
     Path p;
     p.path=path;
     p.filled=filled;
+    p.dontFill=dontFill;
     result.prepend(p);
     mName=elementName;
     return result;
