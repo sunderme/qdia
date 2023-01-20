@@ -1598,9 +1598,10 @@ void MainWindow::exportImage()
     QFileDialog::Options options;
     QString selectedFilter;
     QString path=m_lastPath.isEmpty() ? "" : m_lastPath+QDir::separator();
+    QString baseName=m_fileName.isEmpty() ? "file" : QFileInfo(m_fileName).baseName();
     QString fileName = QFileDialog::getSaveFileName(this,
             tr("Export Diagram to ..."),
-            path+"file.png",
+            path+baseName+".png",
             tr("Png (*.png);;Jpg (*.jpg);;SVG (*.svg);;Pdf (*.pdf);;Postscript (*.ps)"),
             &selectedFilter,
             options);
