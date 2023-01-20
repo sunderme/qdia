@@ -67,8 +67,10 @@ DiagramPathItem::DiagramPathItem(const DiagramPathItem& diagram)
     myPoints = diagram.myPoints;
 
     len = diagram.len;
+    breite = diagram.breite;
 
-    setPath(diagram.path());
+    //setPath(diagram.path());
+    createPath();
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setAcceptHoverEvents(true);

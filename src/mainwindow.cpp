@@ -2112,6 +2112,7 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
+ * user elemts -> order ?
  * fix flip/rotate when moving/dragging several elements
  * fix path click on detection
  * merge path/arc/spline ?
