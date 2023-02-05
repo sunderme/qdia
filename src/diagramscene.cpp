@@ -277,7 +277,13 @@ DiagramItem *DiagramScene::load_userElement(const QString &fn)
         if(i==0){
             offset=item->pos();
         }
-        item->setPos(item->pos()-offset);
+        if(item->type()==DiagramTextItem::Type){
+            DiagramTextItem *ti=qgraphicsitem_cast<DiagramTextItem*>(item);
+            QPointF m_offset=ti->getLastOffset();
+            ti->setCorrectedPos(item->pos()-offset-m_offset);
+        }else{
+            item->setPos(item->pos()-offset);
+        }
         item->setFlag(QGraphicsItem::ItemIsSelectable,false);
         item->setFlag(QGraphicsItem::ItemIsMovable,false);
         item->setParentItem(element);
