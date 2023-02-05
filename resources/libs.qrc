@@ -12,7 +12,6 @@
 <file>libs/gates/or.json</file>
 <file>libs/gates/not.json</file>
 <file>libs/gates/dff.json</file>
-<file>libs/gates/or_test.json</file>
 <file>libs/gates/xor.json</file>
 <file>libs/gates/xnor.json</file>
 <file>libs/gates/nand.json</file>
