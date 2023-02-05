@@ -40,6 +40,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     QSettings settings("QDia","QDia");
     m_recentFiles=settings.value("recentFiles").toStringList();
     m_lastPath=settings.value("lastPath").toString();
+    m_lastPathImage=settings.value("lastPathImage").toString();
     QString fontName=settings.value("font").toString();
     int fontSize=settings.value("fontsize").toInt();
     // setup GUI
@@ -137,6 +138,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     settings.setValue("font",fontCombo->currentFont().toString());
     settings.setValue("fontsize",fontSizeCombo->currentText().toInt());
     settings.setValue("lastPath",m_lastPath);
+    settings.setValue("lastPathImage",m_lastPathImage);
     event->accept();
 }
 
@@ -1597,7 +1599,7 @@ void MainWindow::exportImage()
     m_scene->setGridVisible(false);
     QFileDialog::Options options;
     QString selectedFilter;
-    QString path=m_lastPath.isEmpty() ? "" : m_lastPath+QDir::separator();
+    QString path=m_lastPathImage.isEmpty() ? "" : m_lastPathImage+QDir::separator();
     QString baseName=m_fileName.isEmpty() ? "file" : QFileInfo(m_fileName).baseName();
     QString fileName = QFileDialog::getSaveFileName(this,
             tr("Export Diagram to ..."),
@@ -1658,7 +1660,7 @@ void MainWindow::exportImage()
             pixmap.save(fileName);
         }
         QFileInfo fi(fileName);
-        m_lastPath= fi.absolutePath();
+        m_lastPathImage= fi.absolutePath();
 
     }
     m_scene->setCursorVisible(true);

@@ -292,6 +292,7 @@ private:
    QStringList m_recentFiles;
 
    QString m_lastPath;
+   QString m_lastPathImage;
    int m_lastSavedSnapshot = -1;
 };
 
