@@ -53,8 +53,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     m_scene = new DiagramScene(itemMenu, this);
     m_scene->setSceneRect(QRectF(0, 0, 5000, 5000));
     m_scene->setGridVisible(configuration.showGrid);
-    connect(m_scene, &DiagramScene::itemSelected,
-            this, &MainWindow::itemSelected);
+    /*connect(m_scene, &DiagramScene::itemSelected,
+            this, &MainWindow::itemSelected);*/
     connect(m_scene, &DiagramScene::forceCursor,
             this, &MainWindow::moveCursor);
     // activate/deactivate shortcuts when text is edited in scene
