@@ -212,7 +212,12 @@ void MainWindow::pointerGroupClicked(QAbstractButton *button)
     }
     if(pointerTypeGroup->checkedId()!=DiagramScene::MoveItem) m_view->setDragMode(QGraphicsView::NoDrag);
     else m_view->setDragMode(QGraphicsView::RubberBandDrag);
-    m_scene->setMode(DiagramScene::Mode(pointerTypeGroup->checkedId()));
+    int mode=pointerTypeGroup->checkedId();
+    if(mode==DiagramScene::InsertLine){
+        lineArrowButtonTriggered();
+    }else{
+        m_scene->setMode(DiagramScene::Mode(mode));
+    }
 }
 /*!
  * \brief set horizontal text Align
