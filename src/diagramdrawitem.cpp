@@ -48,8 +48,7 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
     myPos2=diagram.myPos2;
     mPainterPath=createPath();
     setPath(mPainterPath);
-    setFlag(QGraphicsItem::ItemIsMovable, true);
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlags(diagram.flags());
     setAcceptHoverEvents(true);
     setPos(diagram.pos());
     myHoverPoint=-1;

@@ -77,8 +77,7 @@ DiagramTextItem::DiagramTextItem(const DiagramTextItem& textItem)
     setDefaultTextColor(textItem.defaultTextColor());
     setPlainText(textItem.toPlainText());
     setTransform(textItem.transform());
-    setFlag(QGraphicsItem::ItemIsMovable);
-    setFlag(QGraphicsItem::ItemIsSelectable);
+    setFlags(textItem.flags());
     setCorrectedPos(textItem.anchorPoint());
     setZValue(textItem.zValue());
 

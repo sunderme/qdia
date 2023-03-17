@@ -84,8 +84,7 @@ DiagramItem::DiagramItem(const DiagramItem& diagram)
 
     mPainterPath = createPath();
     setPath(mPainterPath);
-    setFlag(QGraphicsItem::ItemIsMovable, true);
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlags(diagram.flags());
 }
 
 DiagramItem::DiagramItem(QMenu *contextMenu,

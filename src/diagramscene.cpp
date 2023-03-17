@@ -700,7 +700,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             myDx=point.rx();
             myDy=point.ry();
             // copy
-            //copiedItems=copyItems(myList);
+            copiedItems=copyItems(myList);
+            /*
             foreach(QGraphicsItem* item,myList){
                 insItem=copy(item);
 
@@ -724,7 +725,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
                 //move original to knew position
                 item->setSelected(true);
-            }
+            }*/
             myMode=CopyingItem;
         }
         if(middleButton){

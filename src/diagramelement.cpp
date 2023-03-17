@@ -36,9 +36,7 @@ DiagramElement::DiagramElement(const DiagramElement& diagram)
             p|=lp.path;
         }
         setPath(p);
-        setFlag(QGraphicsItem::ItemIsMovable, true);
-        setFlag(QGraphicsItem::ItemIsSelectable, true);
-        setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+        setFlags(diagram.flags());
         setAcceptHoverEvents(true);
     }
     setTransform(diagram.transform());

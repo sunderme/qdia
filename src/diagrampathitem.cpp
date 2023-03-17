@@ -71,8 +71,7 @@ DiagramPathItem::DiagramPathItem(const DiagramPathItem& diagram)
 
     //setPath(diagram.path());
     createPath();
-    setFlag(QGraphicsItem::ItemIsMovable, true);
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlags(diagram.flags());
     setAcceptHoverEvents(true);
     setPos(diagram.pos());
 
