@@ -2123,6 +2123,7 @@ void MainWindow::linePatternChanged()
 /* TODO
  * change font on empty text box (start of create)
  * user elements -> order ?
+ * 3 point arc ?
  * fix flip/rotate when moving/dragging several elements
  * fix path click on detection
  * merge path/arc/spline ?
