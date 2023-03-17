@@ -298,11 +298,14 @@ DiagramItem *DiagramScene::load_userElement(const QString &fn)
  * \brief copy item from source at the same position
  * \param source
  */
-void DiagramScene::copyItems(QList<QGraphicsItem *> source)
+QList<QGraphicsItem *> DiagramScene::copyItems(QList<QGraphicsItem *> source)
 {
     // place copy of the items and keep the currents items in copyList
+    QList<QGraphicsItem *> copiedItems;
     foreach(QGraphicsItem* item,source){
         QGraphicsItem *insItem=copy(item);
+        if(!insItem) continue;
+        copiedItems.append(item);
         addItem(insItem);
         insItem->setPos(item->pos());
         item->setZValue(maxZ);
@@ -317,6 +320,7 @@ void DiagramScene::copyItems(QList<QGraphicsItem *> source)
             }
         }
     }
+    return copiedItems;
 }
 /*!
  * \brief move items in source by delta
@@ -696,6 +700,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             myDx=point.rx();
             myDy=point.ry();
             // copy
+            //copiedItems=copyItems(myList);
             foreach(QGraphicsItem* item,myList){
                 insItem=copy(item);
 

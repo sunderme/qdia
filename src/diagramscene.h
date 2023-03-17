@@ -179,7 +179,7 @@ protected:
     void enableAllItems(bool enable=true);
     DiagramTextItem *makeTextItem(QGraphicsItem *item);
     DiagramItem *load_userElement(const QString &fn);
-    void copyItems(QList<QGraphicsItem*> source);
+    QList<QGraphicsItem*> copyItems(QList<QGraphicsItem*> source);
     void moveItems(QList<QGraphicsItem*> source,QPointF delta);
 
 
