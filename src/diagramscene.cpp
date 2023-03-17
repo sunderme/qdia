@@ -1057,7 +1057,6 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
             newItem->setFlag(QGraphicsItem::ItemIsMovable, true);
             newItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
             addItem(newItem);
-            newItem->moveBy(p.x(),p.y());
             copied<<newItem;
         }
         QGraphicsItemGroup *ig=createItemGroup(copied);
