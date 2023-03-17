@@ -310,15 +310,6 @@ QList<QGraphicsItem *> DiagramScene::copyItems(QList<QGraphicsItem *> source)
         insItem->setPos(item->pos());
         item->setZValue(maxZ);
         maxZ+=0.1;
-        //check for children
-        if(item->type()!=QGraphicsItemGroup::Type && item->childItems().count()>0){
-            foreach(QGraphicsItem* item_l1,item->childItems()){
-                QGraphicsItem* addedItem=copy(item_l1);
-                addItem(addedItem);
-                addedItem->setParentItem(insItem);
-                addedItem->setPos(item_l1->pos());
-            }
-        }
     }
     return copiedItems;
 }
@@ -1067,6 +1058,14 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
         break;
     default:
         DiagramItem* newItem=dynamic_cast<DiagramItem*>(item)->copy();
+        if(item->type()!=QGraphicsItemGroup::Type && item->childItems().count()>0){
+            foreach(QGraphicsItem* item_l1,item->childItems()){
+                QGraphicsItem* addedItem=copy(item_l1);
+                addItem(addedItem);
+                addedItem->setParentItem(newItem);
+                addedItem->setPos(item_l1->pos());
+            }
+        }
         return dynamic_cast<QGraphicsItem*>(newItem);
         break;
     }
