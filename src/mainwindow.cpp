@@ -2127,6 +2127,7 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
+ * fix copy of user elements/ copy of groups!
  * change font on empty text box (start of create)
  * user elements -> order ?
  * fix flip/rotate when moving/dragging several elements

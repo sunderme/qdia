@@ -295,6 +295,47 @@ DiagramItem *DiagramScene::load_userElement(const QString &fn)
     return element;
 }
 /*!
+ * \brief copy item from source at the same position
+ * \param source
+ */
+void DiagramScene::copyItems(QList<QGraphicsItem *> source)
+{
+    // place copy of the items and keep the currents items in copyList
+    foreach(QGraphicsItem* item,source){
+        QGraphicsItem *insItem=copy(item);
+        addItem(insItem);
+        insItem->setPos(item->pos());
+        item->setZValue(maxZ);
+        maxZ+=0.1;
+        //check for children
+        if(item->type()!=QGraphicsItemGroup::Type && item->childItems().count()>0){
+            foreach(QGraphicsItem* item_l1,item->childItems()){
+                QGraphicsItem* addedItem=copy(item_l1);
+                addItem(addedItem);
+                addedItem->setParentItem(insItem);
+                addedItem->setPos(item_l1->pos());
+            }
+        }
+    }
+}
+/*!
+ * \brief move items in source by delta
+ * Handle grouped elements correctly
+ * \param source
+ * \param delta
+ */
+void DiagramScene::moveItems(QList<QGraphicsItem *> source, QPointF delta)
+{
+    foreach(QGraphicsItem* item,source){
+        if(item->parentItem()!=0){
+            if(!item->parentItem()->isSelected()) item->moveBy(delta.x(),delta.y());
+        }
+        else {
+            item->moveBy(delta.x(),delta.y());
+        }
+    }
+}
+/*!
  * \brief filter selected child items
  * If in the list parent and child are selected, child is removed from list to avoid
  * the application of a transform twice
@@ -614,14 +655,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         if(!myMoveItems.isEmpty()){
             qreal dx=point.rx()-myDx;
             qreal dy=point.ry()-myDy;
-            foreach(QGraphicsItem* item,myMoveItems){
-                if(item->parentItem()!=0){
-                    if(!item->parentItem()->isSelected()) item->moveBy(-dx,-dy);
-                }
-                else {
-                    item->moveBy(dx,dy);
-                }
-            }
+            moveItems(myMoveItems,QPointF(dx,dy));
             myMoveItems.clear();
             myMode=MoveItem;
             takeSnapshot();
@@ -698,30 +732,9 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             QPointF point=onGrid(mouseEvent->scenePos());
             qreal dx=point.rx()-myDx;
             qreal dy=point.ry()-myDy;
-            foreach(QGraphicsItem* item,copiedItems){
-                if(item->parentItem()){
-                    if(!item->parentItem()->isSelected()) item->moveBy(dx,dy);
-                }else{
-                    item->moveBy(dx,dy);
-                }
-            }
+            moveItems(copiedItems,QPointF(dx,dy));
             // place copy of the items and keep the currents items in copyList
-            foreach(QGraphicsItem* item,copiedItems){
-                QGraphicsItem *insItem=copy(item);
-                addItem(insItem);
-                insItem->setPos(item->pos());
-                item->setZValue(maxZ);
-                maxZ+=0.1;
-                //check for children
-                if(item->type()!=QGraphicsItemGroup::Type && item->childItems().count()>0){
-                    foreach(QGraphicsItem* item_l1,item->childItems()){
-                        QGraphicsItem* addedItem=copy(item_l1);
-                        addItem(addedItem);
-                        addedItem->setParentItem(insItem);
-                        addedItem->setPos(item_l1->pos());
-                    }
-                }
-            }
+            copyItems(copiedItems);
             takeSnapshot();
         }
         if(middleButton){
@@ -766,14 +779,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         QPointF point=onGrid(mouseEvent->scenePos());
         qreal dx=point.rx()-myDx;
         qreal dy=point.ry()-myDy;
-        foreach(QGraphicsItem* item,myMoveItems){
-            if(item->parentItem()!=0){
-                if(!item->parentItem()->isSelected()) item->moveBy(dx,dy);
-            }
-            else {
-                item->moveBy(dx,dy);
-            }
-        }
+        moveItems(myMoveItems,QPointF(dx,dy));
         myDx=point.rx();
         myDy=point.ry();
         break;
@@ -829,14 +835,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             QPointF point=onGrid(mouseEvent->scenePos());
             qreal dx=point.rx()-myDx;
             qreal dy=point.ry()-myDy;
-            foreach(QGraphicsItem* item,copiedItems){
-                if(item->parentItem()!=0){
-                    if(!item->parentItem()->isSelected()) item->moveBy(dx,dy);
-                }
-                else {
-                    item->moveBy(dx,dy);
-                }
-            }
+            moveItems(copiedItems,QPointF(dx,dy));
             myDx=point.rx();
             myDy=point.ry();
         }
