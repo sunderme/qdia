@@ -1373,9 +1373,15 @@ void MainWindow::groupItems()
     if (m_scene->selectedItems().isEmpty())
         return;
 
-    QGraphicsItemGroup *test = m_scene->createItemGroup(m_scene->selectedItems());
-    test->setFlag(QGraphicsItem::ItemIsMovable, true);
-    test->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    QGraphicsItemGroup *groupItem=new QGraphicsItemGroup();
+    QRectF boundBox=m_scene->getTotalBoundary(m_scene->selectedItems());
+    groupItem->setPos(boundBox.bottomLeft());
+    for(QGraphicsItem *item:m_scene->selectedItems()){
+        groupItem->addToGroup(item);
+    }
+    m_scene->addItem(groupItem);
+    groupItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+    groupItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
 
 void MainWindow::ungroupItems()
@@ -2055,28 +2061,16 @@ void MainWindow::transformItems(const QTransform transform, QList<QGraphicsItem 
 {
     foreach( QGraphicsItem *item, items){
         if(!item) continue;
-        if(item->type()!=QGraphicsItemGroup::Type){
-            QTransform trans=item->transform();
-            QPointF shift=item->pos()-anchorPoint;
-            item->setTransform(trans*QTransform(1,0,0,1,shift.x(),shift.y())*transform*QTransform(1,0,0,1,-shift.x(),-shift.y()),false);
-            // correct anchor point shift
-            QTransform transform=item->transform();
-            qreal mx=item->pos().x()+transform.dx();
-            qreal my=item->pos().y()+transform.dy();
-            transform*=QTransform::fromTranslate(-transform.dx(),-transform.dy());
-            item->setPos(mx,my);
-            item->setTransform(transform);
-        }else{
-            QList<QGraphicsItem*> lst=item->childItems();
-            QGraphicsItemGroup *ig=qgraphicsitem_cast<QGraphicsItemGroup *>(item);
-            for(auto *i:lst){
-                ig->removeFromGroup(i);
-            }
-            transformItems(transform,lst,anchorPoint);
-            for(auto *i:lst){
-                ig->addToGroup(i);
-            }
-        }
+        QTransform trans=item->transform();
+        QPointF shift=item->pos()-anchorPoint;
+        item->setTransform(trans*QTransform(1,0,0,1,shift.x(),shift.y())*transform*QTransform(1,0,0,1,-shift.x(),-shift.y()),false);
+        // correct anchor point shift
+        QTransform transform=item->transform();
+        qreal mx=item->pos().x()+transform.dx();
+        qreal my=item->pos().y()+transform.dy();
+        transform*=QTransform::fromTranslate(-transform.dx(),-transform.dy());
+        item->setPos(mx,my);
+        item->setTransform(transform);
     }
 }
 
@@ -2127,7 +2121,6 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
- * fix rotate/flip of copied of groups
  * change font on empty text box (start of create)
  * user elements -> order ?
  * fix flip/rotate when moving/dragging several elements

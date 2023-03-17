@@ -66,7 +66,7 @@ public:
     void setPos2(qreal x,qreal y);
     void setPos2(QPointF pos);
     QPointF getPos2() const
-        { return mapToScene(myPos2); }
+        { return mapToParent(myPos2); }
 
     void setDimension(QPointF newPos);
     QPointF getDimension();
