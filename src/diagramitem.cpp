@@ -82,7 +82,7 @@ DiagramItem::DiagramItem(const DiagramItem& diagram)
     myDiagramType = diagram.myDiagramType;
     myContextMenu = diagram.myContextMenu;
 
-    mPainterPath = createPath();
+    mPainterPath = diagram.mPainterPath;
     setPath(mPainterPath);
     setFlags(diagram.flags());
 }
