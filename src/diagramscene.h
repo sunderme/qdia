@@ -181,6 +181,7 @@ protected:
     DiagramItem *load_userElement(const QString &fn);
     QList<QGraphicsItem*> copyItems(QList<QGraphicsItem*> source);
     void moveItems(QList<QGraphicsItem*> source,QPointF delta);
+    qreal getMinZ(QList<QGraphicsItem*> source);
 
 
 private:
@@ -218,7 +219,7 @@ private:
     bool myGridVisible;
     int myGridScale;
     QList<QGraphicsItem*> myMoveItems;
-    qreal maxZ;
+    qreal m_maxZ;
     QList<QJsonDocument> m_snapshots;
     int m_undoPos;
 };

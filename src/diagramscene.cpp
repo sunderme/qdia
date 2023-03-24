@@ -75,7 +75,7 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     m_rubberbandItem = nullptr;
     myDx=0.0;
     myDy=0.0;
-    maxZ=0;
+    m_maxZ=0;
     myItemColor = Qt::white;
     myTextColor = Qt::black;
     myLineColor = Qt::black;
@@ -302,15 +302,20 @@ QList<QGraphicsItem *> DiagramScene::copyItems(QList<QGraphicsItem *> source)
 {
     // place copy of the items and keep the currents items in copyList
     QList<QGraphicsItem *> copiedItems;
+    qreal minZ=getMinZ(source);
+    qreal mz=minZ;
     foreach(QGraphicsItem* item,source){
         QGraphicsItem *insItem=copy(item);
         if(!insItem) continue;
         copiedItems.append(item);
         addItem(insItem);
         insItem->setPos(item->pos());
-        item->setZValue(maxZ);
-        maxZ+=0.1;
+        insItem->setZValue(item->zValue());
+        qreal z=item->zValue()-minZ+m_maxZ;
+        item->setZValue(z);
+        if(mz<z) mz=z;
     }
+    m_maxZ=mz+0.1;
     return copiedItems;
 }
 /*!
@@ -329,6 +334,24 @@ void DiagramScene::moveItems(QList<QGraphicsItem *> source, QPointF delta)
             item->moveBy(delta.x(),delta.y());
         }
     }
+}
+/*!
+ * \brief get minimal z in list of graphicsitems
+ * \param source list of graphicsitems
+ * \return
+ */
+qreal DiagramScene::getMinZ(QList<QGraphicsItem *> source)
+{
+    if(source.isEmpty()){
+        return 0;
+    }
+    qreal result=source.at(0)->zValue();
+    foreach(const QGraphicsItem* item,source){
+        if(item->zValue()<result){
+            result=item->zValue();
+        }
+    }
+    return result;
 }
 /*!
  * \brief filter selected child items
@@ -479,8 +502,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             pen.setWidth(myLineWidth);
             pen.setStyle(myPenStyle);
             insertedItem->setPen(pen);
-            insertedItem->setZValue(maxZ);
-            maxZ+=0.1;
+            insertedItem->setZValue(m_maxZ);
+            m_maxZ+=0.1;
             addItem(insertedItem);
         }
         insertedItem->setPos(onGrid(mouseEvent->scenePos()));
@@ -499,9 +522,9 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             pen.setCapStyle(Qt::RoundCap);
             insertedPathItem->setPen(pen);
             insertedPathItem->setBrush(myLineColor);
-            insertedPathItem->setZValue(maxZ);
+            insertedPathItem->setZValue(m_maxZ);
             insertedPathItem->setRoutingType(myRouting);
-            maxZ+=0.1;
+            m_maxZ+=0.1;
             addItem(insertedPathItem);
             insertedPathItem->setPos(onGrid(mouseEvent->scenePos()));
             insertedPathItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -517,8 +540,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             pen.setCapStyle(Qt::RoundCap);
             insertedSplineItem->setPen(pen);
             //insertedSplineItem->setBrush(myLineColor);
-            insertedSplineItem->setZValue(maxZ);
-            maxZ+=0.1;
+            insertedSplineItem->setZValue(m_maxZ);
+            m_maxZ+=0.1;
             insertedSplineItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
             insertedSplineItem->setEnabled(true);
             insertedSplineItem->setSelected(true);
@@ -565,8 +588,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             pen.setStyle(myPenStyle);
             pen.setCapStyle(Qt::RoundCap);
             insertedDrawItem->setPen(pen);
-            insertedDrawItem->setZValue(maxZ);
-            maxZ+=0.1;
+            insertedDrawItem->setZValue(m_maxZ);
+            m_maxZ+=0.1;
             addItem(insertedDrawItem);
             insertedDrawItem->setPos(onGrid(mouseEvent->scenePos()));
         }
@@ -585,8 +608,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             QPen p(myLineColor);
             p.setCapStyle(Qt::RoundCap);
             insertedItem->setPen(p);
-            insertedItem->setZValue(maxZ);
-            maxZ+=0.1;
+            insertedItem->setZValue(m_maxZ);
+            m_maxZ+=0.1;
             addItem(insertedItem);
         }
         insertedItem->setPos(onGrid(mouseEvent->scenePos()));
@@ -600,10 +623,10 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             QPen p(myLineColor);
             p.setCapStyle(Qt::RoundCap);
             item->setPen(p);
-            item->setZValue(maxZ);
+            item->setZValue(m_maxZ);
             item->setTransform(insertedItem->transform());
             item->setSelected(true);
-            maxZ+=0.1;
+            m_maxZ+=0.1;
             addItem(item);
             insertedItem=item;
         }
@@ -618,8 +641,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             insertedItem = load_userElement(mItemFileName);
             insertedItem->setPen(Qt::NoPen);
             insertedItem->setBrush(Qt::NoBrush);
-            insertedItem->setZValue(maxZ);
-            maxZ+=0.1;
+            insertedItem->setZValue(m_maxZ);
+            m_maxZ+=0.1;
             addItem(insertedItem);
         }
         insertedItem->setPos(onGrid(mouseEvent->scenePos()));
@@ -631,10 +654,10 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             auto *item= load_userElement(mItemFileName);
             insertedItem->setPen(Qt::NoPen);
             insertedItem->setBrush(Qt::NoBrush);
-            item->setZValue(maxZ);
+            item->setZValue(m_maxZ);
             item->setTransform(insertedItem->transform());
             item->setSelected(true);
-            maxZ+=0.1;
+            m_maxZ+=0.1;
             addItem(item);
             insertedItem=item;
         }
@@ -692,31 +715,6 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             myDy=point.ry();
             // copy
             copiedItems=copyItems(myList);
-            /*
-            foreach(QGraphicsItem* item,myList){
-                insItem=copy(item);
-
-                if(!insItem) continue;
-                addItem(insItem);
-                insItem->setZValue(item->zValue());
-                insItem->setPos(item->pos());
-                copiedItems.append(item);
-                // set Z of new item
-                item->setZValue(maxZ);
-                maxZ+=0.1;
-                //check for children but not group
-                if(item->type()!=QGraphicsItemGroup::Type && item->childItems().count()>0){
-                    foreach(QGraphicsItem* item_l1,item->childItems()){
-                        QGraphicsItem* addedItem=copy(item_l1);
-                        addItem(addedItem);
-                        addedItem->setParentItem(insItem);
-                        addedItem->setPos(item_l1->pos());
-                    }
-                }
-
-                //move original to knew position
-                item->setSelected(true);
-            }*/
             myMode=CopyingItem;
         }
         if(middleButton){
@@ -790,8 +788,8 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             pen.setStyle(myPenStyle);
             insertedItem->setPen(pen);
             insertedItem->setSelected(true);
-            insertedItem->setZValue(maxZ);
-            maxZ+=0.1;
+            insertedItem->setZValue(m_maxZ);
+            m_maxZ+=0.1;
             addItem(insertedItem);
         }
         insertedItem->setPos(onGrid(mouseEvent->scenePos()));
@@ -804,8 +802,8 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             p.setCapStyle(Qt::RoundCap);
             insertedItem->setPen(p);
             insertedItem->setSelected(true);
-            insertedItem->setZValue(maxZ);
-            maxZ+=0.1;
+            insertedItem->setZValue(m_maxZ);
+            m_maxZ+=0.1;
             addItem(insertedItem);
         }
         insertedItem->setPos(onGrid(mouseEvent->scenePos()));
@@ -816,8 +814,8 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             insertedItem->setPen(Qt::NoPen);
             insertedItem->setBrush(Qt::NoBrush);
             insertedItem->setSelected(true);
-            insertedItem->setZValue(maxZ);
-            maxZ+=0.1;
+            insertedItem->setZValue(m_maxZ);
+            m_maxZ+=0.1;
             addItem(insertedItem);
         }
         insertedItem->setPos(onGrid(mouseEvent->scenePos()));
@@ -1153,8 +1151,8 @@ void DiagramScene::insertElementDirectly(const QString element)
     QPen p(myLineColor);
     p.setCapStyle(Qt::RoundCap);
     item->setPen(p);
-    item->setZValue(maxZ);
-    maxZ+=0.1;
+    item->setZValue(m_maxZ);
+    m_maxZ+=0.1;
     addItem(item);
     QPointF pos=myCursor.pos();
     item->setPos(onGrid(pos));
@@ -1193,8 +1191,8 @@ void DiagramScene::duplicateItems()
             QGraphicsItem *newItem=copy(item);
             if(!newItem) continue;
             addItem(newItem);
-            newItem->setZValue(maxZ);
-            maxZ+=0.1;
+            newItem->setZValue(m_maxZ);
+            m_maxZ+=0.1;
             // move to side/down
             newItem->moveBy(myGrid,myGrid);
             newItem->setSelected(true);
@@ -1213,8 +1211,8 @@ void DiagramScene::duplicateItems()
 
 void DiagramScene::setMaxZ(qreal z)
 {
-    if(z>=maxZ){
-        maxZ=z+0.1;
+    if(z>=m_maxZ){
+        m_maxZ=z+0.1;
     }
 }
 /*!
@@ -1400,6 +1398,7 @@ void DiagramScene::read_in_json(QJsonDocument doc)
     for(int i=0;i<array.size();++i){
         QJsonObject json=array[i].toObject();
         QGraphicsItem *item=getElementFromJSON(json);
+        if(item->zValue()>m_maxZ) m_maxZ=item->zValue();
         addItem(item);
         if(item->type()==DiagramItem::Type){
             QRectF rect;
