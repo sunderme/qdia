@@ -1,7 +1,9 @@
 <RCC>
 <qresource prefix="/">
+<file>libs/signal/da.json</file>
 <file>libs/signal/limit.json</file>
 <file>libs/signal/add.json</file>
+<file>libs/signal/ad.json</file>
 <file>libs/signal/mult.json</file>
 <file>libs/signal/subtract.json</file>
 <file>libs/signal/div.json</file>

@@ -628,7 +628,9 @@ void MainWindow::createToolBox()
                    "subtract.json",
                    "mult.json",
                    "div.json",
-                   "limit.json"
+                   "limit.json",
+                   "ad.json",
+                   "da.json",
     };
 
     for(int i=0;i<paths.size();++i){
