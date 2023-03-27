@@ -1379,6 +1379,7 @@ void MainWindow::groupItems()
     QRectF boundBox=m_scene->getTotalBoundary(m_scene->selectedItems());
     groupItem->setPos(boundBox.bottomLeft());
     for(QGraphicsItem *item:m_scene->selectedItems()){
+        if(item->parentItem()) continue; // already is part of "group"
         groupItem->addToGroup(item);
     }
     m_scene->addItem(groupItem);
