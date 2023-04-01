@@ -575,7 +575,6 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         textItem->setSelected(true);
         textItem->setFocus();
         emit textInserted(textItem);
-        takeSnapshot();
         mouseEvent->accept();
         return;
         break;
@@ -1220,6 +1219,7 @@ void DiagramScene::setMaxZ(qreal z)
  */
 void DiagramScene::takeSnapshot()
 {
+    qDebug()<<"snapshot";
     auto doc=create_json_save();
     if(!m_snapshots.isEmpty()){
         // check if duplicate
@@ -1232,7 +1232,6 @@ void DiagramScene::takeSnapshot()
         ++m_undoPos;
     }else{
         // append snapshot
-
         m_snapshots<<doc;
         ++m_undoPos;
     }
