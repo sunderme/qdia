@@ -157,6 +157,18 @@ QPainterPath DiagramDrawItem::createPath()
         path.arcTo(0,0,dx,dy,startAngle,angle);
         break;
     }
+    case MUX:
+    {
+        qreal y=dx/2;
+        if(y>dy/2){
+            y=dy/2; // too low, can't make a mux shape
+        }
+        path.moveTo(0, 0);
+        path.lineTo(dx,y);
+        path.lineTo(dx,dy-y);
+        path.lineTo(0,dy);
+        path.lineTo(0,0);
+    }
     default:
         break;
     }

@@ -547,6 +547,7 @@ void MainWindow::createToolBox()
         {tr("Triangle"),DiagramDrawItem::Triangle},
         {tr("DA"),DiagramDrawItem::DA},
         {tr("OTA"),DiagramDrawItem::OTA},
+        {tr("MUX"),DiagramDrawItem::MUX},
         {tr("Note"),DiagramDrawItem::Note}
     };
     int row=0;
@@ -2124,11 +2125,11 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
+ ** MUX symbol (Form)
+ ** click on line better, second chose next /* fix path click on detection
  * change font on empty text box (start of create)
  * user elements -> order ?
- * 3 point arc ?
  * fix flip/rotate when moving/dragging several elements
- * fix path click on detection
  * manage user generated elements
  * tap style
  * scale elements ?
