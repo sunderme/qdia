@@ -2125,7 +2125,6 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
- ** MUX symbol (Form)
  ** click on line better, second chose next /* fix path click on detection
  * change font on empty text box (start of create)
  * user elements -> order ?

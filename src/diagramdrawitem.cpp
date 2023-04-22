@@ -386,7 +386,7 @@ void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
                  painter->setBrush(QBrush(Qt::red));
              }
              // Rect around valid point
-             painter->drawRect(QRectF(point-QPointF(2,2),point+QPointF(2,2)));
+             painter->drawRect(QRectF(point-QPointF(myHandlerWidth,myHandlerWidth),point+QPointF(myHandlerWidth,myHandlerWidth)));
              if(i==myHoverPoint){
                  painter->setBrush(selBrush);
              }
@@ -457,7 +457,7 @@ QPainterPath DiagramDrawItem::shape() const {
  */
 QRectF DiagramDrawItem::boundingRect() const
 {
-    qreal extra = isSelected() ? pen().width()+20 / 2.0 + myHandlerWidth : 0.0;
+    qreal extra = pen().width() / 2.0 + myHandlerWidth;
 
     QRectF newRect = innerBoundingRect().adjusted(-extra, -extra, extra, extra);
 
