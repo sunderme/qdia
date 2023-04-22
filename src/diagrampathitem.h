@@ -63,6 +63,7 @@ protected:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *e) override;
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *e) override;
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *e) override;
+
     QPointF onGrid(QPointF pos);
 
 private:

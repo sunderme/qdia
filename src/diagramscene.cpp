@@ -1219,7 +1219,6 @@ void DiagramScene::setMaxZ(qreal z)
  */
 void DiagramScene::takeSnapshot()
 {
-    qDebug()<<"snapshot";
     auto doc=create_json_save();
     if(!m_snapshots.isEmpty()){
         // check if duplicate
