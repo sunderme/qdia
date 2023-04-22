@@ -135,24 +135,23 @@ QPainterPath DiagramPathItem::getPath()
  * \param pt
  * \return line section as QLineF
  */
-QLineF DiagramPathItem::findLineSection(QPointF pt)
+QLineF DiagramPathItem::findLineSection(QPointF pt) const
 {
     QLineF line;
-    QPointF testpt=pt-pos();
+    QLineF resultLine;
+    qreal minDist=-1;
     for(int i=1;i<myPoints.count();++i){
         line.setPoints(myPoints[i-1],myPoints[i]);
-        QLineF normal=line.normalVector();
-        QPointF pt_normal=normal.p2()-normal.p1();
-        qreal verticaldistanceSq=QPointF::dotProduct(testpt-normal.p1(),pt_normal);
-        qreal horizontaldistanceSq=QPointF::dotProduct(testpt-line.p1(),line.p2()-line.p1());
-        if(horizontaldistanceSq>=0 && horizontaldistanceSq<=std::pow(line.length(),2)){
-            if(verticaldistanceSq/normal.length()<3){
-                break;
+        qreal md=minimalDistance(line,pt);
+        if(minDist<0 || md<minDist){
+            minDist=md;
+            if(md<3){
+                resultLine=line;
             }
         }
 
     }
-    return line;
+    return resultLine;
 }
 
 QPainterPath DiagramPathItem::createArrow(QPointF p1, QPointF p2) const
@@ -446,11 +445,52 @@ void DiagramPathItem::setRoutingType(const routingType newRoutingType)
     createPath();
 }
 
+/*!
+ * \brief tweak collidesWithPath to only intersect on actual path and no area in between
+ * \param path
+ * \param mode
+ * \return
+ */
+bool DiagramPathItem::collidesWithPath(const QPainterPath &path, Qt::ItemSelectionMode mode) const
+{
+    bool result=false;
+    for(int i=1;i<myPoints.length();++i){
+            QPainterPath testPath;
+            testPath.moveTo(myPoints[i-1]);
+            testPath.lineTo(myPoints[i]);
+            result=testPath.intersects(path);
+            if(result) break;
+    }
+    return result;
+}
+
 QPointF DiagramPathItem::onGrid(QPointF pos)
 {
     DiagramScene* myScene = dynamic_cast<DiagramScene*>(scene());
     QPointF result = myScene->onGrid(pos);
     return result;
+}
+/*!
+ * \brief find the minimal distance between a point and a line
+ * \param line
+ * \param pt
+ * \return minimal distance
+ */
+qreal DiagramPathItem::minimalDistance(QLineF &line, QPointF &pt) const
+{
+    QLineF testLine=QLineF(QPointF(0,0),pt-line.p1());
+    qreal distX=QPointF::dotProduct(line.p2()-line.p1(),testLine.p2())/line.length();
+    qreal distY=0;
+    if(distX<0){
+        distY=QLineF(pt,line.p1()).length();
+    }else{
+        if(distX>line.length()){
+            distY=QLineF(pt,line.p2()).length();
+        }else{
+            distY=sqrt(testLine.length()*testLine.length()-distX*distX);
+        }
+    }
+    return distY;
 }
 
 void DiagramPathItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {

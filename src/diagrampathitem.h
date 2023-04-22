@@ -36,7 +36,7 @@ public:
     QPainterPath getPath();
     QVector<QPointF> getPoints()
         { return myPoints; }
-    QLineF findLineSection(QPointF pt);
+    QLineF findLineSection(QPointF pt) const;
 
     int type() const  override
         { return Type;}
@@ -48,6 +48,7 @@ public:
     routingType getRoutingType(){
         return myRoutingType;
     }
+    virtual bool collidesWithPath(const QPainterPath &path, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape) const override;
 
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
@@ -67,6 +68,7 @@ protected:
     QPointF onGrid(QPointF pos);
 
 private:
+    qreal minimalDistance(QLineF &line,QPointF &pt) const;
     DiagramType myDiagramType;
     routingType myRoutingType;
     QMenu *myContextMenu;
