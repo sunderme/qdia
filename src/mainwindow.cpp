@@ -1889,6 +1889,9 @@ void MainWindow::fileOpen()
         m_recentFiles.prepend(fileName);
         populateRecentFiles();
         QFileInfo fi(fileName);
+        if(m_lastPath!=fi.absolutePath()){
+            m_lastPathImage=m_lastPath; // assume to be exported in same folder
+        }
         m_lastPath= fi.absolutePath();
     }
 }
@@ -2126,6 +2129,7 @@ void MainWindow::linePatternChanged()
 
 /* TODO
  ** click on line better, second chose next /* fix path click on detection
+ * export wider to entail wider lines ?
  * change font on empty text box (start of create)
  * user elements -> order ?
  * fix flip/rotate when moving/dragging several elements
