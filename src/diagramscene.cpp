@@ -1033,8 +1033,19 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
     }
         break;
     case DiagramPathItem::Type:
-        return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramPathItem*>(item)->copy());
+    {
+        DiagramPathItem* newItem=qgraphicsitem_cast<DiagramPathItem*>(item)->copy();
+        if(item->childItems().count()>0){
+            foreach(QGraphicsItem* item_l1,item->childItems()){
+                QGraphicsItem* addedItem=copy(item_l1);
+                addItem(addedItem);
+                addedItem->setParentItem(newItem);
+                addedItem->setPos(item_l1->pos());
+            }
+        }
+        return qgraphicsitem_cast<QGraphicsItem*>(newItem);
         break;
+    }
     case DiagramSplineItem::Type:
         return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramSplineItem*>(item)->copy());
         break;
