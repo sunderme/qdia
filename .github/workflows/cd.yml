@@ -172,11 +172,6 @@ jobs:
     - name: Build
       run: cmake --build build
 
-    - name: Workarounds
-      run: |
-        mkdir -p texstudio.app/Contents/Frameworks
-        cp /usr/local/lib/libbrotlicommon.1.dylib texstudio.app/Contents/Frameworks
-
     - name: Package
       id: package
       run: |
