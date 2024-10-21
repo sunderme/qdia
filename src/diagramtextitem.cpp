@@ -101,7 +101,9 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
     QColor color;
     color.setNamedColor(json["color"].toString());
     setDefaultTextColor(color);
-    setFont(QFont(json["font"].toString()));
+    const QString fontString=json["font"].toString();
+    setFont(QFont(fontString));
+
     QString text=json["text"].toString();
     if(text.startsWith("<!")){
         setHtml(text); // to keep compatibility, prefer plaintext from now
@@ -111,6 +113,7 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
     m_alignment=static_cast<Qt::Alignment>(json["alignment"].toInt());
     setCorrectedPos(p);
     setZValue(json["z"].toDouble());
+
 
     qreal m11=json["m11"].toDouble();
     qreal m12=json["m12"].toDouble();

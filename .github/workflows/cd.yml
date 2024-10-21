@@ -78,7 +78,6 @@ jobs:
 
   build-linux-release:
     name: linux appimage
-    if: False
     if: github.event_name == 'push'
     runs-on: ubuntu-20.04
     steps:
