@@ -4,7 +4,7 @@ on:
   - pull_request
 
 env:
-  OSX_QT_VERSION: 6.4.3
+  OSX_QT_VERSION: 6.8.0
 
 jobs:
   build-win:
@@ -78,6 +78,7 @@ jobs:
 
   build-linux-release:
     name: linux appimage
+    if: False
     if: github.event_name == 'push'
     runs-on: ubuntu-20.04
     steps:
