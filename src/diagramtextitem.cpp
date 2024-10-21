@@ -240,7 +240,6 @@ void DiagramTextItem::write(QJsonObject &json)
     const QPointF &p=m_anchorPoint;
     json["x"]=p.x();
     json["y"]=p.y();
-    qDebug()<<"x/y"<<pos()<<scenePos()<<p;
     json["z"]=zValue();
     json["type"]=type();
     json["text"]=toPlainText();
