@@ -75,6 +75,7 @@ public:
     Qt::Alignment alignment() const;
 
     void setCorrectedPos(QPointF pt);
+    void setAnchorPoint(QPointF pt);
     QPointF anchorPoint() const;
     QPointF calcOffset() const;
     QPointF getLastOffset() const;

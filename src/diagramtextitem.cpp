@@ -237,9 +237,10 @@ DiagramTextItem* DiagramTextItem::copy()
  */
 void DiagramTextItem::write(QJsonObject &json)
 {
-    QPointF p=m_anchorPoint;
+    const QPointF &p=m_anchorPoint;
     json["x"]=p.x();
     json["y"]=p.y();
+    qDebug()<<"x/y"<<pos()<<scenePos()<<p;
     json["z"]=zValue();
     json["type"]=type();
     json["text"]=toPlainText();
@@ -281,6 +282,14 @@ void DiagramTextItem::setCorrectedPos(QPointF pt)
     m_anchorPoint=pt;
     m_offset=calcOffset();
     setPos(pt+m_offset);
+}
+/*!
+ * \brief set anchor point
+ * \param pt
+ */
+void DiagramTextItem::setAnchorPoint(QPointF pt)
+{
+    m_anchorPoint=pt;
 }
 /*!
  * \brief return anchor point

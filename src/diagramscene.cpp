@@ -331,6 +331,10 @@ void DiagramScene::moveItems(QList<QGraphicsItem *> source, QPointF delta)
             if(!item->parentItem()->isSelected()) item->moveBy(delta.x(),delta.y());
         }
         else {
+            if(item->type()==DiagramTextItem::Type){
+                auto *textItem=qgraphicsitem_cast<DiagramTextItem*>(item);
+                textItem->setAnchorPoint(textItem->anchorPoint()+delta);
+            }
             item->moveBy(delta.x(),delta.y());
         }
     }
@@ -728,8 +732,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             qreal dy=point.ry()-myDy;
             moveItems(copiedItems,QPointF(dx,dy));
             // place copy of the items and keep the currents items in copyList
-            copyItems(copiedItems);
             takeSnapshot();
+            copyItems(copiedItems);
         }
         if(middleButton){
             // switch toolbar !!
