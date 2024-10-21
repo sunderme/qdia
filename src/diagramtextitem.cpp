@@ -102,7 +102,9 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
     color.setNamedColor(json["color"].toString());
     setDefaultTextColor(color);
     const QString fontString=json["font"].toString();
-    setFont(QFont(fontString));
+    QFont font;
+    font.fromString(fontString);
+    setFont(font);
 
     QString text=json["text"].toString();
     if(text.startsWith("<!")){
