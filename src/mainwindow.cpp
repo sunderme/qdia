@@ -1386,6 +1386,7 @@ void MainWindow::groupItems()
     QRectF boundBox=m_scene->getTotalBoundary(m_scene->selectedItems());
     groupItem->setPos(boundBox.bottomLeft());
     for(QGraphicsItem *item:m_scene->selectedItems()){
+        item->setSelected(false);
         if(item->parentItem()) continue; // already is part of "group"
         groupItem->addToGroup(item);
     }
@@ -2203,7 +2204,6 @@ void MainWindow::linePatternChanged()
  * import xcircuit/drawio?
  *
  * Text selected in box/text after group/ungroup
- * find&replace on text
  * text in line (middle,left, right) ?
  * indicator where placement point is ?
  */
