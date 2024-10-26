@@ -402,8 +402,11 @@ void DiagramScene::findText(const QString text)
 bool DiagramScene::replaceText(const QString find_text, const QString replace_text, bool replaceAll)
 {
     QList<QGraphicsItem *>lst=selectedItems();
-    if(lst.isEmpty()){
+    if(lst.isEmpty()  && replaceAll){
         lst=items();
+    }
+    if(lst.isEmpty()){
+        return false;
     }
     bool success=false;
     foreach(QGraphicsItem* item,lst){
