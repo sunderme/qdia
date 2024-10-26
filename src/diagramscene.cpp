@@ -374,6 +374,55 @@ void DiagramScene::filterSelectedChildItems(QList<QGraphicsItem *> &lst)
         }
     }
 }
+/*!
+ * \brief find element in scene which contains text
+ * \param text
+ */
+void DiagramScene::findText(const QString text)
+{
+    QList<QGraphicsItem *>lst=selectedItems();
+    if(lst.isEmpty()){
+        lst=items();
+    }
+    foreach(QGraphicsItem* item,lst){
+        DiagramTextItem *ti=qgraphicsitem_cast<DiagramTextItem*>(item);
+        if(ti){
+            if(ti->toPlainText().contains(text)){
+                ti->setSelected(true);
+                break;
+            }
+        }
+    }
+}
+/*!
+ * \brief replace find_text in selected find_text items
+ * \param find_text
+ * \return successful replaced at least one text
+ */
+bool DiagramScene::replaceText(const QString find_text, const QString replace_text, bool replaceAll)
+{
+    QList<QGraphicsItem *>lst=selectedItems();
+    if(lst.isEmpty()){
+        lst=items();
+    }
+    bool success=false;
+    foreach(QGraphicsItem* item,lst){
+        DiagramTextItem *ti=qgraphicsitem_cast<DiagramTextItem*>(item);
+        if(ti){
+            QString text=ti->toPlainText();
+            if(text.contains(find_text)){
+                success=true;
+                text.replace(find_text,replace_text);
+                ti->setPlainText(text);
+                ti->setSelected(true);
+                if(!replaceAll){
+                    break;
+                }
+            }
+        }
+    }
+    return success;
+}
 
 void DiagramScene::setItemType(DiagramItem::DiagramType type)
 {
@@ -1269,6 +1318,7 @@ void DiagramScene::restoreSnapshot(int pos)
         m_undoPos=pos;
     }
 }
+
 /*!
  * \brief get current snaphot position
  * Is not last if undo was performed

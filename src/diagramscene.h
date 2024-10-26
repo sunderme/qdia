@@ -141,6 +141,9 @@ public:
     QRectF getTotalBoundary(const QList<QGraphicsItem*> items) const;
     static void filterSelectedChildItems(QList<QGraphicsItem*> &lst);
 
+    void findText(const QString text);
+    bool replaceText(const QString find_text,const QString replace_text,bool replaceAll=false);
+
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);
     void abort(bool keepSelection=false);

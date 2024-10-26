@@ -54,6 +54,8 @@ set(PROJECT_SOURCES
         src/diagramsplineitem.cpp
         src/diagramscene.cpp
         src/diagramscene.h
+        src/searchreplacedialog.cpp
+        src/searchreplacedialog.h
         src/config.h src/config.cpp
         src/ColorPickerActionWidget.cpp src/ColorPickerActionWidget.h
         src/ColorPickerToolButton.cpp src/ColorPickerToolButton.h

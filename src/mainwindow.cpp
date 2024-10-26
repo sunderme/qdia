@@ -788,6 +788,9 @@ void MainWindow::createActions()
     connect(selectAllAction, &QAction::triggered, this, &MainWindow::selectAll);
     listOfActions.append(selectAllAction);
 
+    searchAndReplaceAction = new QAction(tr("&Search and Replace Texts"), this);
+    connect(searchAndReplaceAction, &QAction::triggered, this, &MainWindow::searchAndReplaceTexts);
+
     boldAction = new QAction(tr("Bold"), this);
     boldAction->setCheckable(true);
     QPixmap pixmap(":/images/bold.svg");
@@ -959,11 +962,19 @@ void MainWindow::createMenus()
     fileMenu->addMenu(m_recentFilesMenu);
     fileMenu->addAction(saveAction);
     fileMenu->addAction(saveAsAction);
-    fileMenu->addAction(copyToClipboardAction);
-    fileMenu->addAction(pasteFromClipboardAction);
     fileMenu->addAction(printAction);
     fileMenu->addAction(exportAction);
     fileMenu->addAction(exitAction);
+
+    editMenu = menuBar()->addMenu(tr("&Edit"));
+    editMenu->addAction(undoAction);
+    editMenu->addAction(redoAction);
+    editMenu->addSeparator();
+    editMenu->addAction(selectAllAction);
+    editMenu->addAction(copyToClipboardAction);
+    editMenu->addAction(pasteFromClipboardAction);
+    editMenu->addSeparator();
+    editMenu->addAction(searchAndReplaceAction);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(zoomAction);
@@ -983,9 +994,6 @@ void MainWindow::createMenus()
     createMenu->addAction(textAction);
 
     itemMenu = menuBar()->addMenu(tr("&Item"));
-    itemMenu->addAction(undoAction);
-    itemMenu->addAction(redoAction);
-    itemMenu->addSeparator();
     itemMenu->addAction(deleteAction);
     itemMenu->addAction(copyAction);
     itemMenu->addAction(duplicateAction);
@@ -995,8 +1003,6 @@ void MainWindow::createMenus()
     itemMenu->addAction(sendBackAction);
     itemMenu->addAction(bringUpAction);
     itemMenu->addAction(sendDownAction);
-    itemMenu->addSeparator();
-    itemMenu->addAction(selectAllAction);
     itemMenu->addSeparator();
     itemMenu->addAction(rotateRightAction);
     itemMenu->addAction(rotateLeftAction);
@@ -1613,6 +1619,63 @@ void MainWindow::fileExit()
     }
 }
 
+/*!
+ * \brief in selected text elements, search and replace text
+ */
+void MainWindow::searchAndReplaceTexts()
+{
+    // open a dialog which asks for text to search and text to replace
+    if(searchDialog==nullptr){
+        searchDialog=new SearchReplaceDialog(this);
+    }
+    if(searchDialog){
+        connect(searchDialog,&SearchReplaceDialog::findNext,this,&MainWindow::findNextText);
+        connect(searchDialog,&SearchReplaceDialog::replace,this,&MainWindow::replaceText);
+        connect(searchDialog,&SearchReplaceDialog::replaceAll,this,&MainWindow::replaceAllText);
+        searchDialog->show();
+    }
+}
+
+
+/*!
+ * \brief find next text matching to search string
+ */
+void MainWindow::findNextText()
+{
+    if(!searchDialog) return;
+    const QString searchText=searchDialog->findText();
+    if(searchText.isEmpty()) return;
+    m_scene->findText(searchText);
+}
+
+/*!
+ * \brief find next text matching to search string
+ */
+void MainWindow::replaceText()
+{
+    if(!searchDialog) return;
+    const QString searchText=searchDialog->findText();
+    const QString replaceText=searchDialog->replaceText();
+    const bool success=m_scene->replaceText(searchText,replaceText,false);
+    if(success){
+        m_scene->takeSnapshot();
+    }
+}
+
+/*!
+ * \brief replace text in all selected
+ */
+void MainWindow::replaceAllText()
+{
+    if(!searchDialog) return;
+    const QString searchText=searchDialog->findText();
+    const QString replaceText=searchDialog->replaceText();
+    const bool success=m_scene->replaceText(searchText,replaceText,true);
+    if(success){
+        m_scene->takeSnapshot();
+    }
+}
+
 void MainWindow::exportImage()
 {
     m_scene->setCursorVisible(false);
@@ -1909,6 +1972,7 @@ bool MainWindow::openFile(QString fileName)
     abort(); // force defined state
     m_scene->clear();
     m_scene->load_json(&file);
+    m_scene->takeSnapshot();
     m_fileName=fileName;
     setWindowFilePath(m_fileName);
     return true;
@@ -2130,7 +2194,6 @@ void MainWindow::linePatternChanged()
 /* TODO
  ** click on line better, second chose next /* fix path click on detection
  * export wider to entail wider lines ?
- * change font on empty text box (start of create)
  * user elements -> order ?
  * fix flip/rotate when moving/dragging several elements
  * manage user generated elements
@@ -2138,4 +2201,9 @@ void MainWindow::linePatternChanged()
  * scale elements ?
  * Align ?
  * import xcircuit/drawio?
+ *
+ * Text selected in box/text after group/ungroup
+ * find&replace on text
+ * text in line (middle,left, right) ?
+ * indicator where placement point is ?
  */

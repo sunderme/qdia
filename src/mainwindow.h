@@ -55,6 +55,7 @@
 #include "ColorPickerToolButton.h"
 #include <QMainWindow>
 #include <QShortcut>
+#include "searchreplacedialog.h"
 
 class DiagramScene;
 
@@ -158,6 +159,10 @@ private slots:
    void switchToRect();
    void switchToDrawItem(int type);
    void fileExit();
+   void searchAndReplaceTexts();
+   void findNextText();
+   void replaceText();
+   void replaceAllText();
 
 protected:
    void closeEvent(QCloseEvent *event);
@@ -195,6 +200,8 @@ private:
 
    QAction *undoAction;
    QAction *redoAction;
+
+   QAction *searchAndReplaceAction;
 
    QAction *toFrontAction;
    QAction *sendBackAction;
@@ -236,6 +243,7 @@ private:
 
    QMenu *fileMenu;
    QMenu *m_recentFilesMenu;
+   QMenu *editMenu;
    QMenu *viewMenu;
    QMenu *createMenu;
    QMenu *itemMenu;
@@ -281,6 +289,8 @@ private:
 
    QList<QAction*> listOfActions;
    QList<QShortcut*> listOfShortcuts;
+
+   SearchReplaceDialog *searchDialog=nullptr;
 
    bool myShowGrid; // Grid visible ?
 
