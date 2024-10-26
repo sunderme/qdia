@@ -1387,7 +1387,11 @@ void MainWindow::groupItems()
     groupItem->setPos(boundBox.bottomLeft());
     for(QGraphicsItem *item:m_scene->selectedItems()){
         item->setSelected(false);
-        if(item->parentItem()) continue; // already is part of "group"
+    }
+    for(QGraphicsItem *item:m_scene->selectedItems()){
+        if(item->parentItem()){
+            continue; // already is part of "group"
+        }
         groupItem->addToGroup(item);
     }
     m_scene->addItem(groupItem);
