@@ -467,7 +467,10 @@ bool DiagramPathItem::collidesWithPath(const QPainterPath &path, Qt::ItemSelecti
         QPainterPath testPath;
         testPath.moveTo(myPoints[i-1]);
         testPath.lineTo(myPoints[i]);
-        result=testPath.intersects(path);
+        QPainterPathStroker stroker(pen());
+        stroker.setWidth(2*myHandlerWidth);
+        QPainterPath strokePath=stroker.createStroke(testPath);
+        result=strokePath.intersects(path);
         if(result) break;
         // check handlers if selected
         if(isSelected()){
