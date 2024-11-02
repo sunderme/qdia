@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <QString>
+
 class Config
 {
 public:
@@ -9,7 +11,7 @@ public:
 
     // global configuration settings
     bool showGrid;
-
+    QString style;
 
 };
 

@@ -56,6 +56,7 @@
 #include <QMainWindow>
 #include <QShortcut>
 #include "searchreplacedialog.h"
+#include "preferencesdialog.h"
 
 class DiagramScene;
 
@@ -163,6 +164,7 @@ private slots:
    void findNextText();
    void replaceText();
    void replaceAllText();
+   void showPreferences();
 
 protected:
    void closeEvent(QCloseEvent *event);
@@ -202,6 +204,7 @@ private:
    QAction *redoAction;
 
    QAction *searchAndReplaceAction;
+   QAction *preferenceAction;
 
    QAction *toFrontAction;
    QAction *sendBackAction;
@@ -291,6 +294,8 @@ private:
    QList<QShortcut*> listOfShortcuts;
 
    SearchReplaceDialog *searchDialog=nullptr;
+
+   PreferencesDialog *preferencesDialog=nullptr;
 
    bool myShowGrid; // Grid visible ?
 

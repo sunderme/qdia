@@ -43,6 +43,10 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     m_lastPathImage=settings.value("lastPathImage").toString();
     QString fontName=settings.value("font").toString();
     int fontSize=settings.value("fontsize").toInt();
+    // restore style
+    if(configuration.style!="<default>"){
+        QApplication::setStyle(QStyleFactory::create(configuration.style));
+    }
     // setup GUI
     createActions();
     createToolBox();
@@ -791,6 +795,9 @@ void MainWindow::createActions()
     searchAndReplaceAction = new QAction(tr("&Search and Replace Texts"), this);
     connect(searchAndReplaceAction, &QAction::triggered, this, &MainWindow::searchAndReplaceTexts);
 
+    preferenceAction = new QAction(tr("&Preferences ..."), this);
+    connect(preferenceAction, &QAction::triggered, this, &MainWindow::showPreferences);
+
     boldAction = new QAction(tr("Bold"), this);
     boldAction->setCheckable(true);
     QPixmap pixmap(":/images/bold.svg");
@@ -975,6 +982,8 @@ void MainWindow::createMenus()
     editMenu->addAction(pasteFromClipboardAction);
     editMenu->addSeparator();
     editMenu->addAction(searchAndReplaceAction);
+    editMenu->addSeparator();
+    editMenu->addAction(preferenceAction);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(zoomAction);
@@ -1679,6 +1688,23 @@ void MainWindow::replaceAllText()
     const bool success=m_scene->replaceText(searchText,replaceText,true);
     if(success){
         m_scene->takeSnapshot();
+    }
+}
+/*!
+ * \brief show preferences dialog
+ */
+void MainWindow::showPreferences()
+{
+    // show preferences dialog
+    if(preferencesDialog==nullptr){
+        preferencesDialog=new PreferencesDialog(this);
+    }
+    if(preferencesDialog->exec()==QDialog::Accepted){
+        const QString newStyleName=preferencesDialog->getStyle();
+        if(newStyleName!=QApplication::style()->objectName()){
+            QApplication::setStyle(QStyleFactory::create(newStyleName));
+            configuration.style=newStyleName;
+        }
     }
 }
 

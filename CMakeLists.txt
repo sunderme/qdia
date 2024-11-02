@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(qdia VERSION 0.40 LANGUAGES CXX)
+project(qdia VERSION 0.41 LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -56,6 +56,8 @@ set(PROJECT_SOURCES
         src/diagramscene.h
         src/searchreplacedialog.cpp
         src/searchreplacedialog.h
+        src/preferencesdialog.cpp
+        src/preferencesdialog.h
         src/config.h src/config.cpp
         src/ColorPickerActionWidget.cpp src/ColorPickerActionWidget.h
         src/ColorPickerToolButton.cpp src/ColorPickerToolButton.h
