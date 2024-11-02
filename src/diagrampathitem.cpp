@@ -454,12 +454,29 @@ void DiagramPathItem::setRoutingType(const routingType newRoutingType)
 bool DiagramPathItem::collidesWithPath(const QPainterPath &path, Qt::ItemSelectionMode mode) const
 {
     bool result=false;
-    for(int i=1;i<myPoints.length();++i){
+    for(int i=0;i<myPoints.length();++i){
+        // check handlers if selected
+        if(isSelected()){
             QPainterPath testPath;
-            testPath.moveTo(myPoints[i-1]);
-            testPath.lineTo(myPoints[i]);
+            testPath.moveTo(myPoints[i]);
+            testPath.addRect(QRectF(myPoints[i]-QPointF(myHandlerWidth,myHandlerWidth),myPoints[i]+QPointF(myHandlerWidth,myHandlerWidth)));
             result=testPath.intersects(path);
             if(result) break;
+        }
+        if(i==0) continue;
+        QPainterPath testPath;
+        testPath.moveTo(myPoints[i-1]);
+        testPath.lineTo(myPoints[i]);
+        result=testPath.intersects(path);
+        if(result) break;
+        // check handlers if selected
+        if(isSelected()){
+            QPainterPath testPath;
+            testPath.moveTo(myPoints[i]);
+            testPath.addRect(QRectF(myPoints[i]-QPointF(2,2),myPoints[i]+QPointF(2,2)));
+            result=testPath.intersects(path);
+            if(result) break;
+        }
     }
     return result;
 }
