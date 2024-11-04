@@ -55,6 +55,7 @@
 #include <QTextCursor>
 
 #include <QJsonObject>
+#include <qpainter.h>
 
 DiagramTextItem::DiagramTextItem(QGraphicsItem *parent)
     : QGraphicsTextItem(parent)
@@ -99,7 +100,11 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
     p.setY(json["y"].toDouble());
 
     QColor color;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+    color.fromString(json["color"].toString());
+#else
     color.setNamedColor(json["color"].toString());
+#endif
     setDefaultTextColor(color);
     const QString fontString=json["font"].toString();
     QFont font;
@@ -158,6 +163,11 @@ void DiagramTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     if (textInteractionFlags() == Qt::NoTextInteraction)
         setTextInteractionFlags(Qt::TextEditorInteraction);
     QGraphicsTextItem::mouseDoubleClickEvent(event);
+}
+
+void DiagramTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QGraphicsTextItem::paint(painter, option, widget);
 }
 /*!
  * \brief calculate the offset for item pos to anchorpoint

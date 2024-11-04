@@ -102,6 +102,7 @@ protected:
     void focusOutEvent(QFocusEvent *event) override;
     void focusInEvent(QFocusEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
     QPointF m_anchorPoint;

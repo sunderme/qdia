@@ -547,7 +547,12 @@ DiagramPathItem::DiagramPathItem(const QJsonObject &json, QMenu *contextMenu)
     myDiagramType=static_cast<DiagramType>(json["diagramtype"].toInt());
     myRoutingType=free;
     QColor color;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
     color.fromString(json["pen"].toString());
+#else
+    color.setNamedColor(json["pen"].toString());
+#endif
     color.setAlpha(json["pen_alpha"].toInt());
     QPen pen(color);
     int width=json["pen_width"].toInt();
