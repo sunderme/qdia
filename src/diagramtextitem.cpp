@@ -177,7 +177,7 @@ void DiagramTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
         painter->setPen(selPen);
         QPointF offset=calcOffset(false);
         const QPointF addOffset(myHandlerWidth,myHandlerWidth);
-        const QRectF r(-m_offset-addOffset,-m_offset+addOffset);
+        const QRectF r(-offset-addOffset,-offset+addOffset);
         painter->drawRect(r);
     }
 
