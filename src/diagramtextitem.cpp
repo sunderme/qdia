@@ -176,7 +176,7 @@ void DiagramTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
         painter->setBrush(selBrush);
         painter->setPen(selPen);
         QPointF offset=calcOffset(false);
-        const QPointF addOffset(myHandlerWidth,myHandlerWidth);
+        const QPointF addOffset(m_handlerWidth,m_handlerWidth);
         const QRectF r(-offset-addOffset,-offset+addOffset);
         painter->drawRect(r);
     }
@@ -192,7 +192,7 @@ QPainterPath DiagramTextItem::shape() const
     path.addRect(boundingRect());
     if(isSelected()){
         QPointF offset=calcOffset(false);
-        const QPointF addOffset(2*myHandlerWidth,2*myHandlerWidth);
+        const QPointF addOffset(2*m_handlerWidth,2*m_handlerWidth);
         const QRectF r(-offset-addOffset,-offset+addOffset);
         path.addRect(r);
     }
@@ -204,7 +204,7 @@ QRectF DiagramTextItem::boundingRect() const
     // increase bounding rect when selected
     QRectF rect=QGraphicsTextItem::boundingRect();
     if(isSelected() && !m_normalBoundingRect){
-        const QPointF addOffset(2*myHandlerWidth,2*myHandlerWidth);
+        const QPointF addOffset(2*m_handlerWidth,2*m_handlerWidth);
         rect.adjust(-addOffset.x(),-addOffset.y(),
                     +addOffset.x(),+addOffset.y());
     }

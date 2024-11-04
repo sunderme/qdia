@@ -2224,7 +2224,6 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
- ** click on line better, second chose next /* fix path click on detection
  * export wider to entail wider lines ?
  * user elements -> order ?
  * fix flip/rotate when moving/dragging several elements
@@ -2235,5 +2234,4 @@ void MainWindow::linePatternChanged()
  * import xcircuit/drawio?
  *
  * text in line (middle,left, right) ?
- * indicator where placement point is ?
  */

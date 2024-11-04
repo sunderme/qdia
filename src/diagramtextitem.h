@@ -113,7 +113,7 @@ private:
     bool m_updateGeometry;
     bool m_touched;
     bool m_fixedGeometry=false;
-    qreal myHandlerWidth=2.0;
+    qreal m_handlerWidth=2.0;
     bool m_normalBoundingRect=false;
 };
 
