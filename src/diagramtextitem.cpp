@@ -167,12 +167,15 @@ void DiagramTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void DiagramTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    m_normalBoundingRect=true;
     QGraphicsTextItem::paint(painter, option, widget);
+    m_normalBoundingRect=false;
     if(isSelected()){
         const QBrush selBrush=QBrush(Qt::cyan);
         const QPen selPen=QPen(Qt::cyan);
         painter->setBrush(selBrush);
         painter->setPen(selPen);
+        QPointF offset=calcOffset(false);
         const QPointF addOffset(myHandlerWidth,myHandlerWidth);
         const QRectF r(-m_offset-addOffset,-m_offset+addOffset);
         painter->drawRect(r);
@@ -188,34 +191,47 @@ QPainterPath DiagramTextItem::shape() const
     QPainterPath path;
     path.addRect(boundingRect());
     if(isSelected()){
-        const QPointF addOffset(myHandlerWidth,myHandlerWidth);
-        const QRectF r(-m_offset-addOffset,-m_offset+addOffset);
+        QPointF offset=calcOffset(false);
+        const QPointF addOffset(2*myHandlerWidth,2*myHandlerWidth);
+        const QRectF r(-offset-addOffset,-offset+addOffset);
         path.addRect(r);
     }
     return path;
+}
+
+QRectF DiagramTextItem::boundingRect() const
+{
+    // increase bounding rect when selected
+    QRectF rect=QGraphicsTextItem::boundingRect();
+    if(isSelected() && !m_normalBoundingRect){
+        const QPointF addOffset(2*myHandlerWidth,2*myHandlerWidth);
+        rect.adjust(-addOffset.x(),-addOffset.y(),
+                    +addOffset.x(),+addOffset.y());
+    }
+    return rect;
 }
 /*!
  * \brief calculate the offset for item pos to anchorpoint
  * \return offset
  */
-QPointF DiagramTextItem::calcOffset() const
+QPointF DiagramTextItem::calcOffset(bool transformed) const
 {
     QPointF offset;
     if(m_alignment & Qt::AlignRight){
         qreal w=boundingRect().width();
-        offset+=QPointF(-w,0);
+        offset+=transformed ? QPointF(-w,0)*transform() : QPointF(-w,0);
     }
     if(m_alignment & Qt::AlignHCenter){
         qreal w=boundingRect().width()/2;
-        offset+=QPointF(-w,0);
+        offset+=transformed ? QPointF(-w,0)*transform() : QPointF(-w,0);
     }
     if(m_alignment & Qt::AlignBottom){
         qreal h=boundingRect().height();
-        offset+=QPointF(0,-h);
+        offset+=transformed ?  QPointF(0,-h)*transform() : QPointF(0,-h);
     }
     if(m_alignment & Qt::AlignVCenter){
         qreal h=boundingRect().height()/2;
-        offset+=QPointF(0,-h);
+        offset+=transformed ? QPointF(0,-h)*transform() : QPointF(0,-h);
     }
     return offset;
 }

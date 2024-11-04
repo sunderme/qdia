@@ -77,7 +77,7 @@ public:
     void setCorrectedPos(QPointF pt);
     void setAnchorPoint(QPointF pt);
     QPointF anchorPoint() const;
-    QPointF calcOffset() const;
+    QPointF calcOffset(bool transformed=true) const;
     QPointF getLastOffset() const;
 
     void setTouched(bool state=true);
@@ -104,6 +104,7 @@ protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     virtual QPainterPath shape() const override;
+    QRectF boundingRect() const override;
 
 private:
     QPointF m_anchorPoint;
@@ -113,6 +114,7 @@ private:
     bool m_touched;
     bool m_fixedGeometry=false;
     qreal myHandlerWidth=2.0;
+    bool m_normalBoundingRect=false;
 };
 
 #endif // DIAGRAMTEXTITEM_H
