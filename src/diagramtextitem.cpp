@@ -217,20 +217,21 @@ QRectF DiagramTextItem::boundingRect() const
 QPointF DiagramTextItem::calcOffset(bool transformed) const
 {
     QPointF offset;
+    const QRectF r=QGraphicsTextItem::boundingRect();
     if(m_alignment & Qt::AlignRight){
-        qreal w=boundingRect().width();
+        qreal w=r.width();
         offset+=transformed ? QPointF(-w,0)*transform() : QPointF(-w,0);
     }
     if(m_alignment & Qt::AlignHCenter){
-        qreal w=boundingRect().width()/2;
+        qreal w=r.width()/2;
         offset+=transformed ? QPointF(-w,0)*transform() : QPointF(-w,0);
     }
     if(m_alignment & Qt::AlignBottom){
-        qreal h=boundingRect().height();
+        qreal h=r.height();
         offset+=transformed ?  QPointF(0,-h)*transform() : QPointF(0,-h);
     }
     if(m_alignment & Qt::AlignVCenter){
-        qreal h=boundingRect().height()/2;
+        qreal h=r.height()/2;
         offset+=transformed ? QPointF(0,-h)*transform() : QPointF(0,-h);
     }
     return offset;
