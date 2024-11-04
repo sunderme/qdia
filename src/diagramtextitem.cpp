@@ -168,6 +168,31 @@ void DiagramTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 void DiagramTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QGraphicsTextItem::paint(painter, option, widget);
+    if(isSelected()){
+        const QBrush selBrush=QBrush(Qt::cyan);
+        const QPen selPen=QPen(Qt::cyan);
+        painter->setBrush(selBrush);
+        painter->setPen(selPen);
+        const QPointF addOffset(myHandlerWidth,myHandlerWidth);
+        const QRectF r(-m_offset-addOffset,-m_offset+addOffset);
+        painter->drawRect(r);
+    }
+
+}
+/*!
+ * \brief return shape plus selection handles
+ * \return
+ */
+QPainterPath DiagramTextItem::shape() const
+{
+    QPainterPath path;
+    path.addRect(boundingRect());
+    if(isSelected()){
+        const QPointF addOffset(myHandlerWidth,myHandlerWidth);
+        const QRectF r(-m_offset-addOffset,-m_offset+addOffset);
+        path.addRect(r);
+    }
+    return path;
 }
 /*!
  * \brief calculate the offset for item pos to anchorpoint

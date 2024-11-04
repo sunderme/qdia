@@ -102,7 +102,8 @@ protected:
     void focusOutEvent(QFocusEvent *event) override;
     void focusInEvent(QFocusEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    virtual QPainterPath shape() const override;
 
 private:
     QPointF m_anchorPoint;
@@ -111,6 +112,7 @@ private:
     bool m_updateGeometry;
     bool m_touched;
     bool m_fixedGeometry=false;
+    qreal myHandlerWidth=2.0;
 };
 
 #endif // DIAGRAMTEXTITEM_H
