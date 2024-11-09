@@ -170,7 +170,7 @@ void DiagramTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     m_normalBoundingRect=true;
     QGraphicsTextItem::paint(painter, option, widget);
     m_normalBoundingRect=false;
-    if(isSelected()){
+    if(isSelected() && textInteractionFlags()==Qt::NoTextInteraction){
         const QBrush selBrush=QBrush(Qt::cyan);
         const QPen selPen=QPen(Qt::cyan);
         painter->setBrush(selBrush);
