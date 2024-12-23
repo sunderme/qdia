@@ -140,6 +140,7 @@ QLineF DiagramPathItem::findLineSection(QPointF pt) const
     QLineF line;
     QLineF resultLine;
     qreal minDist=-1;
+    pt-=pos(); // local coordinates
     for(int i=1;i<myPoints.count();++i){
         line.setPoints(myPoints[i-1],myPoints[i]);
         qreal md=minimalDistance(line,pt);
