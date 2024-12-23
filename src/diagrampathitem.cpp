@@ -393,7 +393,7 @@ QRectF DiagramPathItem::boundingRect() const
 void DiagramPathItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
     if(isSelected()){
         if (e -> buttons() & Qt::LeftButton) {
-            QPointF mouse_point = onGrid(e -> pos());
+            QPointF mouse_point = e->pos();
             for(mySelPoint=0;mySelPoint<numberOfHandlerPoints();mySelPoint++){
                 if(hasClickedOn(mouse_point,getHandlerPoints(mySelPoint))) break;
             }
