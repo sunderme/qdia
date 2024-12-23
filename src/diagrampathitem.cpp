@@ -350,6 +350,10 @@ void DiagramPathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
      if(isSelected()){
          QBrush selBrush=QBrush(Qt::cyan);
          QPen selPen=QPen(Qt::cyan);
+         if(m_textMode){
+             selBrush=QBrush(Qt::blue);
+             selPen=QPen(Qt::blue);
+         }
          painter->setBrush(selBrush);
          painter->setPen(selPen);
          QPointF point;
@@ -364,8 +368,16 @@ void DiagramPathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
              if(i==myHoverPoint){
                  painter->setBrush(selBrush);
              }
+             // show center points for text anchors
+             if(i>0 && m_textMode){
+                 point=(point+myPoints.at(i-1))/2;
+                 painter->drawRect(QRectF(point-QPointF(2,2),point+QPointF(2,2)));
+             }
          }// foreach
-     }// if
+     }else{
+         // reset textMode
+         m_textMode=false;
+     }
 }
 
 QRectF DiagramPathItem::boundingRect() const
@@ -382,11 +394,19 @@ void DiagramPathItem::mousePressEvent(QGraphicsSceneMouseEvent *e) {
     if(isSelected()){
         if (e -> buttons() & Qt::LeftButton) {
             QPointF mouse_point = onGrid(e -> pos());
-            for(mySelPoint=0;mySelPoint<myPoints.count();mySelPoint++){
-                if(hasClickedOn(mouse_point,myPoints.at(mySelPoint))) break;
+            for(mySelPoint=0;mySelPoint<numberOfHandlerPoints();mySelPoint++){
+                if(hasClickedOn(mouse_point,getHandlerPoints(mySelPoint))) break;
             }
-            if(mySelPoint==myPoints.count()) mySelPoint=-1;
+            if(mySelPoint==numberOfHandlerPoints()) mySelPoint=-1;
             else e->accept();
+            // in textMode, use point as text anchor point
+            if(mySelPoint>-1 && m_textMode && childItems().count()==1){
+                DiagramTextItem* textItem=dynamic_cast<DiagramTextItem*>(childItems().first());
+                if(textItem){
+                    textItem->setCorrectedPos(getHandlerPoints(mySelPoint));
+                }
+                mySelPoint=-1;
+            }
         }
     }
     QGraphicsPathItem::mousePressEvent(e);
@@ -484,6 +504,15 @@ bool DiagramPathItem::collidesWithPath(const QPainterPath &path, Qt::ItemSelecti
     }
     return result;
 }
+/*!
+ * \brief activate text mode
+ * When item is selected, in text mode, anchor points for attached texts are offered
+ * \param textMode
+ */
+void DiagramPathItem::setTextMode(bool textMode)
+{
+    m_textMode=textMode;
+}
 
 QPointF DiagramPathItem::onGrid(QPointF pos)
 {
@@ -512,6 +541,37 @@ qreal DiagramPathItem::minimalDistance(QLineF &line, QPointF &pt) const
         }
     }
     return distY;
+}
+/*!
+ * \brief get position of handler at index
+ * Handler change during normal selection (end points of lines)
+ * and during text mode (center points of lines plus end points of lines)
+ * \param index
+ * \return
+ */
+QPointF DiagramPathItem::getHandlerPoints(int index)
+{
+    if(m_textMode){
+        if(index%2==0){
+            return myPoints.at(index/2);
+        }else{
+            return (myPoints.at(index/2)+myPoints.at(index/2+1))/2;
+        }
+    }
+    return myPoints.at(index);
+}
+/*!
+ * \brief return number of handlers
+ * Handler change during normal selection (end points of lines)
+ * and during text mode (center points of lines plus end points of lines)
+ * \return
+ */
+int DiagramPathItem::numberOfHandlerPoints()
+{
+    if(m_textMode){
+        return myPoints.count()*2-1;
+    }
+    return myPoints.count();
 }
 
 void DiagramPathItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {

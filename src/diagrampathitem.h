@@ -50,6 +50,8 @@ public:
     }
     virtual bool collidesWithPath(const QPainterPath &path, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape) const override;
 
+    void setTextMode(bool textMode=true);
+
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -69,6 +71,8 @@ protected:
 
 private:
     qreal minimalDistance(QLineF &line,QPointF &pt) const;
+    QPointF getHandlerPoints(int index);
+    int numberOfHandlerPoints();
     DiagramType myDiagramType;
     routingType myRoutingType;
     QMenu *myContextMenu;
@@ -77,7 +81,7 @@ private:
     int mySelPoint,myHoverPoint;
     qreal myHandlerWidth;
     QList<QPainterPath> m_arrows;
-
+    bool m_textMode;
 };
 
 #endif // DIAGRAMPATHITEM_H

@@ -983,6 +983,9 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
                     textItem->setSelected(true);
                     textItem->setFocus();
+                    auto *p=qgraphicsitem_cast<DiagramPathItem*>(item);
+                    p->setTextMode();
+                    p->update();
                 }else{
                     // path item, add text in center of line segment
                     textItem = makeTextItem(item);
@@ -1014,6 +1017,9 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     if(angle>=280 && angle<=350){
                         textItem->setAlignment(Qt::AlignBottom|Qt::AlignLeft);
                     }
+                    auto *p=qgraphicsitem_cast<DiagramPathItem*>(item);
+                    p->setTextMode();
+                    p->update();
 
                     emit textInserted(textItem);
                 }
