@@ -94,6 +94,7 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     myCursor.setRect(QRectF(-myCursorWidth/2,-myCursorWidth/2,myCursorWidth,myCursorWidth));
     myCursor.setPen(QPen(Qt::gray));
     myCursor.setZValue(10.0);
+    myCursor.setFlag(QGraphicsItem::ItemIgnoresTransformations);
     addItem(&myCursor);
 }
 
