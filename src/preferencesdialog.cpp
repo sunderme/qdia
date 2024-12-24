@@ -17,7 +17,11 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
     const QStringList availableStyles=QStyleFactory::keys();
     styleComboBox->addItems(availableStyles);
     // select the current style
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
     int n=availableStyles.indexOf(defaultStyleName,0,Qt::CaseInsensitive);
+#else
+    int n=availableStyles.indexOf(defaultStyleName,0);
+#endif
     if(n>=0){
         styleComboBox->setCurrentIndex(n);
     }
