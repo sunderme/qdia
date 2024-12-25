@@ -132,7 +132,7 @@ QPainterPath DiagramPathItem::getPath()
 }
 /*!
  * \brief find line section for a given point
- * \param pt
+ * \param pt in scene coordinates
  * \return line section as QLineF
  */
 QLineF DiagramPathItem::findLineSection(QPointF pt) const
@@ -140,7 +140,7 @@ QLineF DiagramPathItem::findLineSection(QPointF pt) const
     QLineF line;
     QLineF resultLine;
     qreal minDist=-1;
-    pt-=pos(); // local coordinates
+    pt=mapFromScene(pt); // local coordinates
     for(int i=1;i<myPoints.count();++i){
         line.setPoints(myPoints[i-1],myPoints[i]);
         qreal md=minimalDistance(line,pt);
