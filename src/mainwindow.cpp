@@ -634,6 +634,8 @@ void MainWindow::createToolBox()
                    "mult.json",
                    "div.json",
                    "limit.json",
+                   "sum.json",
+                   "int.json",
                    "ad.json",
                    "da.json",
     };
@@ -2232,6 +2234,6 @@ void MainWindow::linePatternChanged()
  * scale elements ?
  * Align ?
  * import xcircuit/drawio?
- *
- * text in line (middle,left, right) ?
+ ** read xcircuit lps
+ ** show svg
  */

@@ -1,0 +1,7 @@
+{
+  "name": "sum",
+  "elements":[
+    {"type":"circle","x0":0,"y0":0,"r":20},
+    {"type":"text","text":"∑","x":-6,"y":5}
+  ]
+}
