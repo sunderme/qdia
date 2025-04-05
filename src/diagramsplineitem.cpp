@@ -186,6 +186,7 @@ void DiagramSplineItem::write(QJsonObject &json)
     json["cy1"]=c1.y();
     json["z"]=zValue();
     json["type"]=type();
+    json["diagramtype"]=static_cast<int>(myDiagramType);
     json["pen"]=pen().color().name();
     json["pen_alpha"]=pen().color().alpha();
     json["pen_width"]=pen().width();
