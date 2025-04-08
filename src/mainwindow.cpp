@@ -944,7 +944,7 @@ void MainWindow::createActions()
     listOfActions.append(saveAction);
 
     saveAsAction = new QAction(QIcon(":/images/document-save-as.svg"),tr("Save &As ..."), this);
-    saveAsAction->setShortcut(tr("Ctrl+s"));
+    saveAsAction->setShortcut(tr("Ctrl+Shift+s"));
     connect(saveAsAction, &QAction::triggered,[this]{fileSaveAs();});
     listOfActions.append(saveAsAction);
 
