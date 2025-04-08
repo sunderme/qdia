@@ -114,6 +114,12 @@ void DiagramScene::setLineColor(const QColor &color)
             pen.setColor(myLineColor);
             pathItem->setPen(pen);
         }
+        DiagramSplineItem *splineItem = dynamic_cast<DiagramSplineItem *>(elem);
+        if(splineItem){
+            QPen pen=splineItem->pen();
+            pen.setColor(myLineColor);
+            splineItem->setPen(pen);
+        }
     }
 }
 
