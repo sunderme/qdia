@@ -31,7 +31,12 @@ DiagramSplineItem::DiagramSplineItem(const QJsonObject &json, QMenu *)
     setPos(p);
     setZValue(json["z"].toDouble());
     QColor color;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+    QString colorString=json["pen"].toString();
+    color=QColor::fromString(colorString);
+#else
     color.setNamedColor(json["pen"].toString());
+#endif
     color.setAlpha(json["pen_alpha"].toInt());
     int width=json["pen_width"].toInt();
     Qt::PenStyle pstyle=static_cast<Qt::PenStyle>(json["pen_style"].toInt(1));

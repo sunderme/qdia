@@ -610,7 +610,8 @@ DiagramPathItem::DiagramPathItem(const QJsonObject &json, QMenu *contextMenu)
     QColor color;
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
-    color.fromString(json["pen"].toString());
+    QString colorString=json["pen"].toString();
+    color=QColor::fromString(colorString);
 #else
     color.setNamedColor(json["pen"].toString());
 #endif
