@@ -101,7 +101,7 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
 
     QColor color;
 #if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
-    color.fromString(json["color"].toString());
+    color=QColor::fromString(json["color"].toString());
 #else
     color.setNamedColor(json["color"].toString());
 #endif
