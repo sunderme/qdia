@@ -31,7 +31,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake ..
+          cmake .. -DENABLE_CRASH_HANDLER=ON
       - name: Release translation
         run: |
           cd build
