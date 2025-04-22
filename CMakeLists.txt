@@ -23,8 +23,17 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+option(ENABLE_CRASH_HANDLER "Enable/Disable internal crash handler" OFF)
+if(${ENABLE_CRASH_HANDLER})
+    message(STATUS "Use c++23 crash handler.")
+    set(CMAKE_CXX_STANDARD 23)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+    set(CMAKE_CXX_FLAGS "-g1 -O2 -Wall -Wextra")
+else()
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
 
 find_package(QT NAMES Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Core Gui LinguistTools REQUIRED)
@@ -35,6 +44,10 @@ set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/resources/win.rc")
 set(TS_FILES translation/qdia_en_US.ts translation/qdia_de.ts)
 set_source_files_properties(${TS_FILES}
     PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translation")
+
+if(${ENABLE_CRASH_HANDLER})
+    set(ADDITIONAL_DEFINITIONS ${ADDITIONAL_DEFINITIONS} -DCPP_CRASH_HANDLER)
+endif()
 
 set(PROJECT_SOURCES
         src/main.cpp
@@ -100,6 +113,11 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
+
+if(${ENABLE_CRASH_HANDLER})
+    target_link_libraries(qdia PRIVATE stdc++exp)
+endif()
+
 target_link_libraries(qdia PRIVATE
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Gui
@@ -108,6 +126,7 @@ target_link_libraries(qdia PRIVATE
     Qt${QT_VERSION_MAJOR}::Svg
 )
 set_source_files_properties(resources/qdia.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+target_compile_definitions(qdia PUBLIC ${ADDITIONAL_DEFINITIONS})
 set_target_properties(qdia PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
