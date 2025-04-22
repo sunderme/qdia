@@ -523,9 +523,11 @@ void MainWindow::itemSelected(QGraphicsItem *item)
 
 void MainWindow::about()
 {
+    /*
     // provoke crash
     char *c = nullptr;
     *c = 'A';
+    */
     QMessageBox::about(this, tr("About QDia"),
                        tr("Version %1\n"
                            "Written by Jan Sundermeyer (C) 2022\n"
