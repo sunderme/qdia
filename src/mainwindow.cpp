@@ -2193,6 +2193,29 @@ void MainWindow::transformItems(const QTransform transform, QList<QGraphicsItem 
 {
     foreach( QGraphicsItem *item, items){
         if(!item) continue;
+        // special treatment for texts
+        if(item->type()==DiagramTextItem::Type){
+            if(transform==QTransform(-1,0,0,1,0,0)){
+                // flipX, text not flipped but anchorpoint moved
+                DiagramTextItem *it=qgraphicsitem_cast<DiagramTextItem*>(item);
+                qreal dx=it->pos().x()-anchorPoint.x();
+                it->setPos(it->pos().x()-2*dx,it->pos().y());
+                // move anchor point
+                auto alignment=it->alignment();
+                if(alignment.testFlag(Qt::AlignLeft)){
+                    alignment.setFlag(Qt::AlignRight);
+                    alignment.setFlag(Qt::AlignLeft,false);
+                }else{
+                    if(alignment.testFlag(Qt::AlignRight)){
+                        alignment|=Qt::AlignLeft;
+                        alignment.setFlag(Qt::AlignRight,false);
+                    }
+                }
+                it->setAlignment(alignment);
+                it->updateGeometry();
+                continue;
+            }
+        }
         QTransform trans=item->transform();
         QPointF shift=item->pos()-anchorPoint;
         item->setTransform(trans*QTransform(1,0,0,1,shift.x(),shift.y())*transform*QTransform(1,0,0,1,-shift.x(),-shift.y()),false);
@@ -2258,7 +2281,6 @@ void MainWindow::linePatternChanged()
  * fix flip/rotate when moving/dragging several elements
  * manage user generated elements
  * tap style
- * scale elements ?
  * Align ?
  * import xcircuit/drawio?
  ** read xcircuit lps
