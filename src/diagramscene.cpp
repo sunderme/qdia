@@ -82,6 +82,7 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     myLineWidth = 1;
     myPenStyle = Qt::SolidLine;
     m_undoPos = -1;
+    m_textAlignment = Qt::AlignLeft|Qt::AlignTop;
 
     myRouting=DiagramPathItem::free;
     myGrid=10.0;
