@@ -2198,8 +2198,8 @@ void MainWindow::transformItems(const QTransform transform, QList<QGraphicsItem 
             if(transform==QTransform(-1,0,0,1,0,0)){
                 // flipX, text not flipped but anchorpoint moved
                 DiagramTextItem *it=qgraphicsitem_cast<DiagramTextItem*>(item);
-                qreal dx=it->pos().x()-anchorPoint.x();
-                it->setPos(it->pos().x()-2*dx,it->pos().y());
+                qreal dx=it->anchorPoint().x()-anchorPoint.x();
+                it->setAnchorPoint(QPointF(it->anchorPoint().x()-2*dx,it->anchorPoint().y()));
                 // move anchor point
                 auto alignment=it->alignment();
                 if(alignment.testFlag(Qt::AlignLeft)){
