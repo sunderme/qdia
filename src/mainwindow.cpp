@@ -396,6 +396,21 @@ void MainWindow::flipY()
     transformSelected(QTransform(1,0,0,-1,0,0),m_scene->activeItems());
 }
 
+void MainWindow::scale()
+{
+    if (m_scene->activeItems().isEmpty())
+        return;
+
+    // simple input message box to ask for scale factor
+    bool ok;
+    double scaleFactor = QInputDialog::getDouble(this, tr("Scale"),
+                                                 tr("Scale factor:"), 1.0, 0.01, 100.0, 2, &ok);
+    if (!ok)
+        return;
+
+    transformSelected(QTransform().scale(scaleFactor,scaleFactor),m_scene->activeItems(),true);
+}
+
 void MainWindow::currentFontChanged(const QFont &)
 {
     handleFontChange();
@@ -865,6 +880,12 @@ void MainWindow::createActions()
     connect(flipYAction, &QAction::triggered,this, &MainWindow::flipY);
     listOfActions.append(flipYAction);
 
+    scaleAction = new QAction(QIcon(":/images/transform-scale.svg"),
+                              tr("&Scale"), this);
+    //scaleAction->setShortcut(tr("s"));
+    connect(scaleAction, &QAction::triggered,this, &MainWindow::scale);
+    listOfActions.append(scaleAction);
+
     escShortcut = new QShortcut(QKeySequence(Qt::Key_Escape),
                                 this);
     connect(escShortcut,&QShortcut::activated,this,&MainWindow::abort);
@@ -1024,6 +1045,7 @@ void MainWindow::createMenus()
     itemMenu->addAction(rotateLeftAction);
     itemMenu->addAction(flipXAction);
     itemMenu->addAction(flipYAction);
+    itemMenu->addAction(scaleAction);
     itemMenu->addAction(groupAction);
     itemMenu->addAction(ungroupAction);
     itemMenu->addAction(tapAction);
@@ -2241,6 +2263,5 @@ void MainWindow::linePatternChanged()
  * import xcircuit/drawio?
  ** read xcircuit lps
  ** show svg
- ** backtrace
  ** flipX with shifted text
  */

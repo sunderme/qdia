@@ -102,6 +102,7 @@ private slots:
    void rotateLeft();
    void flipX();
    void flipY();
+   void scale();
    void print();
    void exportImage();
    void copyItems();
@@ -216,6 +217,7 @@ private:
    QAction *rotateLeftAction;
    QAction *flipXAction;
    QAction *flipYAction;
+   QAction *scaleAction;
    QAction *copyAction;
    QAction *duplicateAction;
    QAction *moveAction;
