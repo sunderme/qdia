@@ -2285,5 +2285,4 @@ void MainWindow::linePatternChanged()
  * import xcircuit/drawio?
  ** read xcircuit lps
  ** show svg
- ** flipX with shifted text
  */

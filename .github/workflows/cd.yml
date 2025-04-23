@@ -78,8 +78,8 @@ jobs:
 
   build-linux-release:
     name: linux appimage
-    if: false
-    runs-on: ubuntu-20.04
+    if: true
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -93,7 +93,7 @@ jobs:
       run: sudo apt-get update
 
     - name: Dependencies
-      run: sudo apt-get install qtbase5-dev qt5-default cmake libqt5svg5-dev qttools5-dev
+      run: sudo apt-get install qt6-base-dev cmake qt6-svg-dev qt6-tools-dev
 
     - name: Configure
       run: |
