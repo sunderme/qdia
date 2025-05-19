@@ -168,6 +168,20 @@ QPainterPath DiagramDrawItem::createPath()
         path.lineTo(dx,dy-y);
         path.lineTo(0,dy);
         path.lineTo(0,0);
+        break;
+    }
+    case DEMUX:
+    {
+        qreal y=dx/2;
+        if(y>dy/2){
+            y=dy/2; // too low, can't make a mux shape
+        }
+        path.moveTo(0, y);
+        path.lineTo(dx,0);
+        path.lineTo(dx,dy);
+        path.lineTo(0,dy-y);
+        path.lineTo(0,y);
+        break;
     }
     default:
         break;
