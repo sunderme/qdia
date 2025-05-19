@@ -87,6 +87,9 @@ public:
 
     void setBoundingBox(QRectF rect);
 
+    void setLocked(bool locked);
+    bool isLocked();
+
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -96,6 +99,7 @@ protected:
 private:
     DiagramType myDiagramType;
     QPainterPath mPainterPath;
+    bool m_isLocked=false; /// locked items can't be moved
 };
 //! [0]
 

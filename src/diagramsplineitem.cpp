@@ -238,6 +238,24 @@ QPixmap DiagramSplineItem::icon()
     return pixmap;
 }
 
+void DiagramSplineItem::setLocked(bool locked)
+{
+    m_isLocked = locked;
+    if (locked) {
+        setFlag(QGraphicsItem::ItemIsMovable, false);
+    } else {
+        setFlag(QGraphicsItem::ItemIsMovable, true);
+    }
+}
+/*!
+ * \brief return locked state
+ * \return
+ */
+bool DiagramSplineItem::isLocked()
+{
+    return m_isLocked;
+}
+
 QRectF DiagramSplineItem::boundingRect() const
 {
     QVector<QPointF> pts{p0,p1,c0,c1};

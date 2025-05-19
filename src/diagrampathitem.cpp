@@ -514,6 +514,25 @@ void DiagramPathItem::setTextMode(bool textMode)
     m_textMode=textMode;
 }
 
+
+void DiagramPathItem::setLocked(bool locked)
+{
+    m_isLocked = locked;
+    if (locked) {
+        setFlag(QGraphicsItem::ItemIsMovable, false);
+    } else {
+        setFlag(QGraphicsItem::ItemIsMovable, true);
+    }
+}
+/*!
+ * \brief return locked state
+ * \return
+ */
+bool DiagramPathItem::isLocked()
+{
+    return m_isLocked;
+}
+
 QPointF DiagramPathItem::onGrid(QPointF pos)
 {
     DiagramScene* myScene = dynamic_cast<DiagramScene*>(scene());

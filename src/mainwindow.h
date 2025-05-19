@@ -90,6 +90,8 @@ private slots:
    void redo();
    void buttonGroupClicked(QAbstractButton *button);
    void deleteItem();
+   void lockItem();
+   void unlockItem();
    void pointerGroupClicked(QAbstractButton *button);
    void horzAlignGroupClicked(QAbstractButton *button);
    void vertAlignGroupClicked(QAbstractButton *button);
@@ -202,6 +204,9 @@ private:
    QAction *exitAction;
    QAction *addAction;
    QAction *deleteAction;
+
+   QAction *lockAction;
+   QAction *unlockAction;
 
    QAction *undoAction;
    QAction *redoAction;

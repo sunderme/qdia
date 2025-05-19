@@ -29,6 +29,9 @@ public:
     QPixmap image() const;
     QPixmap icon();
 
+    void setLocked(bool locked);
+    bool isLocked();
+
 protected:
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -54,6 +57,8 @@ private:
     qreal myHandlerWidth;
 
     qreal len,breite;
+
+    bool m_isLocked=false;
 };
 
 #endif // DIAGRAMSPLINEITEM_H

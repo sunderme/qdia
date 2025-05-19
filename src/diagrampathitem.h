@@ -52,6 +52,9 @@ public:
 
     void setTextMode(bool textMode=true);
 
+    void setLocked(bool locked);
+    bool isLocked();
+
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -82,6 +85,7 @@ private:
     qreal myHandlerWidth;
     QList<QPainterPath> m_arrows;
     bool m_textMode;
+    bool m_isLocked=false;
 };
 
 #endif // DIAGRAMPATHITEM_H

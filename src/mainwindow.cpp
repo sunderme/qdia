@@ -200,6 +200,46 @@ void MainWindow::deleteItem()
     }
     m_scene->takeSnapshot();
 }
+/*!
+ * \brief set selected items as locked
+ * Locked items can't be moved or deleted
+ */
+void MainWindow::lockItem()
+{
+    QList<QGraphicsItem *> selectedItems = m_scene->selectedItems();
+    for (int i=0;i<selectedItems.length();++i) {
+        QGraphicsItem *it=selectedItems[i];
+        DiagramItem *item=dynamic_cast<DiagramItem *>(it);
+        if(item){
+            item->setLocked(true);
+            item->setSelected(false);
+        }
+        DiagramPathItem *pathItem=dynamic_cast<DiagramPathItem *>(it);
+        if(pathItem){
+            pathItem->setLocked(true);
+            pathItem->setSelected(false);
+        }
+        DiagramSplineItem *splineItem=dynamic_cast<DiagramSplineItem *>(it);
+        if(pathItem){
+            splineItem->setLocked(true);
+            splineItem->setSelected(false);
+        }
+    }
+}
+/*!
+ * \brief unlock selected items
+ */
+void MainWindow::unlockItem()
+{
+    QList<QGraphicsItem *> selectedItems = m_scene->selectedItems();
+    for (int i=0;i<selectedItems.length();++i) {
+        QGraphicsItem *it=selectedItems[i];
+        DiagramItem *item=qgraphicsitem_cast<DiagramItem *>(it);
+        if(item){
+            item->setLocked(false);
+        }
+    }
+}
 
 void MainWindow::pointerGroupClicked(QAbstractButton *button)
 {
@@ -822,6 +862,14 @@ void MainWindow::createActions()
     connect(deleteAction, &QAction::triggered, this, &MainWindow::deleteItem);
     listOfActions.append(deleteAction);
 
+    lockAction = new QAction(tr("&Lock Item"), this);
+    lockAction->setShortcut(tr("L"));
+    connect(lockAction, &QAction::triggered, this, &MainWindow::lockItem);
+
+    unlockAction = new QAction(tr("&Lock Item"), this);
+    unlockAction->setShortcut(tr("Shift+L"));
+    connect(unlockAction, &QAction::triggered, this, &MainWindow::unlockItem);
+
     exitAction = new QAction(tr("E&xit"), this);
     exitAction->setShortcuts(QKeySequence::Quit);
     exitAction->setStatusTip(tr("Quit QDia"));
@@ -1081,6 +1129,9 @@ void MainWindow::createMenus()
     itemMenu->addAction(ungroupAction);
     itemMenu->addAction(tapAction);
     itemMenu->addAction(makeElementAction);
+    itemMenu->addSeparator();
+    itemMenu->addAction(lockAction);
+    itemMenu->addAction(unlockAction);
 
     aboutMenu = menuBar()->addMenu(tr("&Help"));
     aboutMenu->addAction(aboutAction);
@@ -2308,7 +2359,7 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
- ** lock in place/can't ne moved
+ ** lock in place/can't be moved
  ** color template ?
  * export wider to entail wider lines ?
  * user elements -> order ?
@@ -2319,5 +2370,4 @@ void MainWindow::linePatternChanged()
  * import xcircuit/drawio?
  ** read xcircuit lps
  ** show svg
- * flipX in text in rect ?
  */

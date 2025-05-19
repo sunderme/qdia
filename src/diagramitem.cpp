@@ -160,6 +160,24 @@ void DiagramItem::setBoundingBox(QRectF rect)
     setPath(path);
 }
 
+void DiagramItem::setLocked(bool locked)
+{
+    m_isLocked = locked;
+    if (locked) {
+        setFlag(QGraphicsItem::ItemIsMovable, false);
+    } else {
+        setFlag(QGraphicsItem::ItemIsMovable, true);
+    }
+}
+/*!
+ * \brief return locked state
+ * \return
+ */
+bool DiagramItem::isLocked()
+{
+    return m_isLocked;
+}
+
 void DiagramItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     scene()->clearSelection();

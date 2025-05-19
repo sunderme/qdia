@@ -335,6 +335,9 @@ QList<QGraphicsItem *> DiagramScene::copyItems(QList<QGraphicsItem *> source)
 void DiagramScene::moveItems(QList<QGraphicsItem *> source, QPointF delta)
 {
     foreach(QGraphicsItem* item,source){
+        if(!item->flags().testFlag(QGraphicsItem::ItemIsMovable)){
+            continue; // skip locked items
+        }
         if(item->parentItem()!=0){
             if(!item->parentItem()->isSelected()) item->moveBy(delta.x(),delta.y());
         }
@@ -374,6 +377,11 @@ qreal DiagramScene::getMinZ(QList<QGraphicsItem *> source)
 void DiagramScene::filterSelectedChildItems(QList<QGraphicsItem *> &lst)
 {
     foreach(QGraphicsItem* item,lst){
+        if(!item->flags().testFlag(QGraphicsItem::ItemIsMovable)){
+            item->setSelected(false);
+            lst.removeOne(item);
+            continue; // skip locked items
+        }
         if(item->parentItem()){
             if(item->parentItem()->isSelected()) {
                 item->setSelected(false);
