@@ -2225,7 +2225,8 @@ void MainWindow::transformItems(const QTransform transform, QList<QGraphicsItem 
     foreach( QGraphicsItem *item, items){
         if(!item) continue;
         // special treatment for texts
-        if(item->type()==DiagramTextItem::Type){
+        if(item->type()==DiagramTextItem::Type && items.count()>1){
+            // if only one item is selected, the anchor point is not moved
             if(transform==QTransform(-1,0,0,1,0,0)){
                 // flipX, text not flipped but anchorpoint moved
                 DiagramTextItem *it=qgraphicsitem_cast<DiagramTextItem*>(item);
@@ -2308,9 +2309,7 @@ void MainWindow::linePatternChanged()
 
 /* TODO
  ** lock in place/can't ne moved
- ** dedicated select area within/across
  ** color template ?
- ** Demux
  * export wider to entail wider lines ?
  * user elements -> order ?
  * fix flip/rotate when moving/dragging several elements
