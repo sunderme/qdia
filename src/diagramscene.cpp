@@ -803,6 +803,10 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     case Zoom:
         startPoint=mouseEvent->scenePos();
         break;
+    case SelectOuter:
+    case SelectInner:
+        startPoint=mouseEvent->scenePos();
+        break;
     default:
         ;
     }
@@ -899,6 +903,8 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         }
         break;
     case ZoomSingle:
+    case SelectOuter:
+    case SelectInner:
         if(m_rubberbandItem){
             m_rubberbandItem->setRect(QRectF(startPoint,mouseEvent->scenePos()));
         }
@@ -937,6 +943,22 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
             }
         }
         takeSnapshot();
+    }
+    if(myMode==SelectInner || myMode==SelectOuter){
+        enableAllItems(true);
+        QPointF pt2=mouseEvent->scenePos();
+        QPainterPath path;
+        path.addRect(QRectF(startPoint,pt2));
+        QList<QGraphicsItem *> lst;
+        if(myMode==SelectInner){
+            lst=items(path,Qt::ContainsItemShape);
+        }else{
+            lst=items(path,Qt::IntersectsItemShape);
+        }
+        for(QGraphicsItem *item:lst){
+            item->setSelected(true);
+        }
+        abort(true);
     }
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }

@@ -98,6 +98,8 @@ private slots:
    void sendToBack();
    void sendDown();
    void selectAll();
+   void selectRectInner();
+   void selectRectOuter();
    void rotateRight();
    void rotateLeft();
    void flipX();
@@ -212,6 +214,8 @@ private:
    QAction *bringUpAction;
    QAction *sendDownAction;
    QAction *selectAllAction;
+   QAction *selectRectInnerAction;
+   QAction *selectRectOuterAction;
    QAction *aboutAction;
    QAction *rotateRightAction;
    QAction *rotateLeftAction;

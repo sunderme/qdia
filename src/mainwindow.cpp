@@ -363,6 +363,24 @@ void MainWindow::selectAll()
         item->setSelected(true);
     }
 }
+/*!
+ * \brief start selection rectangle
+ * Only elements completely inside are selected
+ */
+void MainWindow::selectRectInner()
+{
+    m_scene->setMode(DiagramScene::SelectInner);
+    m_view->setDragMode(QGraphicsView::RubberBandDrag);
+}
+/*!
+ * \brief start selection rectangle
+ * Elements crossing rectangle are selected
+ */
+void MainWindow::selectRectOuter()
+{
+    m_scene->setMode(DiagramScene::SelectOuter);
+    m_view->setDragMode(QGraphicsView::RubberBandDrag);
+}
 
 void MainWindow::rotateRight()
 {
@@ -572,6 +590,7 @@ void MainWindow::createToolBox()
         {tr("DA"),DiagramDrawItem::DA},
         {tr("OTA"),DiagramDrawItem::OTA},
         {tr("MUX"),DiagramDrawItem::MUX},
+        {tr("DEMUX"),DiagramDrawItem::DEMUX},
         {tr("Note"),DiagramDrawItem::Note}
     };
     int row=0;
@@ -814,6 +833,16 @@ void MainWindow::createActions()
     connect(selectAllAction, &QAction::triggered, this, &MainWindow::selectAll);
     listOfActions.append(selectAllAction);
 
+    selectRectOuterAction = new QAction(tr("Select Rect &Outer"), this);
+    selectRectOuterAction->setShortcut(tr("Shift+s"));
+    connect(selectRectOuterAction, &QAction::triggered, this, &MainWindow::selectRectOuter);
+    listOfActions.append(selectRectOuterAction);
+
+    selectRectInnerAction = new QAction(tr("Select &Rect Inner"), this);
+    selectRectInnerAction->setShortcut(tr("s"));
+    connect(selectRectInnerAction, &QAction::triggered, this, &MainWindow::selectRectInner);
+    listOfActions.append(selectRectInnerAction);
+
     searchAndReplaceAction = new QAction(tr("&Search and Replace Texts"), this);
     connect(searchAndReplaceAction, &QAction::triggered, this, &MainWindow::searchAndReplaceTexts);
 
@@ -1006,6 +1035,8 @@ void MainWindow::createMenus()
     editMenu->addAction(redoAction);
     editMenu->addSeparator();
     editMenu->addAction(selectAllAction);
+    editMenu->addAction(selectRectInnerAction);
+    editMenu->addAction(selectRectOuterAction);
     editMenu->addAction(copyToClipboardAction);
     editMenu->addAction(pasteFromClipboardAction);
     editMenu->addSeparator();
@@ -2276,6 +2307,10 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
+ ** lock in place/can't ne moved
+ ** dedicated select area within/across
+ ** color template ?
+ ** Demux
  * export wider to entail wider lines ?
  * user elements -> order ?
  * fix flip/rotate when moving/dragging several elements
@@ -2285,4 +2320,5 @@ void MainWindow::linePatternChanged()
  * import xcircuit/drawio?
  ** read xcircuit lps
  ** show svg
+ * flipX in text in rect ?
  */
