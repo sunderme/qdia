@@ -751,7 +751,7 @@ void MainWindow::createToolBox()
     }
     // add user pane !
 #ifdef Q_OS_WIN
-    const QString elementPath="%appdata%/.config/QDia/userElements";
+    const QString elementPath="%appdata%/Roaming/QDia/userElements";
    #else
     const QString elementPath=QDir::homePath()+"/.config/QDia/userElements/";
 #endif
@@ -926,6 +926,10 @@ void MainWindow::createActions()
     exportAction->setStatusTip(tr("Export Diagram to image"));
     connect(exportAction, SIGNAL(triggered()), this, SLOT(exportImage()));
 
+    importAction = new QAction(tr("&Import Diagram"), this);
+    importAction->setStatusTip(tr("Import Diagram from file"));
+    connect(importAction, SIGNAL(triggered()), this, SLOT(importDiagram()));
+
     copyAction = new QAction(QIcon(":/images/edit-copy.svg"),tr("&Copy"), this);
     copyAction->setShortcut(tr("c"));
     connect(copyAction, &QAction::triggered,this, &MainWindow::copyItems);
@@ -1076,6 +1080,7 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveAsAction);
     fileMenu->addAction(printAction);
     fileMenu->addAction(exportAction);
+    fileMenu->addAction(importAction);
     fileMenu->addAction(exitAction);
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
@@ -1548,7 +1553,7 @@ void MainWindow::makeElement()
 
     // save selected in special path
 #ifdef Q_OS_WIN
-    QString elemenPath="%appdata%/.config/QDia/userElements";
+    QString elemenPath="%appdata%/Roaming/QDia/userElements";
 #else
     QString elemenPath=QDir::homePath()+"/.config/QDia/userElements/";
 #endif
@@ -1893,6 +1898,26 @@ void MainWindow::exportImage()
     }
     m_scene->setCursorVisible(true);
     m_scene->setGridVisible(gridVisible);
+}
+/*!
+ * \brief Import diagram from file
+ */
+void MainWindow::importDiagram()
+{
+    QFileDialog::Options options;
+    QString selectedFilter;
+    QString path=m_lastPath.isEmpty() ? "" : m_lastPath+QDir::separator();
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Load Diagram"),
+                                                    path+"dia.json",
+                                                    tr("QDiagram (*.qdia);;QDiagram old(*.json)"),
+                                                    &selectedFilter,
+                                                    options);
+    if (!fileName.isEmpty()){
+        // reuse user element mechanism
+        m_scene->setItemType(fileName);
+        m_scene->setMode(DiagramScene::InsertUserElement);
+    }
 }
 
 void MainWindow::zoomIn()
@@ -2359,8 +2384,8 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
- ** lock in place/can't be moved
- ** color template ?
+ ** color template ? / store custom colors
+ ** show handlers on top when selected and below
  * export wider to entail wider lines ?
  * user elements -> order ?
  * fix flip/rotate when moving/dragging several elements

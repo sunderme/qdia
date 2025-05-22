@@ -109,6 +109,7 @@ private slots:
    void scale();
    void print();
    void exportImage();
+   void importDiagram();
    void copyItems();
    void duplicateItems();
    void copyToClipboard();
@@ -251,6 +252,7 @@ private:
 
    QAction *printAction;
    QAction *exportAction;
+   QAction *importAction;
 
    QShortcut *escShortcut;
    QShortcut *backoutOneShortcut;
