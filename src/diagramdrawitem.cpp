@@ -93,6 +93,13 @@ QPainterPath DiagramDrawItem::createPath()
         path.lineTo(0,dy);
         path.lineTo(0,0);
         break;
+    case Square:
+        path.moveTo(0, 0);
+        path.lineTo(dx,0);
+        path.lineTo(dx,dy);
+        path.lineTo(0,dy);
+        path.lineTo(0,0);
+        break;
     case Ellipse:
         path.addEllipse(0,0,dx,dy);
         break;
@@ -263,7 +270,7 @@ void DiagramDrawItem::setPos2(QPointF newPos)
 {
     prepareGeometryChange();
     myPos2=mapFromScene(newPos);
-    if(myDiagramType==Circle){
+    if(myDiagramType==Circle || myDiagramType==Square){
         // special treatment in case of circle
         if(fabs(myPos2.x())>fabs(myPos2.y())){
             if(myPos2.y()<0) myPos2.setY(-fabs(myPos2.x()));
@@ -288,7 +295,7 @@ void DiagramDrawItem::setDimension(QPointF newPos)
 
 void DiagramDrawItem::mySetDimension(QPointF newPos)
 {
-    if(myDiagramType==Circle){
+    if(myDiagramType==Circle|| myDiagramType==Square){
         // special treatment in case of circle
         if(myPos2.x()!=newPos.x()){
             myPos2=newPos;
