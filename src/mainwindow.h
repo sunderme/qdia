@@ -322,6 +322,7 @@ private:
    QString m_lastPath;
    QString m_lastPathImage;
    int m_lastSavedSnapshot = -1;
+   QByteArray m_id; // unique ID for this instance
 };
 
 #endif // MAINWINDOW_H

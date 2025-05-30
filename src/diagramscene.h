@@ -117,7 +117,7 @@ public:
     bool save_json(QFile *file,bool selectedItemsOnly=false);
     QJsonDocument create_json_save(bool selectedItemsOnly=false);
     bool load_json(QFile *file);
-    void read_in_json(QJsonDocument doc);
+    QList<QGraphicsItem*> read_in_json(QJsonDocument doc,bool place=true);
     void addElementToJSON(QGraphicsItem* item,QJsonArray &array);
     QGraphicsItem* getElementFromJSON(QJsonObject json);
 
@@ -156,7 +156,7 @@ public slots:
     void checkOnGrid();
     void clear();
     void copyToBuffer();
-    void pasteFromBuffer();
+    void pasteFromBuffer(QByteArray buffer=QByteArray());
 
 signals:
     void itemInserted(DiagramItem *item);

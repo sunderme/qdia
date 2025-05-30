@@ -621,6 +621,7 @@ void MainWindow::createToolBox()
     // added DrawItem
     QList<Element> elements{
         {tr("Rectangle"),DiagramDrawItem::Rectangle},
+        {tr("Square"),DiagramDrawItem::Square},
         {tr("Ellipse"),DiagramDrawItem::Ellipse},
         {tr("Circle"),DiagramDrawItem::Circle},
         {tr("RoundedRect"),DiagramDrawItem::RoundedRect},
@@ -1467,10 +1468,14 @@ void MainWindow::copyToClipboard()
     // TODO: only selected whould be exported to clipboard
     m_scene->setCursorVisible(false);
     m_scene->copyToBuffer();
+    // save selected items to bytearray
+    QJsonDocument doc=m_scene->create_json_save(true);
+    QByteArray buffer(doc.toJson(QJsonDocument::Compact));
+    // unselect everything
     m_scene->abort();
     bool gridVisible=m_scene->isGridVisible();
     m_scene->setGridVisible(false);
-    QClipboard *clipboard = QGuiApplication::clipboard();
+
     QRectF rect=m_scene->itemsBoundingRect();
     rect.adjust(-1,-1,1,1);
     qreal w=rect.width();
@@ -1492,14 +1497,29 @@ void MainWindow::copyToClipboard()
     painter.setRenderHint(QPainter::Antialiasing);
     m_scene->render(&painter,QRectF(),rect);
     painter.end();
-    clipboard->setPixmap(pixmap);
+    // copy image into mimedata
+    QMimeData *mimeData = new QMimeData;
+    mimeData->setImageData(pixmap);
+    // add qdia data to mimedata
+    mimeData->setData("application/qdia",buffer);
+    mimeData->setData("application/qdia_id",m_id);
+    // copy mimedata to clipboard
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setMimeData(mimeData);
     m_scene->setCursorVisible(true);
     m_scene->setGridVisible(gridVisible);
 }
 
 void MainWindow::pasteFromClipboard()
 {
-    m_scene->pasteFromBuffer();
+    // check if we have a qdia mimedata
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    const QMimeData *mimeData = clipboard->mimeData();
+    QByteArray buffer;
+    if (!clipboard->ownsClipboard() && mimeData->hasFormat("application/qdia")) {
+        buffer = mimeData->data("application/qdia");
+    }
+    m_scene->pasteFromBuffer(buffer);
 }
 
 void MainWindow::groupItems()
@@ -2384,8 +2404,14 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
- ** color template ? / store custom colors
+ * color template ? / store custom colors
  ** show handlers on top when selected and below
+ * copy/paste between qdia instances (MIME)
+ * click unselect (shift/? alt)
+ * click again to select lower element
+ * better handlers when zoomed out ?
+ * cut line
+ * manhattan routing
  * export wider to entail wider lines ?
  * user elements -> order ?
  * fix flip/rotate when moving/dragging several elements
@@ -2393,6 +2419,6 @@ void MainWindow::linePatternChanged()
  * tap style
  * Align ?
  * import xcircuit/drawio?
- ** read xcircuit lps
- ** show svg
+ * read xcircuit lps
+ * show svg
  */

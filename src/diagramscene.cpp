@@ -1210,8 +1210,13 @@ void DiagramScene::copyToBuffer()
     }
 }
 
-void DiagramScene::pasteFromBuffer()
+void DiagramScene::pasteFromBuffer(QByteArray buffer)
 {
+    if(!buffer.isEmpty()){
+        // read from buffer
+        QJsonDocument doc=QJsonDocument::fromJson(buffer);
+        bufferedItems=read_in_json(doc,false);
+    }
     copiedItems.clear();
     selectedItems().clear();
     QRectF bnd=getTotalBoundary(bufferedItems);
@@ -1502,14 +1507,18 @@ bool DiagramScene::load_json(QFile *file)
  * \brief read in json
  * \param doc
  */
-void DiagramScene::read_in_json(QJsonDocument doc)
+QList<QGraphicsItem *> DiagramScene::read_in_json(QJsonDocument doc,bool place)
 {
+    QList<QGraphicsItem*> newItems;
     QJsonArray array=doc.array();
     for(int i=0;i<array.size();++i){
         QJsonObject json=array[i].toObject();
         QGraphicsItem *item=getElementFromJSON(json);
         if(item->zValue()>m_maxZ) m_maxZ=item->zValue();
-        addItem(item);
+        if(place){
+            addItem(item);
+        }
+        newItems.append(item);
         if(item->type()==DiagramItem::Type){
             QRectF rect;
             for(const auto* it:item->childItems()){
@@ -1525,6 +1534,7 @@ void DiagramScene::read_in_json(QJsonDocument doc)
     insertedSplineItem = nullptr;
     textItem = nullptr;
     myMode = MoveItem;
+    return newItems;
 }
 /*!
  * \brief add item as json to JSON array
