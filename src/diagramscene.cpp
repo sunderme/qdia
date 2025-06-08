@@ -373,6 +373,28 @@ qreal DiagramScene::getMinZ(QList<QGraphicsItem *> source)
     return result;
 }
 /*!
+ * \brief check if item has partner and replace it with partner
+ * partner is used to place a copy on top of the scene to have visible handlers
+ * The principal item is the partner item
+ * \param item
+ */
+void DiagramScene::getPartneredItem(QGraphicsItem *&item) const
+{
+    // check if partner exists, use that instead
+    auto *pathItem=qgraphicsitem_cast<DiagramPathItem*>(item);
+    if(pathItem && pathItem->partnerItem()){
+        item=pathItem->partnerItem();
+    }
+    auto *splineItem=qgraphicsitem_cast<DiagramSplineItem*>(item);
+    if(splineItem && splineItem->partnerItem()){
+        item=splineItem->partnerItem();
+    }
+    auto *drawItem=qgraphicsitem_cast<DiagramDrawItem*>(item);
+    if(drawItem && drawItem->partnerItem()){
+        item=drawItem->partnerItem();
+    }
+}
+/*!
  * \brief filter selected child items
  * If in the list parent and child are selected, child is removed from list to avoid
  * the application of a transform twice
@@ -445,6 +467,21 @@ bool DiagramScene::replaceText(const QString find_text, const QString replace_te
         }
     }
     return success;
+}
+/*!
+ * \brief return selected items
+ * Replace items which have partners
+ * \return
+ */
+QList<QGraphicsItem *> DiagramScene::selectedItems()
+{
+    QList<QGraphicsItem *> lst = QGraphicsScene::selectedItems();
+
+    // check for partnered items
+    for(QGraphicsItem* &item:lst){
+        getPartneredItem(item);
+    }
+    return lst;
 }
 
 void DiagramScene::setItemType(DiagramItem::DiagramType type)
@@ -1164,8 +1201,10 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
         break;
     }
     case DiagramSplineItem::Type:
+    {
         return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramSplineItem*>(item)->copy());
         break;
+    }
     case QGraphicsItemGroup::Type:
     {
         QPointF p=item->pos();
@@ -1267,7 +1306,7 @@ void DiagramScene::itemSelectionChangedSlot()
     if(m_SelectedItem){
         // selection changed ?
         m_blockSelectionChanged=true;
-        QList<QGraphicsItem*> items=selectedItems();
+        QList<QGraphicsItem*> items=QGraphicsScene::selectedItems();
         if(items.size()!=1 || items.first()!=m_SelectedItem){
             DiagramDrawItem *drawItem=qgraphicsitem_cast<DiagramDrawItem*>(m_SelectedItem);
             if(drawItem){
@@ -1295,7 +1334,7 @@ void DiagramScene::itemSelectionChangedSlot()
     }
     if(!m_SelectedItem){
         // only when single element is selected
-        QList<QGraphicsItem*> items=selectedItems();
+        QList<QGraphicsItem*> items=QGraphicsScene::selectedItems();
         if(items.size()==1){
             QGraphicsItem *item=items.first();
             if(item->type()==DiagramDrawItem::Type){
@@ -1394,7 +1433,7 @@ void DiagramScene::insertElementDirectly(const QString element)
  * active items are selected items or insertItem
  * \return
  */
-QList<QGraphicsItem *> DiagramScene::activeItems() const
+QList<QGraphicsItem *> DiagramScene::activeItems()
 {
     if(!selectedItems().isEmpty()){
         return selectedItems();

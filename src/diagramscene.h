@@ -126,7 +126,7 @@ public:
 
     void deleteItem(QGraphicsItem *item);
     void insertElementDirectly(const QString element);
-    QList<QGraphicsItem *> activeItems() const;
+    QList<QGraphicsItem *> activeItems();
     void duplicateItems();
 
     void setMaxZ(qreal z);
@@ -143,6 +143,8 @@ public:
 
     void findText(const QString text);
     bool replaceText(const QString find_text,const QString replace_text,bool replaceAll=false);
+
+    QList<QGraphicsItem*> selectedItems();
 
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);
@@ -188,6 +190,7 @@ protected:
     QList<QGraphicsItem*> copyItems(QList<QGraphicsItem*> source);
     void moveItems(QList<QGraphicsItem*> source,QPointF delta);
     qreal getMinZ(QList<QGraphicsItem*> source);
+    void getPartneredItem(QGraphicsItem *&item) const;
 
 
 private:

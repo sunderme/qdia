@@ -2319,6 +2319,31 @@ void MainWindow::transformSelected(const QTransform transform, QList<QGraphicsIt
  */
 void MainWindow::transformItems(const QTransform transform, QList<QGraphicsItem *> items, QPointF anchorPoint)
 {
+    // special treatment for selected draw/path/spline item (extra copy to show on top)
+    if(items.size()==1){
+        QGraphicsItem *item=items.first();
+        if(item->type()==DiagramPathItem::Type){
+            DiagramPathItem *it=qgraphicsitem_cast<DiagramPathItem*>(item);
+            if(it){
+                auto *partner=it->partnerItem();
+                items.append(partner);
+            }
+        }
+        if(item->type()==DiagramSplineItem::Type){
+            DiagramSplineItem *it=qgraphicsitem_cast<DiagramSplineItem*>(item);
+            auto *partner=it->partnerItem();
+            if(partner){
+                items.append(partner);
+            }
+        }
+        if(item->type()==DiagramDrawItem::Type){
+            DiagramDrawItem *it=qgraphicsitem_cast<DiagramDrawItem*>(item);
+            auto *partner=it->partnerItem();
+            if(partner){
+                items.append(partner);
+            }
+        }
+    }
     foreach( QGraphicsItem *item, items){
         if(!item) continue;
         // special treatment for texts
