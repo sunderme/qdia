@@ -1080,6 +1080,7 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     textItem->setFocus();
                 }else{
                     // draw item, add text in center
+                    m_blockSelectionChanged=true;
                     textItem = makeTextItem(item);
                     DiagramDrawItem *drawItem=dynamic_cast<DiagramDrawItem *>(item);
                     if(drawItem && drawItem->diagramType()==DiagramDrawItem::Note){
@@ -1092,6 +1093,7 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     }
 
                     emit textInserted(textItem);
+                    m_blockSelectionChanged=false;
                 }
                 mouseEvent->accept();
                 break;
@@ -1108,6 +1110,7 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     p->update();
                 }else{
                     // path item, add text in center of line segment
+                    m_blockSelectionChanged=true;
                     textItem = makeTextItem(item);
                     textItem->setAlignment(Qt::AlignBottom|Qt::AlignHCenter);
                     // find correct position for tex
@@ -1142,6 +1145,7 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     p->update();
 
                     emit textInserted(textItem);
+                    m_blockSelectionChanged=false;
                 }
                 mouseEvent->accept();
                 break;
