@@ -135,6 +135,7 @@ void MainWindow::redo()
  */
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    m_scene->clearSelection(); // avoid crash
     QSettings settings("QDia", "QDia");
     settings.setValue("geometry", saveGeometry());
     settings.setValue("windowState", saveState());

@@ -101,14 +101,6 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     connect(this,&DiagramScene::selectionChanged,this,&DiagramScene::itemSelectionChangedSlot);
 }
 
-DiagramScene::~DiagramScene()
-{
-    if(mySelected){
-        mySelected->setSelected(false);
-    }
-    QGraphicsScene::~QGraphicsScene();
-}
-
 void DiagramScene::setLineColor(const QColor &color)
 {
     myLineColor = color;
@@ -240,9 +232,11 @@ void DiagramScene::setMode(DiagramScene::Mode mode, bool m_abort)
 
 void DiagramScene::enableAllItems(bool enable)
 {
+    m_blockSelectionChanged=true;
     foreach(QGraphicsItem* item,items()){
         item->setEnabled(enable);
     }
+    m_blockSelectionChanged=!enable;
 }
 /*!
  * \brief make a text item as child of item
@@ -852,8 +846,8 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         QGraphicsScene::mouseMoveEvent(mouseEvent);
         if(mouseEvent->buttons()==Qt::LeftButton && mouseGrabberItem()){
             checkOnGrid();
-            if(mySelected){
-                DiagramDrawItem *drawItem=qgraphicsitem_cast<DiagramDrawItem*>(mySelected);
+            if(m_SelectedItem){
+                DiagramDrawItem *drawItem=qgraphicsitem_cast<DiagramDrawItem*>(m_SelectedItem);
                 if(drawItem){
                     DiagramDrawItem *partnerItem=drawItem->partnerItem();
                     partnerItem->setPos(drawItem->pos());
@@ -1259,31 +1253,45 @@ void DiagramScene::pasteFromBuffer(QByteArray buffer)
  */
 void DiagramScene::itemSelectionChangedSlot()
 {
-    if(mySelected){
+    if(m_blockSelectionChanged) return;
+    if(m_SelectedItem){
         // selection changed ?
+        m_blockSelectionChanged=true;
         QList<QGraphicsItem*> items=selectedItems();
-        if(items.size()!=1 || items.first()!=mySelected){
-            delete(mySelected);
-            mySelected=nullptr;
+        if(items.size()!=1 || items.first()!=m_SelectedItem){
+            DiagramDrawItem *drawItem=qgraphicsitem_cast<DiagramDrawItem*>(m_SelectedItem);
+            if(drawItem){
+                DiagramDrawItem *partner=drawItem->partnerItem();
+                partner->setFlag(QGraphicsItem::ItemIsMovable, true);
+                drawItem->setPartnerItem(nullptr);
+            }
+            this->removeItem(m_SelectedItem);
+            delete m_SelectedItem;
+            m_SelectedItem=nullptr;
         }
-    }else{
-        // remove my selected item
-        delete(mySelected);
-        mySelected=nullptr;
+        m_blockSelectionChanged=false;
+    }
+    if(!m_SelectedItem){
         // only when single element is selected
         QList<QGraphicsItem*> items=selectedItems();
         if(items.size()==1){
             QGraphicsItem *item=items.first();
             if(item->type()==DiagramDrawItem::Type){
+                m_blockSelectionChanged=true;
                 DiagramDrawItem *drawItem=qgraphicsitem_cast<DiagramDrawItem*>(item);
                 DiagramDrawItem *newItem=qgraphicsitem_cast<DiagramDrawItem*>(drawItem->copy());
-                mySelected = newItem;
+                m_SelectedItem = newItem;
                 newItem->setZValue(m_maxZ);
                 m_maxZ+=0.1;
                 addItem(newItem);
                 newItem->setPartnerItem(drawItem);
                 // disable drag on lower level
                 drawItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+                drawItem->setSelected(false);
+                newItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+                newItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+                newItem->setSelected(true);
+                m_blockSelectionChanged=false;
             }
         }
     }

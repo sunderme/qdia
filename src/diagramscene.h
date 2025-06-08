@@ -80,7 +80,6 @@ public:
     enum Mode { InsertItem, InsertLine, InsertSpline, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem, Zoom , MoveItems, InsertElement , ZoomSingle, InsertUserElement,SelectInner,SelectOuter};
 
     explicit DiagramScene(QMenu *itemMenu, QObject *parent = nullptr);
-    ~DiagramScene() override;
     QFont font() const { return myFont; }
     QColor textColor() const { return myTextColor; }
     QColor itemColor() const { return myItemColor; }
@@ -230,7 +229,8 @@ private:
     QList<QJsonDocument> m_snapshots;
     int m_undoPos;
 
-    QGraphicsItem *mySelected=nullptr;
+    QGraphicsItem *m_SelectedItem=nullptr;
+    bool m_blockSelectionChanged=false;
 };
 
 #endif // DIAGRAMSCENE_H
