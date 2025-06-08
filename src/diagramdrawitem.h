@@ -80,6 +80,9 @@ public:
     void setStartPoint(const QPointF pt);
     void setEndPoint(const QPointF pt);
 
+    void setPartnerItem(DiagramDrawItem *parterItem);
+    DiagramDrawItem *partnerItem();
+
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -108,6 +111,7 @@ private:
     qreal myRadius;
     QPointF mStartPoint,mEndPoint;
     Rect mRect;
+    DiagramDrawItem *m_partnerItem;
 };
 
 #endif // DIAGRAMDRAWITEM_H

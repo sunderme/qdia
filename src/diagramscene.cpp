@@ -97,6 +97,16 @@ DiagramScene::DiagramScene(QMenu *itemMenu, QObject *parent)
     myCursor.setZValue(10.0);
     myCursor.setFlag(QGraphicsItem::ItemIgnoresTransformations);
     addItem(&myCursor);
+
+    connect(this,&DiagramScene::selectionChanged,this,&DiagramScene::itemSelectionChangedSlot);
+}
+
+DiagramScene::~DiagramScene()
+{
+    if(mySelected){
+        mySelected->setSelected(false);
+    }
+    QGraphicsScene::~QGraphicsScene();
 }
 
 void DiagramScene::setLineColor(const QColor &color)
@@ -251,7 +261,7 @@ DiagramTextItem *DiagramScene::makeTextItem(QGraphicsItem *item)
     connect(textItem, &DiagramTextItem::receivedFocus,
             this, &DiagramScene::editorReceivedFocus);
     connect(textItem, &DiagramTextItem::selectedChange,
-            this, &DiagramScene::itemSelected);
+            this, &DiagramScene::textItemSelected);
     //addItem(textItem);
     textItem->setParentItem(item);
     textItem->setDefaultTextColor(myTextColor);
@@ -640,7 +650,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         connect(textItem, &DiagramTextItem::receivedFocus,
                 this, &DiagramScene::editorReceivedFocus);
         connect(textItem, &DiagramTextItem::selectedChange,
-                this, &DiagramScene::itemSelected);
+                this, &DiagramScene::textItemSelected);
         addItem(textItem);
         textItem->setDefaultTextColor(myTextColor);
         textItem->setCorrectedPos(onGrid(mouseEvent->scenePos()));
@@ -842,6 +852,13 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         QGraphicsScene::mouseMoveEvent(mouseEvent);
         if(mouseEvent->buttons()==Qt::LeftButton && mouseGrabberItem()){
             checkOnGrid();
+            if(mySelected){
+                DiagramDrawItem *drawItem=qgraphicsitem_cast<DiagramDrawItem*>(mySelected);
+                if(drawItem){
+                    DiagramDrawItem *partnerItem=drawItem->partnerItem();
+                    partnerItem->setPos(drawItem->pos());
+                }
+            }
         }
         break;
     case MoveItems:
@@ -1124,7 +1141,7 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
         connect(textItem, &DiagramTextItem::receivedFocus,
                 this, &DiagramScene::editorReceivedFocus);
         connect(textItem, &DiagramTextItem::selectedChange,
-                this, &DiagramScene::itemSelected);
+                this, &DiagramScene::textItemSelected);
         return qgraphicsitem_cast<QGraphicsItem*>(textItem);
     }
         break;
@@ -1234,6 +1251,42 @@ void DiagramScene::pasteFromBuffer(QByteArray buffer)
     myDy=myCursor.pos().y();
 
     myMode=CopyingItem;
+}
+
+/*!
+ * \brief to be called when selection has changed
+ * Handle drawing of special elements on top to make all handlers visible
+ */
+void DiagramScene::itemSelectionChangedSlot()
+{
+    if(mySelected){
+        // selection changed ?
+        QList<QGraphicsItem*> items=selectedItems();
+        if(items.size()!=1 || items.first()!=mySelected){
+            delete(mySelected);
+            mySelected=nullptr;
+        }
+    }else{
+        // remove my selected item
+        delete(mySelected);
+        mySelected=nullptr;
+        // only when single element is selected
+        QList<QGraphicsItem*> items=selectedItems();
+        if(items.size()==1){
+            QGraphicsItem *item=items.first();
+            if(item->type()==DiagramDrawItem::Type){
+                DiagramDrawItem *drawItem=qgraphicsitem_cast<DiagramDrawItem*>(item);
+                DiagramDrawItem *newItem=qgraphicsitem_cast<DiagramDrawItem*>(drawItem->copy());
+                mySelected = newItem;
+                newItem->setZValue(m_maxZ);
+                m_maxZ+=0.1;
+                addItem(newItem);
+                newItem->setPartnerItem(drawItem);
+                // disable drag on lower level
+                drawItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+            }
+        }
+    }
 }
 
 void DiagramScene::setCursorVisible(bool vis)
@@ -1633,7 +1686,7 @@ QGraphicsItem *DiagramScene::getElementFromJSON(QJsonObject json)
         connect(textItem, &DiagramTextItem::receivedFocus,
                 this, &DiagramScene::editorReceivedFocus);
         connect(textItem, &DiagramTextItem::selectedChange,
-                this, &DiagramScene::itemSelected);
+                this, &DiagramScene::textItemSelected);
         item=textItem;
         break;
     case QGraphicsItemGroup::Type:

@@ -57,7 +57,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     m_scene = new DiagramScene(itemMenu, this);
     m_scene->setSceneRect(QRectF(0, 0, 5000, 5000));
     m_scene->setGridVisible(configuration.showGrid);
-    connect(m_scene, &DiagramScene::itemSelected,
+    connect(m_scene, &DiagramScene::textItemSelected,
             this, &MainWindow::itemSelected);
     connect(m_scene, &DiagramScene::forceCursor,
             this, &MainWindow::moveCursor);
@@ -2406,7 +2406,6 @@ void MainWindow::linePatternChanged()
 /* TODO
  * color template ? / store custom colors
  ** show handlers on top when selected and below
- * copy/paste between qdia instances (MIME)
  * click unselect (shift/? alt)
  * click again to select lower element
  * better handlers when zoomed out ?

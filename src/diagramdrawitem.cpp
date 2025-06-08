@@ -31,6 +31,7 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     if(diagramType==Note){
         myRadius=10.;
     }
+    m_partnerItem=nullptr;
 }
 
 DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
@@ -54,7 +55,7 @@ DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
-
+    m_partnerItem=nullptr;
 }
 
 DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):DiagramItem(json,contextMenu)
@@ -77,6 +78,7 @@ DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):Di
     myHoverPoint=-1;
     mySelPoint=-1;
     myHandlerWidth=2.0;
+    m_partnerItem=nullptr;
 }
 //! [1]
 QPainterPath DiagramDrawItem::createPath()
@@ -283,6 +285,9 @@ void DiagramDrawItem::setPos2(QPointF newPos)
     }
     mPainterPath=createPath();
     setPath(mPainterPath);
+    if(m_partnerItem){
+        m_partnerItem->setPos2(newPos);
+    }
 }
 
 void DiagramDrawItem::setDimension(QPointF newPos)
@@ -291,6 +296,9 @@ void DiagramDrawItem::setDimension(QPointF newPos)
     mySetDimension(newPos);
     mPainterPath=createPath();
     setPath(mPainterPath);
+    if(m_partnerItem){
+        m_partnerItem->setDimension(newPos);
+    }
 }
 
 void DiagramDrawItem::mySetDimension(QPointF newPos)
@@ -356,6 +364,9 @@ void DiagramDrawItem::setStartPoint(const QPointF pt)
     if(myDiagramType==Pie){
         mPainterPath=createPath();
     }
+    if(m_partnerItem){
+        m_partnerItem->setStartPoint(pt);
+    }
 }
 
 /*!
@@ -368,51 +379,80 @@ void DiagramDrawItem::setEndPoint(const QPointF pt)
     if(myDiagramType==Pie){
         mPainterPath=createPath();
     }
+    if(m_partnerItem){
+        m_partnerItem->setEndPoint(pt);
+    }
+}
+/*!
+ * \brief define partner item
+ * The partner item is the same item, but properly placed in scene
+ * This item is drawn on top of the scene for visibility to show handlers and covered lines
+ * Surfaces are transparent.
+ * Changes on this item are propagated to the partner item.
+ * \param parterItem
+ */
+void DiagramDrawItem::setPartnerItem(DiagramDrawItem *parterItem)
+{
+    m_partnerItem=parterItem;
 }
 
+DiagramDrawItem *DiagramDrawItem::partnerItem()
+{
+    return m_partnerItem;
+}
 
 void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
            QWidget *)
 {
-     painter->setPen(pen());
-     painter->setBrush(brush());
-     painter->drawPath(path());
-     // selected
-     if(isSelected()){
-         // Rect
-         QPen selPen=QPen(Qt::DashLine);
-         selPen.setColor(Qt::black);
-         QBrush selBrush=QBrush(Qt::NoBrush);
-         painter->setBrush(selBrush);
-         painter->setPen(selPen);
-         QRectF rect=innerBoundingRect();
-         painter->drawRect(rect);
-         if(myDiagramType==Pie){
-             // extra lines for pie/arc
-             painter->drawLine(myPos2/2,mStartPoint+myPos2/2);
-             painter->drawLine(myPos2/2,mEndPoint+myPos2/2);
-         }
-         // Draghandles
-         selBrush=QBrush(Qt::cyan,Qt::SolidPattern);
-         selPen=QPen(Qt::cyan);
-         painter->setBrush(selBrush);
-         painter->setPen(selPen);
-         QPointF point;
-         int nPoints=getNumberOfHandles();
+    if(!m_partnerItem){
+        painter->setPen(pen());
+        painter->setBrush(brush());
+        painter->drawPath(path());
+    }else{
+        //top level selected item
+        QPen selPen=QPen(Qt::DashLine);
+        selPen.setColor(Qt::black);
+        QBrush selBrush=QBrush(Qt::NoBrush);
+        painter->setBrush(selBrush);
+        painter->setPen(selPen);
+        painter->drawPath(path());
+    }
+    // selected
+    if(isSelected()){
+        // Rect
+        QPen selPen=QPen(Qt::DashLine);
+        selPen.setColor(Qt::black);
+        QBrush selBrush=QBrush(Qt::NoBrush);
+        painter->setBrush(selBrush);
+        painter->setPen(selPen);
+        QRectF rect=innerBoundingRect();
+        painter->drawRect(rect);
+        if(myDiagramType==Pie){
+            // extra lines for pie/arc
+            painter->drawLine(myPos2/2,mStartPoint+myPos2/2);
+            painter->drawLine(myPos2/2,mEndPoint+myPos2/2);
+        }
+        // Draghandles
+        selBrush=QBrush(Qt::cyan,Qt::SolidPattern);
+        selPen=QPen(Qt::cyan);
+        painter->setBrush(selBrush);
+        painter->setPen(selPen);
+        QPointF point;
+        int nPoints=getNumberOfHandles();
 
-         for(int i=0;i<nPoints;i++)
-         {
-             point=getHandler(i);
-             if(i==myHoverPoint){
-                 painter->setBrush(QBrush(Qt::red));
-             }
-             // Rect around valid point
-             painter->drawRect(QRectF(point-QPointF(myHandlerWidth,myHandlerWidth),point+QPointF(myHandlerWidth,myHandlerWidth)));
-             if(i==myHoverPoint){
-                 painter->setBrush(selBrush);
-             }
-         }// foreach
-     }// if
+        for(int i=0;i<nPoints;i++)
+        {
+            point=getHandler(i);
+            if(i==myHoverPoint){
+                painter->setBrush(QBrush(Qt::red));
+            }
+            // Rect around valid point
+            painter->drawRect(QRectF(point-QPointF(myHandlerWidth,myHandlerWidth),point+QPointF(myHandlerWidth,myHandlerWidth)));
+            if(i==myHoverPoint){
+                painter->setBrush(selBrush);
+            }
+        }// foreach
+    }// if
 }
 
 void DiagramDrawItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
@@ -537,15 +577,26 @@ void DiagramDrawItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
             mRect.translate(-anchorPoint); // renormalize: anchor is at 0/0, the item is moved instead
             mySetDimension(mRect.point());
             setPos(mapToScene(anchorPoint));
+            if(m_partnerItem){
+                m_partnerItem->setDimension(mRect.point());
+                m_partnerItem->setPos(mapToScene(anchorPoint));
+            }
         }else{
             if(mySelPoint==8){
                 mStartPoint=mouse_point-myPos2/2;
+                if(m_partnerItem){
+                    m_partnerItem->setStartPoint(mStartPoint);
+                }
             }
             if(mySelPoint==9){
                 mEndPoint=mouse_point-myPos2/2;
+                if(m_partnerItem){
+                    m_partnerItem->setEndPoint(mEndPoint);
+                }
             }
         }
         mPainterPath=createPath();
+
         setPath(mPainterPath);
         // update text position if present
         // currently only center

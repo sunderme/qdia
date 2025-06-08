@@ -80,6 +80,7 @@ public:
     enum Mode { InsertItem, InsertLine, InsertSpline, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem, Zoom , MoveItems, InsertElement , ZoomSingle, InsertUserElement,SelectInner,SelectOuter};
 
     explicit DiagramScene(QMenu *itemMenu, QObject *parent = nullptr);
+    ~DiagramScene() override;
     QFont font() const { return myFont; }
     QColor textColor() const { return myTextColor; }
     QColor itemColor() const { return myItemColor; }
@@ -158,10 +159,13 @@ public slots:
     void copyToBuffer();
     void pasteFromBuffer(QByteArray buffer=QByteArray());
 
+protected slots:
+    void itemSelectionChangedSlot();
+
 signals:
     void itemInserted(DiagramItem *item);
     void textInserted(QGraphicsTextItem *item);
-    void itemSelected(QGraphicsItem *item);
+    void textItemSelected(QGraphicsItem *item);
     void editorHasLostFocus();
     void editorHasReceivedFocus();
     void zoomRect(QPointF p1,QPointF p2);
@@ -225,6 +229,8 @@ private:
     qreal m_maxZ;
     QList<QJsonDocument> m_snapshots;
     int m_undoPos;
+
+    QGraphicsItem *mySelected=nullptr;
 };
 
 #endif // DIAGRAMSCENE_H
