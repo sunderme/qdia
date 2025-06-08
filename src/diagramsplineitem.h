@@ -23,6 +23,8 @@ public:
 
     QPointF getActivePoint(const int currentActive=-1);
 
+    void setPoints(QPointF p0, QPointF p1, QPointF c0, QPointF c1);
+
     DiagramSplineItem* copy();
     void write(QJsonObject &json);
 
@@ -31,6 +33,9 @@ public:
 
     void setLocked(bool locked);
     bool isLocked();
+
+    void setPartnerItem(DiagramSplineItem *partnerItem);
+    DiagramSplineItem *partnerItem();
 
 protected:
     QRectF boundingRect() const;
@@ -59,6 +64,7 @@ private:
     qreal len,breite;
 
     bool m_isLocked=false;
+    DiagramSplineItem *m_partnerItem=nullptr;
 };
 
 #endif // DIAGRAMSPLINEITEM_H

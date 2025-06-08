@@ -852,6 +852,16 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     DiagramDrawItem *partnerItem=drawItem->partnerItem();
                     partnerItem->setPos(drawItem->pos());
                 }
+                DiagramPathItem *pathItem=qgraphicsitem_cast<DiagramPathItem*>(m_SelectedItem);
+                if(pathItem){
+                    DiagramPathItem *partnerItem=pathItem->partnerItem();
+                    partnerItem->setPos(pathItem->pos());
+                }
+                DiagramSplineItem *splineItem=qgraphicsitem_cast<DiagramSplineItem*>(m_SelectedItem);
+                if(splineItem){
+                    DiagramSplineItem *partnerItem=splineItem->partnerItem();
+                    partnerItem->setPos(splineItem->pos());
+                }
             }
         }
         break;
@@ -1265,6 +1275,18 @@ void DiagramScene::itemSelectionChangedSlot()
                 partner->setFlag(QGraphicsItem::ItemIsMovable, true);
                 drawItem->setPartnerItem(nullptr);
             }
+            DiagramPathItem *pathItem=qgraphicsitem_cast<DiagramPathItem*>(m_SelectedItem);
+            if(pathItem){
+                DiagramPathItem *partner=pathItem->partnerItem();
+                partner->setFlag(QGraphicsItem::ItemIsMovable, true);
+                pathItem->setPartnerItem(nullptr);
+            }
+            DiagramSplineItem *splineItem=qgraphicsitem_cast<DiagramSplineItem*>(m_SelectedItem);
+            if(splineItem){
+                DiagramSplineItem *partner=splineItem->partnerItem();
+                partner->setFlag(QGraphicsItem::ItemIsMovable, true);
+                splineItem->setPartnerItem(nullptr);
+            }
             this->removeItem(m_SelectedItem);
             delete m_SelectedItem;
             m_SelectedItem=nullptr;
@@ -1288,6 +1310,40 @@ void DiagramScene::itemSelectionChangedSlot()
                 // disable drag on lower level
                 drawItem->setFlag(QGraphicsItem::ItemIsMovable, false);
                 drawItem->setSelected(false);
+                newItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+                newItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+                newItem->setSelected(true);
+                m_blockSelectionChanged=false;
+            }
+            if(item->type()==DiagramPathItem::Type){
+                m_blockSelectionChanged=true;
+                DiagramPathItem *pathItem=qgraphicsitem_cast<DiagramPathItem*>(item);
+                DiagramPathItem *newItem=qgraphicsitem_cast<DiagramPathItem*>(pathItem->copy());
+                m_SelectedItem = newItem;
+                newItem->setZValue(m_maxZ);
+                m_maxZ+=0.1;
+                addItem(newItem);
+                newItem->setPartnerItem(pathItem);
+                // disable drag on lower level
+                pathItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+                pathItem->setSelected(false);
+                newItem->setFlag(QGraphicsItem::ItemIsMovable, true);
+                newItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
+                newItem->setSelected(true);
+                m_blockSelectionChanged=false;
+            }
+            if(item->type()==DiagramSplineItem::Type){
+                m_blockSelectionChanged=true;
+                DiagramSplineItem *splineItem=qgraphicsitem_cast<DiagramSplineItem*>(item);
+                DiagramSplineItem *newItem=qgraphicsitem_cast<DiagramSplineItem*>(splineItem->copy());
+                m_SelectedItem = newItem;
+                newItem->setZValue(m_maxZ);
+                m_maxZ+=0.1;
+                addItem(newItem);
+                newItem->setPartnerItem(splineItem);
+                // disable drag on lower level
+                splineItem->setFlag(QGraphicsItem::ItemIsMovable, false);
+                splineItem->setSelected(false);
                 newItem->setFlag(QGraphicsItem::ItemIsMovable, true);
                 newItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
                 newItem->setSelected(true);

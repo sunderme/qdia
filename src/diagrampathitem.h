@@ -37,6 +37,8 @@ public:
     QVector<QPointF> getPoints()
         { return myPoints; }
     QLineF findLineSection(QPointF pt) const;
+    void setPoints(QVector<QPointF> points);
+
 
     int type() const  override
         { return Type;}
@@ -54,6 +56,9 @@ public:
 
     void setLocked(bool locked);
     bool isLocked();
+
+    void setPartnerItem(DiagramPathItem *partnerItem);
+    DiagramPathItem *partnerItem();
 
 protected:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) override;
@@ -84,8 +89,9 @@ private:
     int mySelPoint,myHoverPoint;
     qreal myHandlerWidth;
     QList<QPainterPath> m_arrows;
-    bool m_textMode;
+    bool m_textMode=false;
     bool m_isLocked=false;
+    DiagramPathItem *m_partnerItem=nullptr;
 };
 
 #endif // DIAGRAMPATHITEM_H

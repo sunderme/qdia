@@ -155,6 +155,15 @@ QLineF DiagramPathItem::findLineSection(QPointF pt) const
     return resultLine;
 }
 
+void DiagramPathItem::setPoints(QVector<QPointF> points)
+{
+    prepareGeometryChange();
+    myPoints=points;
+    if(myPoints.size()>1){
+        createPath();
+    }
+}
+
 QPainterPath DiagramPathItem::createArrow(QPointF p1, QPointF p2) const
 {
 #define pi 3.141592654
@@ -341,43 +350,49 @@ void DiagramPathItem::write(QJsonObject &json)
 void DiagramPathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
            QWidget *)
 {
-     painter->setPen(pen());
-     painter->setBrush(Qt::NoBrush);
-     painter->drawPath(getPath());
-     painter->setBrush(pen().color());
-     drawArrows(painter);
-     // selected
-     if(isSelected()){
-         QBrush selBrush=QBrush(Qt::cyan);
-         QPen selPen=QPen(Qt::cyan);
-         if(m_textMode){
-             selBrush=QBrush(Qt::blue);
-             selPen=QPen(Qt::blue);
-         }
-         painter->setBrush(selBrush);
-         painter->setPen(selPen);
-         QPointF point;
-         for(int i=0;i<myPoints.count();i++)
-         {
-             point = myPoints.at(i);
-             if(i==myHoverPoint){
-                 painter->setBrush(QBrush(Qt::red));
-             }
-             // Rect around valid point
-             painter->drawRect(QRectF(point-QPointF(2,2),point+QPointF(2,2)));
-             if(i==myHoverPoint){
-                 painter->setBrush(selBrush);
-             }
-             // show center points for text anchors
-             if(i>0 && m_textMode){
-                 point=(point+myPoints.at(i-1))/2;
-                 painter->drawRect(QRectF(point-QPointF(2,2),point+QPointF(2,2)));
-             }
-         }// foreach
-     }else{
-         // reset textMode
-         m_textMode=false;
-     }
+    painter->setBrush(Qt::NoBrush);
+    if(!m_partnerItem){
+        painter->setPen(pen());
+    }else{
+        QPen selPen=QPen(Qt::DashLine);
+        selPen.setColor(Qt::black);
+        painter->setPen(selPen);
+    }
+    painter->drawPath(getPath());
+    painter->setBrush(pen().color());
+    drawArrows(painter);
+    // selected
+    if(isSelected()){
+        QBrush selBrush=QBrush(Qt::cyan);
+        QPen selPen=QPen(Qt::cyan);
+        if(m_textMode){
+            selBrush=QBrush(Qt::blue);
+            selPen=QPen(Qt::blue);
+        }
+        painter->setBrush(selBrush);
+        painter->setPen(selPen);
+        QPointF point;
+        for(int i=0;i<myPoints.count();i++)
+        {
+            point = myPoints.at(i);
+            if(i==myHoverPoint){
+                painter->setBrush(QBrush(Qt::red));
+            }
+            // Rect around valid point
+            painter->drawRect(QRectF(point-QPointF(2,2),point+QPointF(2,2)));
+            if(i==myHoverPoint){
+                painter->setBrush(selBrush);
+            }
+            // show center points for text anchors
+            if(i>0 && m_textMode){
+                point=(point+myPoints.at(i-1))/2;
+                painter->drawRect(QRectF(point-QPointF(2,2),point+QPointF(2,2)));
+            }
+        }// foreach
+    }else{
+        // reset textMode
+        m_textMode=false;
+    }
 }
 
 QRectF DiagramPathItem::boundingRect() const
@@ -418,6 +433,9 @@ void DiagramPathItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
         QPointF mouse_point = onGrid(e -> pos());
         myPoints.replace(mySelPoint,onGrid(mouse_point));
         createPath();
+        if(m_partnerItem){
+            m_partnerItem->myPoints=myPoints;
+        }
         e->accept();
     }else{
         QGraphicsPathItem::mouseMoveEvent(e);
@@ -531,6 +549,20 @@ void DiagramPathItem::setLocked(bool locked)
 bool DiagramPathItem::isLocked()
 {
     return m_isLocked;
+}
+/*!
+ * \brief set partner item
+ * Used for connecting two path items, one on top to show selection and the actual element in the stack
+ * \param partnerItem
+ */
+void DiagramPathItem::setPartnerItem(DiagramPathItem *partnerItem)
+{
+    m_partnerItem = partnerItem;
+}
+
+DiagramPathItem *DiagramPathItem::partnerItem()
+{
+    return m_partnerItem;
 }
 
 QPointF DiagramPathItem::onGrid(QPointF pos)

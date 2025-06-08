@@ -144,6 +144,24 @@ QPointF DiagramSplineItem::getActivePoint(const int currentActive)
     return QPointF();
 }
 
+/*!
+ * \brief setPoints
+ * Set the points of the spline item
+ * \param p0 start point
+ * \param p1 end point
+ * \param c0 control point 0
+ * \param c1 control point 1
+ */
+void DiagramSplineItem::setPoints(QPointF p0, QPointF p1, QPointF c0, QPointF c1)
+{
+    this->p0 = p0;
+    this->p1 = p1;
+    this->c0 = c0;
+    this->c1 = c1;
+
+    createPath();
+}
+
 void DiagramSplineItem::updateActive(const QPointF point,int currentActive)
 {
     //prepareGeometryChange();
@@ -256,6 +274,20 @@ bool DiagramSplineItem::isLocked()
     return m_isLocked;
 }
 
+/*!
+ * \brief set partner item
+ * Used for connecting two path items, one on top to show selection and the actual element in the stack
+ * \param partnerItem
+ */
+void DiagramSplineItem::setPartnerItem(DiagramSplineItem *partnerItem)
+{
+    m_partnerItem = partnerItem;
+}
+
+DiagramSplineItem *DiagramSplineItem::partnerItem()
+{
+    return m_partnerItem;
+}
 QRectF DiagramSplineItem::boundingRect() const
 {
     QVector<QPointF> pts{p0,p1,c0,c1};
@@ -286,7 +318,13 @@ void DiagramSplineItem::createPath()
 
 void DiagramSplineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->setPen(pen());
+    if(!m_partnerItem){
+        painter->setPen(pen());
+    }else{
+        QPen selPen=QPen(Qt::DashLine);
+        selPen.setColor(Qt::black);
+        painter->setPen(selPen);
+    }
     painter->setBrush(brush());
     QPainterPath path;
     path.moveTo(p0);
@@ -431,6 +469,9 @@ void DiagramSplineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         }
 
         createPath();
+        if(m_partnerItem){
+            m_partnerItem->setPoints(p0,p1,c0,c1);
+        }
         e->accept();
     }else{
         QGraphicsPathItem::mouseMoveEvent(e);
