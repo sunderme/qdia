@@ -428,7 +428,7 @@ void MainWindow::rotateRight()
     if (m_scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform().rotate(90),m_scene->activeItems(),true);
+    transformSelected(QTransform().rotate(90),m_scene->activeItems(true),true);
 }
 
 void MainWindow::rotateLeft()
@@ -436,7 +436,7 @@ void MainWindow::rotateLeft()
     if (m_scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform().rotate(-90),m_scene->activeItems(),true);
+    transformSelected(QTransform().rotate(-90),m_scene->activeItems(true),true);
 }
 
 void MainWindow::flipX()
@@ -444,7 +444,7 @@ void MainWindow::flipX()
     if (m_scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform(-1,0,0,1,0,0),m_scene->activeItems());
+    transformSelected(QTransform(-1,0,0,1,0,0),m_scene->activeItems(true));
 }
 
 void MainWindow::flipY()
@@ -452,7 +452,7 @@ void MainWindow::flipY()
     if (m_scene->activeItems().isEmpty())
         return;
 
-    transformSelected(QTransform(1,0,0,-1,0,0),m_scene->activeItems());
+    transformSelected(QTransform(1,0,0,-1,0,0),m_scene->activeItems(true));
 }
 
 void MainWindow::scale()
@@ -467,7 +467,7 @@ void MainWindow::scale()
     if (!ok)
         return;
 
-    transformSelected(QTransform().scale(scaleFactor,scaleFactor),m_scene->activeItems(),true);
+    transformSelected(QTransform().scale(scaleFactor,scaleFactor),m_scene->activeItems(true),true);
 }
 
 void MainWindow::currentFontChanged(const QFont &)

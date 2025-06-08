@@ -126,7 +126,7 @@ public:
 
     void deleteItem(QGraphicsItem *item);
     void insertElementDirectly(const QString element);
-    QList<QGraphicsItem *> activeItems();
+    QList<QGraphicsItem *> activeItems(bool includeSelected=false);
     void duplicateItems();
 
     void setMaxZ(qreal z);
@@ -144,7 +144,7 @@ public:
     void findText(const QString text);
     bool replaceText(const QString find_text,const QString replace_text,bool replaceAll=false);
 
-    QList<QGraphicsItem*> selectedItems();
+    QList<QGraphicsItem*> selectedItems(bool includeSelected=false);
 
 
 public slots:

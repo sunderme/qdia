@@ -495,13 +495,16 @@ bool DiagramScene::replaceText(const QString find_text, const QString replace_te
  * Replace items which have partners
  * \return
  */
-QList<QGraphicsItem *> DiagramScene::selectedItems()
+QList<QGraphicsItem *> DiagramScene::selectedItems(bool includeSelected)
 {
     QList<QGraphicsItem *> lst = QGraphicsScene::selectedItems();
 
     // check for partnered items
     for(QGraphicsItem* &item:lst){
         getPartneredItem(item);
+    }
+    if(includeSelected && m_SelectedItem){
+        lst.append(m_SelectedItem);
     }
     return lst;
 }
@@ -1455,10 +1458,10 @@ void DiagramScene::insertElementDirectly(const QString element)
  * active items are selected items or insertItem
  * \return
  */
-QList<QGraphicsItem *> DiagramScene::activeItems()
+QList<QGraphicsItem *> DiagramScene::activeItems(bool includeSelected)
 {
     if(!selectedItems().isEmpty()){
-        return selectedItems();
+        return selectedItems(includeSelected);
     }
     if(!myMoveItems.isEmpty()){
         return myMoveItems;
