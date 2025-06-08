@@ -1442,6 +1442,9 @@ void DiagramScene::deleteItem(QGraphicsItem *item)
     if(item==insertedDrawItem){
         insertedDrawItem=nullptr;
     }
+    if(item==m_SelectedItem){
+        m_SelectedItem=nullptr;
+    }
     this->removeItem(item);
 }
 

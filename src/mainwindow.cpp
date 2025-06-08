@@ -189,7 +189,7 @@ void MainWindow::buttonGroupClicked(QAbstractButton *button)
 
 void MainWindow::deleteItem()
 {
-    QList<QGraphicsItem *> selectedItems = m_scene->selectedItems();
+    QList<QGraphicsItem *> selectedItems = m_scene->selectedItems(true);
 
     for (int i=0;i<selectedItems.length();++i) {
         QGraphicsItem *it=selectedItems[i];
