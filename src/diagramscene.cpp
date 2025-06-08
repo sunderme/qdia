@@ -394,6 +394,28 @@ void DiagramScene::getPartneredItem(QGraphicsItem *&item) const
         item=drawItem->partnerItem();
     }
 }
+
+/*!
+ * \brief check if item is locked
+ * \param item
+ * \return
+ */
+bool DiagramScene::isItemLocked(QGraphicsItem *item)
+{
+    DiagramItem *diagramItem = qgraphicsitem_cast<DiagramItem*>(item);
+    if(diagramItem){
+        return diagramItem->isLocked();
+    }
+    DiagramPathItem *pathItem = qgraphicsitem_cast<DiagramPathItem*>(item);
+    if(pathItem){
+        return pathItem->isLocked();
+    }
+    DiagramSplineItem *splineItem = qgraphicsitem_cast<DiagramSplineItem*>(item);
+    if(splineItem){
+        return splineItem->isLocked();
+    }
+    return false;
+}
 /*!
  * \brief filter selected child items
  * If in the list parent and child are selected, child is removed from list to avoid
@@ -403,7 +425,7 @@ void DiagramScene::getPartneredItem(QGraphicsItem *&item) const
 void DiagramScene::filterSelectedChildItems(QList<QGraphicsItem *> &lst)
 {
     foreach(QGraphicsItem* item,lst){
-        if(!item->flags().testFlag(QGraphicsItem::ItemIsMovable)){
+        if(isItemLocked(item)){
             item->setSelected(false);
             lst.removeOne(item);
             continue; // skip locked items

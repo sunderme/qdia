@@ -146,6 +146,7 @@ public:
 
     QList<QGraphicsItem*> selectedItems();
 
+
 public slots:
     void setMode(DiagramScene::Mode mode,bool m_abort=true);
     void abort(bool keepSelection=false);
@@ -191,7 +192,7 @@ protected:
     void moveItems(QList<QGraphicsItem*> source,QPointF delta);
     qreal getMinZ(QList<QGraphicsItem*> source);
     void getPartneredItem(QGraphicsItem *&item) const;
-
+    static bool isItemLocked(QGraphicsItem *item);
 
 private:
 
