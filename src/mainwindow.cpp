@@ -2432,7 +2432,7 @@ void MainWindow::linePatternChanged()
 /* TODO
  * color template ? / store custom colors
  ** show handlers on top when selected and below
-  - fix copy/move click on
+  - fix copy/move click on -> freeze selection ?
   - doubleClick text , move item
  * click unselect (shift/? alt)
  * click again to select lower element

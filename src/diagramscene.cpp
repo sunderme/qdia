@@ -219,9 +219,9 @@ void DiagramScene::setMode(DiagramScene::Mode mode, bool m_abort)
 
     myMode = mode;
     switch (mode) {
-    case MoveItem:
     case MoveItems:
     case CopyItem:
+    case MoveItem:
         enableAllItems(true);
         break;
     default:
@@ -320,6 +320,7 @@ QList<QGraphicsItem *> DiagramScene::copyItems(QList<QGraphicsItem *> source)
         QGraphicsItem *insItem=copy(item);
         if(!insItem) continue;
         copiedItems.append(item);
+        item->setFlag(QGraphicsItem::ItemIsMovable,true);
         addItem(insItem);
         insItem->setPos(item->pos());
         insItem->setZValue(item->zValue());
@@ -436,6 +437,7 @@ void DiagramScene::filterSelectedChildItems(QList<QGraphicsItem *> &lst)
                 lst.removeOne(item);
             }
         }
+        item->setFlag(QGraphicsItem::ItemIsMovable,true);
     }
 }
 /*!
@@ -858,6 +860,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             // switch toolbar !!
             emit abortSignal();
         }
+        mouseEvent->accept();
+        return;
         break;
     case CopyingItem:
         if (copiedItems.count() > 0){
@@ -873,6 +877,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             // switch toolbar !!
             emit abortSignal();
         }
+        mouseEvent->accept();
+        return;
         break;
     case Zoom:
         startPoint=mouseEvent->scenePos();
@@ -1051,6 +1057,11 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         }
         abort(true);
     }
+    if(myMode== CopyingItem){
+        mouseEvent->accept();
+        return;
+    }
+
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
 
@@ -1653,6 +1664,7 @@ void DiagramScene::abort(bool keepSelection)
     insertedDrawItem=nullptr;
     insertedPathItem=nullptr;
     insertedSplineItem=nullptr;
+    m_blockSelectionChanged=false;
     copiedItems.clear();
 
     if(!keepSelection) clearSelection();
