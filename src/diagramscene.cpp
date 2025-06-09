@@ -1188,7 +1188,7 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void DiagramScene::checkOnGrid()
 {
-    foreach (QGraphicsItem *item, selectedItems()) {
+    foreach (QGraphicsItem *item, selectedItems(true)) {
         if(item->parentItem()) continue; // don't change elements which are bound to other items, e.g. text for rectangle
         if(item->type()==DiagramTextItem::Type){
             DiagramTextItem *textItem=qgraphicsitem_cast<DiagramTextItem *>(item);
