@@ -826,12 +826,22 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 // speichere Referenzpunkt
                 myDx=point.rx();
                 myDy=point.ry();
+                // disable partner
+                if(m_SelectedItem){
+                    m_blockSelectionChanged=true;
+                    this->removeItem(m_SelectedItem);
+                    delete m_SelectedItem;
+                    m_SelectedItem=nullptr;
+                    m_blockSelectionChanged=false;
+                }
             }
         }
         if(middleButton){
             // switch toolbar !!
             emit abortSignal();
         }
+        mouseEvent->accept();
+        return;
         break;
     }
     case CopyItem:
