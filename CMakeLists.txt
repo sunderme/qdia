@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(qdia VERSION 0.53 LANGUAGES CXX)
+project(qdia VERSION 0.54 LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
