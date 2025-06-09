@@ -2431,8 +2431,6 @@ void MainWindow::linePatternChanged()
 
 /* TODO
  * color template ? / store custom colors
- ** show handlers on top when selected and below
-  - doubleClick text , move item
  * click unselect (shift/? alt)
  * click again to select lower element
  * better handlers when zoomed out ?

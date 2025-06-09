@@ -1367,32 +1367,32 @@ void DiagramScene::itemSelectionChangedSlot()
     if(m_blockSelectionChanged) return;
     if(m_SelectedItem){
         // selection changed ?
-        m_blockSelectionChanged=true;
         QList<QGraphicsItem*> items=QGraphicsScene::selectedItems();
-        if(items.size()!=1 || items.first()!=m_SelectedItem){
+        if(items.contains(m_SelectedItem)) {
+            m_blockSelectionChanged=true;
             DiagramDrawItem *drawItem=qgraphicsitem_cast<DiagramDrawItem*>(m_SelectedItem);
             if(drawItem){
                 DiagramDrawItem *partner=drawItem->partnerItem();
-                partner->setFlag(QGraphicsItem::ItemIsMovable, true);
-                drawItem->setPartnerItem(nullptr);
+                partner->setSelected(true);
             }
             DiagramPathItem *pathItem=qgraphicsitem_cast<DiagramPathItem*>(m_SelectedItem);
             if(pathItem){
                 DiagramPathItem *partner=pathItem->partnerItem();
-                partner->setFlag(QGraphicsItem::ItemIsMovable, true);
-                pathItem->setPartnerItem(nullptr);
+                partner->setSelected(true);
             }
             DiagramSplineItem *splineItem=qgraphicsitem_cast<DiagramSplineItem*>(m_SelectedItem);
             if(splineItem){
                 DiagramSplineItem *partner=splineItem->partnerItem();
-                partner->setFlag(QGraphicsItem::ItemIsMovable, true);
-                splineItem->setPartnerItem(nullptr);
+                partner->setSelected(true);
             }
             this->removeItem(m_SelectedItem);
             delete m_SelectedItem;
             m_SelectedItem=nullptr;
+            m_blockSelectionChanged=false;
+        }else{
+            removePartnerItem();
         }
-        m_blockSelectionChanged=false;
+
     }
     if(!m_SelectedItem){
         // only when single element is selected
@@ -1409,7 +1409,6 @@ void DiagramScene::itemSelectionChangedSlot()
                 addItem(newItem);
                 newItem->setPartnerItem(drawItem);
                 // disable drag on lower level
-                drawItem->setFlag(QGraphicsItem::ItemIsMovable, false);
                 drawItem->setSelected(false);
                 newItem->setFlag(QGraphicsItem::ItemIsMovable, true);
                 newItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -1426,7 +1425,6 @@ void DiagramScene::itemSelectionChangedSlot()
                 addItem(newItem);
                 newItem->setPartnerItem(pathItem);
                 // disable drag on lower level
-                pathItem->setFlag(QGraphicsItem::ItemIsMovable, false);
                 pathItem->setSelected(false);
                 newItem->setFlag(QGraphicsItem::ItemIsMovable, true);
                 newItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -1443,7 +1441,6 @@ void DiagramScene::itemSelectionChangedSlot()
                 addItem(newItem);
                 newItem->setPartnerItem(splineItem);
                 // disable drag on lower level
-                splineItem->setFlag(QGraphicsItem::ItemIsMovable, false);
                 splineItem->setSelected(false);
                 newItem->setFlag(QGraphicsItem::ItemIsMovable, true);
                 newItem->setFlag(QGraphicsItem::ItemIsSelectable, true);
