@@ -193,6 +193,7 @@ protected:
     qreal getMinZ(QList<QGraphicsItem*> source);
     void getPartneredItem(QGraphicsItem *&item) const;
     static bool isItemLocked(QGraphicsItem *item);
+    void removePartnerItem();
 
 private:
 

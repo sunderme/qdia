@@ -418,6 +418,18 @@ bool DiagramScene::isItemLocked(QGraphicsItem *item)
     return false;
 }
 /*!
+ * \brief remove partner item
+ * remove m_SelectedItem properly
+ */
+void DiagramScene::removePartnerItem()
+{
+    m_blockSelectionChanged=true;
+    this->removeItem(m_SelectedItem);
+    delete m_SelectedItem;
+    m_SelectedItem = nullptr;
+    m_blockSelectionChanged=false;
+}
+/*!
  * \brief filter selected child items
  * If in the list parent and child are selected, child is removed from list to avoid
  * the application of a transform twice
@@ -828,11 +840,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 myDy=point.ry();
                 // disable partner
                 if(m_SelectedItem){
-                    m_blockSelectionChanged=true;
-                    this->removeItem(m_SelectedItem);
-                    delete m_SelectedItem;
-                    m_SelectedItem=nullptr;
-                    m_blockSelectionChanged=false;
+                    removePartnerItem();
                 }
             }
         }
@@ -1114,6 +1122,10 @@ void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
                     }
 
                     emit textInserted(textItem);
+                    // deselect drawitem
+                    item->setSelected(false);
+                    // remove partner
+                    removePartnerItem();
                     m_blockSelectionChanged=false;
                 }
                 mouseEvent->accept();
