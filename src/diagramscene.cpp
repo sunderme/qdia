@@ -873,6 +873,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             // copy
             copiedItems=copyItems(myList);
             myMode=CopyingItem;
+            clearSelection();
         }
         if(middleButton){
             // switch toolbar !!
