@@ -1302,8 +1302,9 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
     }
 }
 
-void DiagramScene::clear()
+void DiagramScene::clearScene()
 {
+    removePartnerItem();
     foreach(QGraphicsItem *item,items()){
         if(item!=&myCursor)
         {
@@ -1580,11 +1581,11 @@ void DiagramScene::restoreSnapshot(int pos)
         // at m_undoPos
         if(m_undoPos>0){
             --m_undoPos;
-            clear();
+            clearScene();
             read_in_json(m_snapshots.at(m_undoPos));
         }
     }else{
-        clear();
+        clearScene();
         read_in_json(m_snapshots.at(pos));
         m_undoPos=pos;
     }

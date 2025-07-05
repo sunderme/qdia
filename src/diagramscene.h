@@ -157,7 +157,7 @@ public slots:
     void editorLostFocus(DiagramTextItem *item);
     void editorReceivedFocus(DiagramTextItem *item);
     void checkOnGrid();
-    void clear();
+    void clearScene();
     void copyToBuffer();
     void pasteFromBuffer(QByteArray buffer=QByteArray());
 

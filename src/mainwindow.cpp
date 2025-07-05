@@ -2159,7 +2159,7 @@ bool MainWindow::openFile(QString fileName)
         return false;
     }
     abort(); // force defined state
-    m_scene->clear();
+    m_scene->clearScene();
     m_scene->load_json(&file);
     m_scene->takeSnapshot();
     m_fileName=fileName;
