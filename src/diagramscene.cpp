@@ -224,6 +224,14 @@ void DiagramScene::setMode(DiagramScene::Mode mode, bool m_abort)
     case MoveItem:
         enableAllItems(true);
         break;
+    case InsertItem:
+    case InsertDrawItem:
+    case InsertText:
+    case InsertUserElement:
+    case InsertElement:
+    case InsertLine:
+    case InsertSpline:
+        removePartnerItem();
     default:
         enableAllItems(false);
         break;
