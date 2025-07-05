@@ -431,6 +431,9 @@ bool DiagramScene::isItemLocked(QGraphicsItem *item)
  */
 void DiagramScene::removePartnerItem()
 {
+    if(m_SelectedItem==nullptr){
+        return; // nothing to remove
+    }
     m_blockSelectionChanged=true;
     this->removeItem(m_SelectedItem);
     delete m_SelectedItem;
