@@ -1720,6 +1720,7 @@ QJsonDocument DiagramScene::create_json_save(bool selectedItemsOnly)
     QJsonArray array;
     QList<QGraphicsItem*> lst=selectedItemsOnly ? selectedItems() : items();
     foreach(QGraphicsItem* item, lst){
+        if(item==m_SelectedItem) continue; // don't snapshot partner item
         if(item->parentItem()) continue;
         addElementToJSON(item,array);
     }
