@@ -604,7 +604,7 @@ void MainWindow::about()
     */
     QMessageBox::about(this, tr("About QDia"),
                        tr("Version %1\n"
-                           "Written by Jan Sundermeyer (C) 2022\n"
+                           "Written by Jan Sundermeyer (C) 2022-2025\n"
                           "Simple schematic/diagram entry editor.").arg(QDIA_VERSION));
 }
 
