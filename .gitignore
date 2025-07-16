@@ -73,3 +73,6 @@ build
 *.dll
 *.exe
 
+# Doxygen generated files
+doc/html
+doc/latex
