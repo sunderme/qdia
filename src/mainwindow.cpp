@@ -293,7 +293,7 @@ void MainWindow::bringToFront()
         return;
     m_scene->setCursorVisible(false);
 
-    QGraphicsItem *selectedItem = m_scene->selectedItems().first();
+    QGraphicsItem *selectedItem = m_scene->selectedItems().constFirst();
     const QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
 
     qreal zValue = 0;
@@ -312,7 +312,7 @@ void MainWindow::bringUp()
         return;
     m_scene->setCursorVisible(false);
 
-    QGraphicsItem *selectedItem = m_scene->selectedItems().first();
+    QGraphicsItem *selectedItem = m_scene->selectedItems().constFirst();
     const QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
 
     qreal zValue=selectedItem->zValue();
@@ -347,7 +347,7 @@ void MainWindow::sendToBack()
     if (m_scene->selectedItems().isEmpty())
         return;
     m_scene->setCursorVisible(false);
-    QGraphicsItem *selectedItem = m_scene->selectedItems().first();
+    QGraphicsItem *selectedItem = m_scene->selectedItems().constFirst();
     const QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
 
     qreal zValue = 0;
@@ -366,7 +366,7 @@ void MainWindow::sendDown()
         return;
     m_scene->setCursorVisible(false);
 
-    QGraphicsItem *selectedItem = m_scene->selectedItems().first();
+    QGraphicsItem *selectedItem = m_scene->selectedItems().constFirst();
     const QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
 
     qreal zValue=selectedItem->zValue();
@@ -1592,7 +1592,7 @@ void MainWindow::tapItem()
     if (m_scene->selectedItems().isEmpty())
         return;
 
-    QGraphicsItem *item=m_scene->selectedItems().first();
+    QGraphicsItem *item=m_scene->selectedItems().constFirst();
     if(item->type()==QGraphicsItemGroup::Type) return; // needs to be a single item
     // check text item
     if(item->type()==DiagramTextItem::Type){
