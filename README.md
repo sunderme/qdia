@@ -14,6 +14,8 @@ Installer/binaries for windows, OSX and linux can be found under [Releases](http
 The program has reached a useable state.
 Creating schematics,loading/saving, exporting and undo/redo work.
 
+[Manual](https://github.com/sunderme/qdia/wiki/Manual)
+
 ## Screenshots
 
 <img width="971" alt="grafik" src="https://user-images.githubusercontent.com/14033169/172570257-8b48640e-bfbe-4250-be3a-0b231646e1b4.png">
