@@ -229,6 +229,7 @@ void DiagramScene::setMode(DiagramScene::Mode mode, bool m_abort)
     case InsertText:
     case InsertUserElement:
     case InsertElement:
+    case InsertImage:
     case InsertLine:
     case InsertSpline:
         removePartnerItem();
@@ -627,6 +628,7 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             break;
         case InsertItem:
         case InsertElement:
+        case InsertImage:
         case InsertUserElement:
             if (insertedItem){
                 insertedItem=nullptr;
@@ -785,6 +787,33 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             QPen p(myLineColor);
             p.setCapStyle(Qt::RoundCap);
             item->setPen(p);
+            item->setZValue(m_maxZ);
+            item->setTransform(insertedItem->transform());
+            item->setSelected(true);
+            m_maxZ+=0.1;
+            addItem(item);
+            insertedItem=item;
+        }
+        takeSnapshot();
+        if(middleButton){
+            // switch toolbar !!
+            emit abortSignal();
+        }
+        break;
+    case InsertImage:
+        if(insertedItem==nullptr){
+            insertedItem = new DiagramImage(mItemFileName, myItemMenu);
+            insertedItem->setZValue(m_maxZ);
+            m_maxZ+=0.1;
+            addItem(insertedItem);
+        }
+        insertedItem->setPos(onGrid(mouseEvent->scenePos()));
+        emit itemInserted(insertedItem);
+        insertedItem->setSelected(false);
+        insertedItem->setEnabled(false);
+        // add next item, same orientation if rotated/flipped
+        {
+            DiagramItem *item=new DiagramImage(mItemFileName, myItemMenu);
             item->setZValue(m_maxZ);
             item->setTransform(insertedItem->transform());
             item->setSelected(true);
@@ -995,6 +1024,16 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             QPen p(myLineColor);
             p.setCapStyle(Qt::RoundCap);
             insertedItem->setPen(p);
+            insertedItem->setSelected(true);
+            insertedItem->setZValue(m_maxZ);
+            m_maxZ+=0.1;
+            addItem(insertedItem);
+        }
+        insertedItem->setPos(onGrid(mouseEvent->scenePos()));
+        break;
+    case InsertImage:
+        if(insertedItem==nullptr){
+            insertedItem = new DiagramImage(mItemFileName, myItemMenu);
             insertedItem->setSelected(true);
             insertedItem->setZValue(m_maxZ);
             m_maxZ+=0.1;
@@ -1664,6 +1703,7 @@ void DiagramScene::abort(bool keepSelection)
         break;
     case InsertItem:
     case InsertElement:
+    case InsertImage:
     case InsertUserElement:
         if(insertedItem)
             removeItem(insertedItem);

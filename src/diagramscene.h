@@ -54,6 +54,7 @@
 #include "diagramitem.h"
 #include "diagramdrawitem.h"
 #include "diagramelement.h"
+#include "diagramimage.h"
 #include "diagramtextitem.h"
 #include "diagrampathitem.h"
 #include "diagramsplineitem.h"
@@ -77,7 +78,7 @@ class DiagramScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-    enum Mode { InsertItem, InsertLine, InsertSpline, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem, Zoom , MoveItems, InsertElement , ZoomSingle, InsertUserElement,SelectInner,SelectOuter};
+    enum Mode { InsertItem, InsertLine, InsertSpline, InsertText, MoveItem, CopyItem, CopyingItem, InsertDrawItem, Zoom , MoveItems, InsertElement, InsertImage , ZoomSingle, InsertUserElement,SelectInner,SelectOuter};
 
     explicit DiagramScene(QMenu *itemMenu, QObject *parent = nullptr);
     QFont font() const { return myFont; }

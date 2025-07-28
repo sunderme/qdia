@@ -171,6 +171,7 @@ private slots:
    void replaceText();
    void replaceAllText();
    void showPreferences();
+   void insertImage();
 
 protected:
    void closeEvent(QCloseEvent *event);
@@ -239,6 +240,7 @@ private:
    QAction *lineAction;
    QAction *rectAction;
    QAction *textAction;
+   QAction *imageAction;
 
    QAction *tapAction;
 
@@ -321,6 +323,7 @@ private:
 
    QString m_lastPath;
    QString m_lastPathImage;
+   QString m_lastImportPathImage;
    int m_lastSavedSnapshot = -1;
    QByteArray m_id; // unique ID for this instance
 };

@@ -41,6 +41,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent)
     m_recentFiles=settings.value("recentFiles").toStringList();
     m_lastPath=settings.value("lastPath").toString();
     m_lastPathImage=settings.value("lastPathImage").toString();
+    m_lastImportPathImage=settings.value("lastPathImportImage").toString();
     QString fontName=settings.value("font").toString();
     int fontSize=settings.value("fontsize").toInt();
     // restore style
@@ -144,6 +145,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     settings.setValue("fontsize",fontSizeCombo->currentText().toInt());
     settings.setValue("lastPath",m_lastPath);
     settings.setValue("lastPathImage",m_lastPathImage);
+    settings.setValue("lastPathImportImage",m_lastImportPathImage);
     event->accept();
 }
 
@@ -999,6 +1001,11 @@ void MainWindow::createActions()
     connect(textAction,&QAction::triggered,this,&MainWindow::switchToText);
     listOfActions.append(textAction);
 
+    imageAction = new QAction(tr("Insert &Image"), this);
+    imageAction->setShortcut(QKeySequence("i"));
+    connect(imageAction,&QAction::triggered,this,&MainWindow::insertImage);
+    listOfActions.append(imageAction);
+
     // Zoom in/out
     zoomInAction = new QAction(QIcon(":/images/zoomin.svg"),tr("Zoom &in"), this);
     //zoomInAction->setShortcut(tr("Shift+z"));
@@ -1115,6 +1122,7 @@ void MainWindow::createMenus()
     createMenu->addAction(lineAction);
     createMenu->addAction(rectAction);
     createMenu->addAction(textAction);
+    createMenu->addAction(imageAction);
 
     itemMenu = menuBar()->addMenu(tr("&Item"));
     itemMenu->addAction(deleteAction);
@@ -1842,6 +1850,28 @@ void MainWindow::showPreferences()
             QApplication::setStyle(QStyleFactory::create(newStyleName));
             configuration.style=newStyleName;
         }
+    }
+}
+/*!
+ * \brief insert image
+ * Imagefile is selected in QFileDialog
+ */
+void MainWindow::insertImage()
+{
+    QFileDialog::Options options;
+    QString selectedFilter;
+    QString path=m_lastImportPathImage.isEmpty() ? "" : m_lastImportPathImage+QDir::separator();
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Insert Image"),
+                                                    path+"image.png",
+                                                    tr("Images (*.png *.jpg *.jpeg *.bmp *.gif)"),
+                                                    &selectedFilter,
+                                                    options);
+    if (!fileName.isEmpty()){
+        m_scene->setItemType(fileName);
+        m_scene->setMode(DiagramScene::InsertImage);
+        QFileInfo fi(fileName);
+        m_lastImportPathImage= fi.absolutePath();
     }
 }
 
