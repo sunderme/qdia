@@ -73,6 +73,17 @@ void DiagramImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     if(!mPixmap.isNull()){
         painter->drawPixmap(boundingRect(), mPixmap, mPixmap.rect());
     }
+    // selected
+    if(isSelected()){
+        // Rect
+        QPen selPen=QPen(Qt::DotLine);
+        selPen.setWidth(0);
+        selPen.setColor(Qt::black);
+        QBrush selBrush=QBrush(Qt::NoBrush);
+        painter->setBrush(selBrush);
+        painter->setPen(selPen);
+        painter->drawRect(boundingRect());
+    }// if
 }
 QRectF DiagramImage::boundingRect() const
 {
@@ -80,6 +91,15 @@ QRectF DiagramImage::boundingRect() const
         return QRectF(0, 0, mPixmap.width(), mPixmap.height());
     }
     return QRectF();
+}
+
+QPainterPath DiagramImage::shape() const
+{
+    QPainterPath path;
+    if(!mPixmap.isNull()){
+        path.addRect(boundingRect());
+    }
+    return path;
 }
 
 /*!

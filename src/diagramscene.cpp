@@ -1886,6 +1886,10 @@ QGraphicsItem *DiagramScene::getElementFromJSON(QJsonObject json)
         insertedItem = new DiagramElement(json,myItemMenu);
         item=insertedItem;
         break;
+    case DiagramImage::Type:
+        insertedItem = new DiagramImage(json,myItemMenu);
+        item=insertedItem;
+        break;
     case DiagramDrawItem::Type:
         insertedDrawItem = new DiagramDrawItem(json,myItemMenu);
         item=insertedDrawItem;
