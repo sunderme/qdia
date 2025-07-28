@@ -67,6 +67,20 @@ QPixmap DiagramImage::image() const
     }
     return mPixmap;
 }
+/*!
+ * \brief set image from QIMage
+ * \param img
+ */
+void DiagramImage::setImage(QImage img)
+{
+    mPixmap=QPixmap::fromImage(img);
+    if(!mPixmap.isNull()){
+        setFlag(QGraphicsItem::ItemIsMovable, true);
+        setFlag(QGraphicsItem::ItemIsSelectable, true);
+        setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+        setAcceptHoverEvents(true);
+    }
+}
 
 void DiagramImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {

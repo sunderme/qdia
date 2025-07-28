@@ -25,6 +25,7 @@ public:
     QString getFileName() {
         return mFileName;
     }
+    void setImage(QImage img);
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
     QRectF boundingRect() const override;

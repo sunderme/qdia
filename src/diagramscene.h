@@ -161,6 +161,7 @@ public slots:
     void clearScene();
     void copyToBuffer();
     void pasteFromBuffer(QByteArray buffer=QByteArray());
+    void pasteImage(QImage img);
 
 protected slots:
     void itemSelectionChangedSlot();

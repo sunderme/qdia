@@ -1528,6 +1528,11 @@ void MainWindow::pasteFromClipboard()
     if (!clipboard->ownsClipboard() && mimeData->hasFormat("application/qdia")) {
         buffer = mimeData->data("application/qdia");
     }
+    if (!clipboard->ownsClipboard() && mimeData->hasImage()) {
+        QImage image = qvariant_cast<QImage>(mimeData->imageData());
+        m_scene->pasteImage(image);
+        return;
+    }
     m_scene->pasteFromBuffer(buffer);
 }
 

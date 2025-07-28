@@ -1409,6 +1409,21 @@ void DiagramScene::pasteFromBuffer(QByteArray buffer)
 
     myMode=CopyingItem;
 }
+/*! paste image from clipboard
+ * \param img image to paste
+ */
+void DiagramScene::pasteImage(QImage img)
+{
+    if(img.isNull()) return;
+    setMode(InsertImage);
+    DiagramImage *di=new DiagramImage("", myItemMenu);
+    di->setImage(img);
+    insertedItem = di;
+    insertedItem->setSelected(true);
+    insertedItem->setZValue(m_maxZ);
+    m_maxZ+=0.1;
+    addItem(insertedItem);
+}
 
 /*!
  * \brief to be called when selection has changed
