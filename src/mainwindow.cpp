@@ -1533,6 +1533,20 @@ void MainWindow::pasteFromClipboard()
         m_scene->pasteImage(image);
         return;
     }
+    if (!clipboard->ownsClipboard()){
+        // check if mimedata is image file name
+        if (mimeData->hasUrls()) {
+            QList<QUrl> urls = mimeData->urls();
+            if (!urls.isEmpty()) {
+                QString fileName = urls.first().toLocalFile();
+                QImage img=QImage(fileName);
+                if(!img.isNull()){
+                    m_scene->pasteImage(img);
+                    return;
+                }
+            }
+        }
+    }
     m_scene->pasteFromBuffer(buffer);
 }
 
