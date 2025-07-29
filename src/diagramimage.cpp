@@ -93,6 +93,7 @@ void DiagramImage::setImage(QImage img)
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
         setAcceptHoverEvents(true);
+        m_boundingRect= QRectF(0, 0, mPixmap.width(), mPixmap.height());
     }
 }
 
