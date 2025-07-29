@@ -21,7 +21,7 @@ DiagramImage::DiagramImage(const QString fileName, QMenu *contextMenu, QGraphics
     }
     myHoverPoint=-1;
     mySelPoint=-1;
-    myHandlerWidth=2.0;
+    myHandlerWidth=5.0;
 }
 
 DiagramImage::DiagramImage(const QJsonObject &json, QMenu *contextMenu): DiagramItem(json, contextMenu)
@@ -40,7 +40,7 @@ DiagramImage::DiagramImage(const QJsonObject &json, QMenu *contextMenu): Diagram
     }
     myHoverPoint=-1;
     mySelPoint=-1;
-    myHandlerWidth=2.0;
+    myHandlerWidth=5.0;
 }
 
 DiagramImage::DiagramImage(const DiagramImage& diagram): DiagramItem(diagram)
@@ -50,7 +50,7 @@ DiagramImage::DiagramImage(const DiagramImage& diagram): DiagramItem(diagram)
     m_boundingRect = diagram.m_boundingRect;
     myHoverPoint=-1;
     mySelPoint=-1;
-    myHandlerWidth=2.0;
+    myHandlerWidth=5.0;
 }
 DiagramItem* DiagramImage::copy()
 {
@@ -161,7 +161,21 @@ void DiagramImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
         }// if
     }// if
 }
+/*!
+* \brief return boundrect of actual structure plus helper structures
+* Helperstructure are usually the handles in selected state
+* \return
+*/
 QRectF DiagramImage::boundingRect() const
+{
+    qreal extra = myHandlerWidth;
+
+    QRectF newRect = innerBoundingRect().adjusted(-extra, -extra, extra, extra);
+
+    return newRect;
+}
+
+QRectF DiagramImage::innerBoundingRect() const
 {
     if(!mPixmap.isNull()){
         return m_boundingRect.rect();
@@ -175,6 +189,16 @@ QPainterPath DiagramImage::shape() const
     if(!mPixmap.isNull()){
         path.addRect(boundingRect());
     }
+    if(isSelected()){
+        QPointF point;
+        const int numberOfHandles=8;
+        for(int i=0;i<numberOfHandles;i++)
+        {
+            point=getHandler(i);
+            // Rect around valid point
+            path.addRect(QRectF(point-QPointF(myHandlerWidth,myHandlerWidth),point+QPointF(myHandlerWidth,myHandlerWidth)));
+        }// for
+    }// if
     return path;
 }
 
