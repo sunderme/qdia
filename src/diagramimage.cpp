@@ -105,14 +105,20 @@ void DiagramImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
         // maintain aspect ratio
         // first try to fit the width
         qreal scaleFactor = targetRect.width() / sourceRect.width();
-        if(sourceRect.height()*scaleFactor< targetRect.height()){
+        if(sourceRect.height()*scaleFactor<= targetRect.height()){
             // fits
             // adapt height to maintain aspect ratio
-            targetRect.setHeight(sourceRect.height()*scaleFactor);
+            const qreal h = targetRect.height();
+            const qreal hn = sourceRect.height()*scaleFactor;
+            targetRect.setHeight(hn);
+            targetRect.translate(QPointF(0,(h-hn)/2));
         }else{
             // fits height
             scaleFactor = targetRect.height() / sourceRect.height();
-            targetRect.setWidth(sourceRect.width()*scaleFactor);
+            const qreal w= targetRect.width();
+            const qreal wn= sourceRect.width()*scaleFactor;
+            targetRect.setWidth(wn);
+            targetRect.translate(QPointF((w-wn)/2,0));
         }
 
         painter->drawPixmap(targetRect, mPixmap, sourceRect);
