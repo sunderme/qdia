@@ -1,10 +1,12 @@
 #include "diagramimage.h"
+#include "diagramscene.h"
 #include <QPainter>
 #include <QCursor>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <qbuffer.h>
+#include <QGraphicsSceneContextMenuEvent>
 
 DiagramImage::DiagramImage(const QString fileName, QMenu *contextMenu, QGraphicsItem *parent): DiagramItem(contextMenu,parent)
 {
@@ -15,7 +17,11 @@ DiagramImage::DiagramImage(const QString fileName, QMenu *contextMenu, QGraphics
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
         setAcceptHoverEvents(true);
+        m_boundingRect= QRectF(0, 0, mPixmap.width(), mPixmap.height());
     }
+    myHoverPoint=-1;
+    mySelPoint=-1;
+    myHandlerWidth=2.0;
 }
 
 DiagramImage::DiagramImage(const QJsonObject &json, QMenu *contextMenu): DiagramItem(json, contextMenu)
@@ -30,13 +36,21 @@ DiagramImage::DiagramImage(const QJsonObject &json, QMenu *contextMenu): Diagram
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
         setAcceptHoverEvents(true);
+        m_boundingRect = QRectF(0, 0, mPixmap.width(), mPixmap.height());
     }
+    myHoverPoint=-1;
+    mySelPoint=-1;
+    myHandlerWidth=2.0;
 }
 
 DiagramImage::DiagramImage(const DiagramImage& diagram): DiagramItem(diagram)
 {
     mFileName=diagram.mFileName;
     mPixmap=diagram.mPixmap;
+    m_boundingRect = diagram.m_boundingRect;
+    myHoverPoint=-1;
+    mySelPoint=-1;
+    myHandlerWidth=2.0;
 }
 DiagramItem* DiagramImage::copy()
 {
@@ -85,7 +99,23 @@ void DiagramImage::setImage(QImage img)
 void DiagramImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     if(!mPixmap.isNull()){
-        painter->drawPixmap(boundingRect(), mPixmap, mPixmap.rect());
+        QRectF targetRect = boundingRect();
+        QRectF sourceRect = mPixmap.rect();
+        // Draw the pixmap scaled to fit the bounding rectangle
+        // maintain aspect ratio
+        // first try to fit the width
+        qreal scaleFactor = targetRect.width() / sourceRect.width();
+        if(sourceRect.height()*scaleFactor< targetRect.height()){
+            // fits
+            // adapt height to maintain aspect ratio
+            targetRect.setHeight(sourceRect.height()*scaleFactor);
+        }else{
+            // fits height
+            scaleFactor = targetRect.height() / sourceRect.height();
+            targetRect.setWidth(sourceRect.width()*scaleFactor);
+        }
+
+        painter->drawPixmap(targetRect, mPixmap, sourceRect);
     }
     // selected
     if(isSelected()){
@@ -97,12 +127,37 @@ void DiagramImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
         painter->setBrush(selBrush);
         painter->setPen(selPen);
         painter->drawRect(boundingRect());
+        // selected
+        if(isSelected()){
+            QRectF rect=boundingRect();
+            painter->drawRect(rect);
+            // Draghandles
+            selBrush=QBrush(Qt::cyan,Qt::SolidPattern);
+            selPen=QPen(Qt::cyan);
+            painter->setBrush(selBrush);
+            painter->setPen(selPen);
+            QPointF point;
+            const int nPoints=8;
+
+            for(int i=0;i<nPoints;i++)
+            {
+                point=getHandler(i);
+                if(i==myHoverPoint){
+                    painter->setBrush(QBrush(Qt::red));
+                }
+                // Rect around valid point
+                painter->drawRect(QRectF(point-QPointF(myHandlerWidth,myHandlerWidth),point+QPointF(myHandlerWidth,myHandlerWidth)));
+                if(i==myHoverPoint){
+                    painter->setBrush(selBrush);
+                }
+            }// foreach
+        }// if
     }// if
 }
 QRectF DiagramImage::boundingRect() const
 {
     if(!mPixmap.isNull()){
-        return QRectF(0, 0, mPixmap.width(), mPixmap.height());
+        return m_boundingRect.rect();
     }
     return QRectF();
 }
@@ -116,25 +171,102 @@ QPainterPath DiagramImage::shape() const
     return path;
 }
 
-/*!
- * \brief change cursor when move is feasible
- * \param e
- */
-void DiagramImage::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
-{
+void DiagramImage::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
     if (isSelected()) {
-        setCursor(Qt::SizeAllCursor);
+        QPointF hover_point = e -> pos();
+        QPointF point;
+        for(myHoverPoint=0;myHoverPoint<8;myHoverPoint++){
+            point=getHandler(myHoverPoint);
+            if(hasClickedOn(hover_point,point)) break;
+        }//for
+        if(myHoverPoint==8) myHoverPoint=-1;
+        else update();
     }
-    DiagramItem::hoverEnterEvent(e);
+    DiagramItem::hoverMoveEvent(e);
 }
-/*!
- * \brief change cursor back to default
- * \param e
- */
-void DiagramImage::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
-{
+
+void DiagramImage::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
     if (isSelected()) {
-        setCursor(Qt::ArrowCursor);
+        if(myHoverPoint>-1){
+            myHoverPoint=-1;
+            update();
+        }
     }
     DiagramItem::hoverLeaveEvent(e);
+}
+
+bool DiagramImage::hasClickedOn(QPointF press_point, QPointF point) const {
+    return (
+        press_point.x() >= point.x() - myHandlerWidth &&\
+                                                            press_point.x() <  point.x() + myHandlerWidth &&\
+              press_point.y() >= point.y() - myHandlerWidth &&\
+              press_point.y() <  point.y() + myHandlerWidth
+        );
+}
+
+
+QPointF DiagramImage::onGrid(QPointF pos)
+{
+    DiagramScene* myScene = dynamic_cast<DiagramScene*>(scene());
+    QPointF result = myScene->onGrid(pos);
+    return result;
+}
+/*!
+ * \brief return position of the stretch handlers
+ * \param i number of handler
+ * clock-wise, start left top
+ * \return
+ */
+QPointF DiagramImage::getHandler(int i) const
+{
+    QPointF point;
+    QRectF rect=m_boundingRect.rect();
+
+    if(i<3) point=QPointF(rect.left()+rect.width()/2*i,rect.top());
+    if(i==3) point=QPointF(rect.right(),rect.bottom()-rect.height()/2);
+    if(i>3 && i<7) point=QPointF(rect.left()+rect.width()/2*(i-4),rect.bottom());
+    if(i==7) point=QPointF(rect.left(),rect.bottom()-rect.height()/2);
+    return point;
+}
+
+void DiagramImage::mouseMoveEvent(QGraphicsSceneMouseEvent *e) {
+    // left click
+    if ((e -> buttons() & Qt::LeftButton)&&(mySelPoint>-1)) {
+        QPointF mouse_point = onGrid(e -> pos());
+        prepareGeometryChange();
+        if(mySelPoint<8){
+            m_boundingRect.movePoint(mouse_point);
+            QPointF anchorPoint=m_boundingRect.anchorPoint();
+            m_boundingRect.translate(-anchorPoint); // renormalize: anchor is at 0/0, the item is moved instead
+            setPos(mapToScene(anchorPoint));
+            /*if(m_partnerItem){
+                m_partnerItem->set;
+            }*/
+        }
+        e->setAccepted(true);
+    }
+    else
+        DiagramItem::mouseMoveEvent(e);
+}
+
+void DiagramImage::mousePressEvent(QGraphicsSceneMouseEvent *e) {
+    if(isSelected()){
+        if (e -> buttons() & Qt::LeftButton) {
+            QPointF mouse_point = e -> pos();
+            QPointF point;
+            for(mySelPoint=0;mySelPoint<8;mySelPoint++){
+                point=getHandler(mySelPoint);
+                if(hasClickedOn(mouse_point,point)) break;
+            }//for
+            if(mySelPoint==8){
+                mySelPoint=-1;
+            }else{
+                if(mySelPoint<8){
+                    m_boundingRect=Rect(m_boundingRect.point(),mySelPoint);
+                }
+                e->accept();
+            }
+        }
+    }
+    DiagramItem::mousePressEvent(e);
 }

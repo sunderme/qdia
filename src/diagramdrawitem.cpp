@@ -637,6 +637,18 @@ Rect::Rect(QPointF pt,int selPoint)
     setSelPoint(selPoint);
 }
 
+Rect::Rect(QRectF rect)
+{
+    m_selPoint=-1;
+    m_mvAnchorX=false;
+    m_mvPointX=false;
+    m_mvAnchorY=false;
+    m_mvPointY=false;
+    // anchor is 0/0
+    m_anchor=QPointF(0,0);
+    m_point=QPointF(rect.width(),rect.height());
+}
+
 QPointF Rect::anchorPoint() const
 {
     return m_anchor;
@@ -645,6 +657,11 @@ QPointF Rect::anchorPoint() const
 QPointF Rect::point() const
 {
     return m_point;
+}
+
+QRectF Rect::rect() const
+{
+    return QRectF(m_anchor,m_point);
 }
 
 void Rect::setSelPoint(int selPoint)

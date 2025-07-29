@@ -2,6 +2,7 @@
 #define DIAGRAMIMAGE_H
 
 #include "diagramitem.h"
+#include "diagramdrawitem.h"
 
 class DiagramImage : public DiagramItem
 {
@@ -30,12 +31,24 @@ protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *e) override;
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *e) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *e) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *e) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *e) override;
+    bool hasClickedOn(QPointF press_point, QPointF point) const ;
+    QPointF onGrid(QPointF pos);
+
+    QPointF getHandler(int i) const;
 
     QString mFileName;
     QString mName;
     QPixmap mPixmap;
+    Rect m_boundingRect;
+
+    int myHoverPoint,mySelPoint;
+    qreal myHandlerWidth;
+
+    DiagramImage *m_partnerItem;
 };
 
 #endif // DIAGRAMIMAGE_H

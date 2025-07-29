@@ -14,8 +14,10 @@ class Rect
 public:
     Rect();
     Rect(QPointF pt,int selPoint);
+    Rect(QRectF rect);
     QPointF anchorPoint() const;
     QPointF point() const;
+    QRectF rect() const;
 
     void setSelPoint(int selPoint);
     void setLeft();
