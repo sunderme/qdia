@@ -22,6 +22,13 @@
 * THE SOFTWARE.
 */
 
+/*!
+ * @file ColorPickerActionWidget.h
+ * @brief Implementation of a class for color selection in a Qt-based application.
+ *
+ * This file defines the ColorPickerActionWidget class, which inherits from QWidgetAction and provides functionality for color selection using QColorDialog.
+ */
+
 #ifndef COLOR_PICKER_ACTION_WIDGET_H
 #define COLOR_PICKER_ACTION_WIDGET_H
 
@@ -29,6 +36,12 @@
 
 QT_FORWARD_DECLARE_CLASS(QColorDialog)
 
+/*!
+ * @class ColorPickerActionWidget
+ * @brief Class for color selection inheriting from QWidgetAction.
+ *
+ * The class provides the ability to select a color using the QColorDialog dialog and emits signals when a color is selected or the action is canceled.
+ */
 class ColorPickerActionWidget: public QWidgetAction
 {
     Q_OBJECT
@@ -36,7 +49,17 @@ public:
     explicit ColorPickerActionWidget(QWidget * parent = 0);
 
 Q_SIGNALS:
+
+    /*!
+     * @brief Signal emitted when a color is selected.
+     *
+     * @param color Selected color.
+     */
     void colorSelected(QColor color);
+
+    /*!
+     * @brief Signal emitted when the action is canceled.
+     */
     void rejected();
 
 public Q_SLOTS:

@@ -22,9 +22,21 @@
 * THE SOFTWARE.
 */
 
+/*!
+ * @file ColorPickerActionWidget.cpp
+ * @brief Implementation of the ColorPickerActionWidget class.
+ */
+
 #include "ColorPickerActionWidget.h"
 #include <QColorDialog>
 
+/*!
+ * @brief Constructor of the ColorPickerActionWidget class.
+ *
+ * Initializes the color selection dialog and connects signals.
+ *
+ * @param parent Parent widget.
+ */
 ColorPickerActionWidget::ColorPickerActionWidget(QWidget * parent) :
     QWidgetAction(parent),
     m_colorDialog(new QColorDialog(parent))
@@ -42,11 +54,21 @@ ColorPickerActionWidget::ColorPickerActionWidget(QWidget * parent) :
     setDefaultWidget(m_colorDialog);
 }
 
+/*!
+ * @brief Slot called before the widget is shown.
+ *
+ * Displays the color selection dialog.
+ */
 void ColorPickerActionWidget::aboutToShow()
 {
     m_colorDialog->show();
 }
 
+/*!
+ * @brief Slot called before the widget is hidden.
+ *
+ * Hides the color selection dialog.
+ */
 void ColorPickerActionWidget::aboutToHide()
 {
     m_colorDialog->hide();
