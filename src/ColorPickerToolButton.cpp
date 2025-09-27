@@ -22,12 +22,26 @@
 * THE SOFTWARE.
 */
 
+/**
+ * @file ColorPickerToolButton.cpp
+ * @brief Implementation of the ColorPickerToolButton class
+ */
+
 #include "ColorPickerToolButton.h"
 #include "ColorPickerActionWidget.h"
 #include <QMenu>
 #include <QColorDialog>
 #include <QScopedPointer>
 
+/**
+ * @brief Initializes the button with color picker components
+ *
+ * Creates:
+ * - A popup menu with ColorPickerActionWidget
+ * - Default action triggering color dialog
+ * - Signal connections for color selection propagation
+ * - Menu show/hide handlers for the color widget
+ */
 ColorPickerToolButton::ColorPickerToolButton(QWidget * parent) :
     QToolButton(parent),
     m_menu(new QMenu(this))
@@ -56,6 +70,14 @@ ColorPickerToolButton::ColorPickerToolButton(QWidget * parent) :
     QObject::connect(m_menu, SIGNAL(aboutToHide()), colorPickerActionWidget, SLOT(aboutToHide()));
 }
 
+/**
+ * @brief Shows a QColorDialog and handles selection results
+ *
+ * Features:
+ * - Uses non-native dialog for consistent cross-platform behavior
+ * - Shows alpha channel but forces full opacity (alpha=255)
+ * - Emits colorSelected() with chosen color or rejected() on cancel
+ */
 void ColorPickerToolButton::onColorDialogAction()
 {
     QScopedPointer<QColorDialog> colorDialogPtr(new QColorDialog(this));
