@@ -22,6 +22,11 @@
 * THE SOFTWARE.
 */
 
+/**
+ * @file ColorPickerToolButton.h
+ * @brief A custom tool button for color selection with a popup menu.
+ */
+
 #ifndef COLOR_PICKER_TOOL_BUTTON_H
 #define COLOR_PICKER_TOOL_BUTTON_H
 
@@ -30,21 +35,48 @@
 
 QT_FORWARD_DECLARE_CLASS(QMenu)
 
+/**
+ * @class ColorPickerToolButton
+ * @brief Provides a button with color selection capabilities.
+ *
+ * This QToolButton subclass combines a default color dialog action with
+ * a custom color picker widget in a popup menu. Supports alpha channel
+ * selection and emits signals for color selection and cancellation.
+ */
 class ColorPickerToolButton: public QToolButton
 {
     Q_OBJECT
 public:
+
+    /**
+     * @brief Constructs a ColorPickerToolButton
+     * @param parent Parent widget (optional)
+     */
     explicit ColorPickerToolButton(QWidget * parent = 0);
 
 Q_SIGNALS:
+
+    /**
+     * @brief Emitted when a color is selected
+     * @param color The selected QColor
+     */
     void colorSelected(QColor color);
+
+    /**
+     * @brief Emitted when color selection is canceled
+     */
     void rejected();
 
 private Q_SLOTS:
+
+    /**
+     * @brief Handles the color dialog activation
+     * @internal
+     */
     void onColorDialogAction();
 
 private:
-    QMenu * m_menu;
+    QMenu * m_menu; ///< Popup menu containing color picker widgets
 };
 
 #endif // COLOR_PICKER_TOOL_BUTTON_H
