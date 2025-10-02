@@ -48,7 +48,6 @@ int main(int argc, char *argv[])
 #else
         QString fn=qApp->applicationDirPath()+"/translations/" + baseName+".qm";
 #endif
-        qDebug()<<QFileInfo::exists(fn)<<fn;
         if (translator.load(fn)) {
             a.installTranslator(&translator);
             break;
