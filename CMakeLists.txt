@@ -41,7 +41,10 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS PrintSupport Svg REQUIRED)
 
 set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/resources/win.rc")
 
-set(TS_FILES translation/qdia_en_US.ts translation/qdia_de.ts)
+set(TS_FILES 
+    translation/qdia_en_US.ts
+    translation/qdia_de_DE.ts
+)
 set_source_files_properties(${TS_FILES}
     PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translation")
 
@@ -67,6 +70,8 @@ set(PROJECT_SOURCES
         src/diagramsplineitem.cpp
         src/diagramscene.cpp
         src/diagramscene.h
+        src/diagramimage.cpp
+        src/diagramimage.h
         src/searchreplacedialog.cpp
         src/searchreplacedialog.h
         src/preferencesdialog.cpp
@@ -86,7 +91,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MACOSX_BUNDLE
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        src/diagramimage.h src/diagramimage.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET qdia APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

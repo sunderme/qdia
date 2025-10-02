@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="de_DE">
 <context>
     <name>MainWindow</name>
     <message>
         <location filename="../src/mainwindow.cpp" line="400"/>
         <source>%</source>
-        <translation></translation>
+        <translation>Über QDia</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="509"/>
@@ -20,7 +18,7 @@ Written by Jan Sundermeyer (C) 2022
 Simple schematic/diagram entry editor.</source>
         <translation>Version %1
 Geschrieben von Jan Sundermeyer (C) 2022
-Einfacher Schaltplan/Diagramm Editor.</translation>
+Einfacher Schaltplan/Diagramm Editor</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="528"/>
@@ -40,7 +38,7 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="531"/>
         <source>RoundedRect</source>
-        <translation>AbgerundetesRechteck</translation>
+        <translation>GerundeteEckenRechteck</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="532"/>
@@ -75,22 +73,22 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="557"/>
         <source>Basic Shapes</source>
-        <translation>Einfach Formen</translation>
+        <translation>Einfache Formen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="562"/>
         <source>Basic Electronic Elements</source>
-        <translation>Einfache elektronische Elemente</translation>
+        <translation>Einfache Elektronische Elemente</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="585"/>
         <source>Analog Blocks</source>
-        <translation>Analogblöcke</translation>
+        <translation>Analoge Blöcke</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="590"/>
         <source>Basic Digital Gates</source>
-        <translation>Digitalgatter</translation>
+        <translation>Einfache Digitale Gatter</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="604"/>
@@ -115,7 +113,7 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="698"/>
         <source>&amp;Redo</source>
-        <translation>&amp;Wiederherstellen</translation>
+        <translation>&amp;Wiederholen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="699"/>
@@ -125,12 +123,12 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="703"/>
         <source>Bring to &amp;Front</source>
-        <translation>Nach &amp;vorne</translation>
+        <translation>Nach &amp;Vorne bringen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="704"/>
         <source>Ctrl+F</source>
-        <translation></translation>
+        <translation>Ctrl+F</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="705"/>
@@ -140,32 +138,32 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="708"/>
         <source>Send to &amp;Back</source>
-        <translation>Nach &amp;hinten</translation>
+        <translation>Nach &amp;Hinten schicken</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="709"/>
         <source>Ctrl+T</source>
-        <translation></translation>
+        <translation>Ctrl+T</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="710"/>
         <source>Send item to back</source>
-        <translation>Element nach hinten senden</translation>
+        <translation>Element nach hinten schicken</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="714"/>
         <source>Bring &amp;up</source>
-        <translation>Nach &amp;vorne</translation>
+        <translation>Nach &amp;oben bringen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="716"/>
         <source>Bring item one up</source>
-        <translation>Um eins nach vorne</translation>
+        <translation>Element eins nach oben bringen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="720"/>
         <source>Send &amp;down</source>
-        <translation>Nach &amp;hinten</translation>
+        <translation>Nach &amp;unten schicken</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="721"/>
@@ -175,72 +173,72 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="722"/>
         <source>Send item one down</source>
-        <translation>Um eins nach hinten</translation>
+        <translation>Element um eins nach unten schicken</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="726"/>
         <source>rotate &amp;Right</source>
-        <translation>Drehe &amp;rechts</translation>
+        <translation>Nach &amp;Rechts drehen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="727"/>
         <source>R</source>
-        <translation></translation>
+        <translation>R</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="728"/>
         <source>rotate item 90 degrees right</source>
-        <translation>drehe Element 90 grad nach rechts</translation>
+        <translation>Element um 90 Grad nach rechts drehen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="733"/>
         <source>rotate &amp;Left</source>
-        <translation>Drehe &amp;links</translation>
+        <translation>Nach &amp;links drehen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="734"/>
         <source>Shift+R</source>
-        <translation></translation>
+        <translation>Shift+R</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="735"/>
         <source>rotate item 90 degrees left</source>
-        <translation>drehe Element 90 grad nach links</translation>
+        <translation>drehe um 90 Grad nach links</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="740"/>
         <source>&amp;group Items</source>
-        <translation>&amp;Gruppiere Elemente</translation>
+        <translation>&amp;Grupiere Elemente</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="741"/>
         <source>Ctrl+G</source>
-        <translation></translation>
+        <translation>Ctrl+G</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="742"/>
         <source>group Items</source>
-        <translation>Gruppiere Elemente</translation>
+        <translation>Grupiere Elemente</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="747"/>
         <source>&amp;ungroup Item</source>
-        <translation>Gr&amp;uppierung lösen</translation>
+        <translation>Grupierung &amp;lösen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="748"/>
         <source>Shift+Ctrl+G</source>
-        <translation></translation>
+        <translation>Shift+Ctrl+G</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="749"/>
         <source>ungroup Items</source>
-        <translation>Gruppierung lösen</translation>
+        <translation>Grupierung lösen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="753"/>
         <source>&amp;make user element</source>
-        <translation>&amp;Generiere Nutzerelement</translation>
+        <translation>Generiere N&amp;utzerelement</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="757"/>
@@ -250,22 +248,22 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="758"/>
         <source>Delete</source>
-        <translation>Lösche</translation>
+        <translation>Löschen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="759"/>
         <source>Delete item from diagram</source>
-        <translation>Lösche Element aus Diagram</translation>
+        <translation>Element aus Diagramm löschen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="763"/>
         <source>E&amp;xit</source>
-        <translation>Be&amp;ende</translation>
+        <translation>B&amp;eenden</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="765"/>
         <source>Quit Scenediagram example</source>
-        <translation>QDia beenden</translation>
+        <translation>Quit Scenediagram example</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="769"/>
@@ -280,17 +278,17 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="778"/>
         <source>Ctrl+B</source>
-        <translation></translation>
+        <translation>Ctrl+B</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="781"/>
         <source>Italic</source>
-        <translation>Schrägstellen</translation>
+        <translation>Kursiv</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="783"/>
         <source>Ctrl+I</source>
-        <translation></translation>
+        <translation>Ctrl+I</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="786"/>
@@ -321,7 +319,7 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="1948"/>
         <source>Solid Line</source>
-        <translation>Feste Linie</translation>
+        <translation>Ganze Linie</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1948"/>
@@ -346,7 +344,7 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="715"/>
         <source>Ctrl+U</source>
-        <translation></translation>
+        <translation>Ctrl+U</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="791"/>
@@ -356,12 +354,12 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="792"/>
         <source>F1</source>
-        <translation></translation>
+        <translation>F1</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="795"/>
         <source>&amp;Print</source>
-        <translation>&amp;Drucke</translation>
+        <translation>D&amp;rucken</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="796"/>
@@ -371,37 +369,37 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="799"/>
         <source>&amp;Export Diagram</source>
-        <translation>Diagramm &amp;exportieren</translation>
+        <translation>&amp;Exportiere Diagramm</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="800"/>
         <source>Export Diagram to image</source>
-        <translation>Diagramm als Bild exportieren</translation>
+        <translation>Exportiere Diagramm in ein Bild</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="803"/>
         <source>&amp;Copy</source>
-        <translation>&amp;Kopiere</translation>
+        <translation>&amp;Kopieren</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="804"/>
         <source>c</source>
-        <translation></translation>
+        <translation>c</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="808"/>
         <source>&amp;Duplicate</source>
-        <translation>&amp;Dupliziere</translation>
+        <translation>&amp;Duplizieren</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="809"/>
         <source>ctrl+d</source>
-        <translation></translation>
+        <translation>ctrl+d</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="813"/>
         <source>&amp;Tap</source>
-        <translation>&amp;Übernehmen</translation>
+        <translation>&amp;Proben</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="814"/>
@@ -411,148 +409,148 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="818"/>
         <source>&amp;Move</source>
-        <translation>&amp;Verschiebe</translation>
+        <translation>&amp;Verschieben</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="819"/>
         <source>m</source>
-        <translation></translation>
+        <translation>m</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="824"/>
         <source>Flip &amp;X</source>
-        <translation>Spiegele &amp;X</translation>
+        <translation>Spiegeln &amp;X</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="825"/>
         <source>f</source>
-        <translation></translation>
+        <translation>f</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="829"/>
         <source>Flip &amp;Y</source>
-        <translation>Spiegele &amp;Y</translation>
+        <translation>Spiegeln &amp;Y</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="830"/>
         <source>Shift+F</source>
-        <translation></translation>
+        <translation>Shift+F</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="844"/>
         <source>Create &amp;Dot</source>
-        <translation>Erzeuge &amp;Punkt</translation>
+        <translation>Generiere &amp;Punkt</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="849"/>
         <source>Create &amp;Line</source>
-        <translation>Erzeuge &amp;Linie</translation>
+        <translation>Generiere &amp;Linie</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="854"/>
         <source>Create &amp;Rect</source>
-        <translation>Erzeuge &amp;Rechteck</translation>
+        <translation>Generiere &amp;Rechteck</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="859"/>
         <source>Create &amp;Text</source>
-        <translation>Erzeuge &amp;Text</translation>
+        <translation>Generiere &amp;Text</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="865"/>
         <source>Zoom &amp;in</source>
-        <translation>H&amp;ineinzoomen</translation>
+        <translation>&amp;Vergrößern</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="871"/>
         <source>Shift+z</source>
-        <translation></translation>
+        <translation>Shift+z</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="870"/>
         <source>Zoom &amp;out</source>
-        <translation>Her&amp;auszoomen</translation>
+        <translation>Ver&amp;kleinern</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="875"/>
         <source>&amp;Zoom area</source>
-        <translation>&amp;Bereich vergrößern</translation>
+        <translation>Auf &amp;Bereich vergrößern</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="876"/>
         <source>z</source>
-        <translation></translation>
+        <translation>z</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="880"/>
         <source>Zoom &amp;Fit</source>
-        <translation>&amp;Alles zeigen</translation>
+        <translation>Alles &amp;zeigen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="881"/>
         <source>v</source>
-        <translation></translation>
+        <translation>v</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="886"/>
         <source>&amp;Finer Grid</source>
-        <translation>&amp;Feineres Gitter</translation>
+        <translation>&amp;Feineres Raster</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="887"/>
         <source>+</source>
-        <translation></translation>
+        <translation>+</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="892"/>
         <source>&amp;Coarser Grid</source>
-        <translation>&amp;Gröberes Gitter</translation>
+        <translation>&amp;Gröberes Raster</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="893"/>
         <source>-</source>
-        <translation></translation>
+        <translation>-</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="898"/>
         <source>Show &amp;Grid</source>
-        <translation>Zeige Gi&amp;tter</translation>
+        <translation>Zeige &amp;Raster</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="905"/>
         <source>&amp;Open ...</source>
-        <translation>Ö&amp;ffne ...</translation>
+        <translation>&amp;Öffne ...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="906"/>
         <source>Ctrl+o</source>
-        <translation></translation>
+        <translation>Ctrl+o</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="911"/>
         <source>&amp;Save ...</source>
-        <translation>&amp;Speichere ...</translation>
+        <translation>&amp;Speichern ...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="912"/>
         <location filename="../src/mainwindow.cpp" line="918"/>
         <source>Ctrl+s</source>
-        <translation></translation>
+        <translation>Ctrl+s</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="917"/>
         <source>Save &amp;As ...</source>
-        <translation>Speichere &amp;als ...</translation>
+        <translation>Speichern &amp;als ...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="922"/>
         <source>&amp;Copy to clipboard</source>
-        <translation>&amp;Kopiere in die Zwischenablage</translation>
+        <translation>In Zwischenablage &amp;kopieren</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="923"/>
         <source>Ctrl+c</source>
-        <translation></translation>
+        <translation>Ctrl+c</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="928"/>
@@ -562,32 +560,32 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="929"/>
         <source>Ctrl+v</source>
-        <translation></translation>
+        <translation>Ctrl+v</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="937"/>
         <source>Open recent files...</source>
-        <translation>Zuletzt geöffnet ...</translation>
+        <translation>Letzte Dateien öffnen ...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="940"/>
         <source>&amp;File</source>
-        <translation>&amp;Dateien</translation>
+        <translation>&amp;Datei</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="951"/>
         <source>&amp;View</source>
-        <translation>A&amp;nsicht</translation>
+        <translation>&amp;Ansicht</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="962"/>
         <source>&amp;Create</source>
-        <translation>&amp;Erzeuge</translation>
+        <translation>&amp;Generie</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="968"/>
         <source>&amp;Item</source>
-        <translation>&amp;Elemente</translation>
+        <translation>&amp;Element</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="993"/>
@@ -622,7 +620,7 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="1172"/>
         <source>Zoom</source>
-        <translation>Zoom</translation>
+        <translation>Vergrößerung</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1258"/>
@@ -652,7 +650,7 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="1573"/>
         <source>Export Diagram to ...</source>
-        <translation>Exportiere Diagramm als ...</translation>
+        <translation>Exportiere Diagramm nach ...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1768"/>
@@ -663,7 +661,7 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
         <location filename="../src/mainwindow.cpp" line="1776"/>
         <location filename="../src/mainwindow.cpp" line="1805"/>
         <source>File operation error</source>
-        <translation>Fehler in Dateiverarbeitung</translation>
+        <translation>Fehler in Dateioperation</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1823"/>
@@ -678,7 +676,7 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="1875"/>
         <source>Start</source>
-        <translation>Start</translation>
+        <translation>Anfang</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1875"/>
@@ -688,17 +686,17 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="1875"/>
         <source>StartEnd</source>
-        <translation>StartEnde</translation>
+        <translation>AnfangEnde</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1875"/>
         <source>Spline</source>
-        <translation></translation>
+        <translation>Spline</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1875"/>
         <source>Spline Start</source>
-        <translation></translation>
+        <translation>Spline Anfang</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="1875"/>
@@ -708,7 +706,7 @@ Einfacher Schaltplan/Diagramm Editor.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="1875"/>
         <source>Spline StartEnd</source>
-        <translation>Spline StartEnde</translation>
+        <translation>Spline AnfangEnde</translation>
     </message>
 </context>
 </TS>
