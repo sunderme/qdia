@@ -43,11 +43,7 @@ int main(int argc, char *argv[])
     const QStringList uiLanguages = QLocale::system().uiLanguages();
     for (const QString &locale : uiLanguages) {
         const QString baseName = "qdia_" + QLocale(locale).name();
-#ifdef Q_OS_MACOS
         QString fn=":/i18n/translation/" + baseName+".qm";
-#else
-        QString fn=qApp->applicationDirPath()+"/translations/" + baseName+".qm";
-#endif
         if (translator.load(fn)) {
             a.installTranslator(&translator);
             break;
