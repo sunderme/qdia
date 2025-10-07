@@ -44,6 +44,7 @@ set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/resources/win.rc")
 set(TS_FILES 
     translation/qdia_en_US.ts
     translation/qdia_de_DE.ts
+    translation/qdia_ru.ts
 )
 set_source_files_properties(${TS_FILES}
     PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translation")
