@@ -65,10 +65,10 @@ DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):Di
     qreal height=json["height"].toDouble();
     myPos2=QPointF(width,height);
     myRadius=5.0;
-    qreal x0=json["start_x"].toDouble();
-    qreal y0=json["start_y"].toDouble();
-    qreal x1=json["end_x"].toDouble();
-    qreal y1=json["end_y"].toDouble();
+    qreal x0=json["x0"].toDouble();
+    qreal y0=json["y0"].toDouble();
+    qreal x1=json["x1"].toDouble();
+    qreal y1=json["y1"].toDouble();
     mStartPoint=QPointF(x0,y0);
     mEndPoint=QPointF(x1,y1);
 
