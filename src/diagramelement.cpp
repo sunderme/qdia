@@ -109,6 +109,7 @@ void DiagramElement::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
         QPen selPen=QPen(Qt::DotLine);
         selPen.setWidth(0);
         selPen.setColor(Qt::black);
+        selPen.setBrush(Qt::white);
         QBrush selBrush=QBrush(Qt::NoBrush);
         painter->setBrush(selBrush);
         painter->setPen(selPen);
