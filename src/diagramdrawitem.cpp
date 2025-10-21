@@ -155,6 +155,7 @@ QPainterPath DiagramDrawItem::createPath()
         path.lineTo(myRadius,0);
         break;
     case Pie:
+    case CirclePie:
     {
         qreal compression=myPos2.y()/myPos2.x(); // calculate compression because it is an ellipse instead of a circle
         QLineF ln(0,0,mStartPoint.x(),mStartPoint.y()/compression);
@@ -254,7 +255,7 @@ void DiagramDrawItem::write(QJsonObject &json)
     json["diagramtype"]=static_cast<int>(myDiagramType);
     json["width"]=myPos2.x();
     json["height"]=myPos2.y();
-    if(myDiagramType==Pie){
+    if(myDiagramType==Pie || myDiagramType==CirclePie){
         json["x0"]=mStartPoint.x();
         json["y0"]=mStartPoint.y();
         json["x1"]=mEndPoint.x();
@@ -272,7 +273,7 @@ void DiagramDrawItem::setPos2(QPointF newPos)
 {
     prepareGeometryChange();
     myPos2=mapFromScene(newPos);
-    if(myDiagramType==Circle || myDiagramType==Square){
+    if(myDiagramType==Circle || myDiagramType==Square || myDiagramType==CirclePie){
         // special treatment in case of circle
         if(fabs(myPos2.x())>fabs(myPos2.y())){
             if(myPos2.y()<0) myPos2.setY(-fabs(myPos2.x()));
@@ -303,7 +304,7 @@ void DiagramDrawItem::setDimension(QPointF newPos)
 
 void DiagramDrawItem::mySetDimension(QPointF newPos)
 {
-    if(myDiagramType==Circle|| myDiagramType==Square){
+    if(myDiagramType==Circle|| myDiagramType==Square || myDiagramType==CirclePie){
         // special treatment in case of circle
         if(myPos2.x()!=newPos.x()){
             myPos2=newPos;
@@ -344,7 +345,7 @@ QPointF DiagramDrawItem::getHandler(int i) const
 int DiagramDrawItem::getNumberOfHandles() const
 {
     int nHandles=8;
-    if(myDiagramType==Pie){
+    if(myDiagramType==Pie || myDiagramType==CirclePie){
         nHandles=10;
     }
     return nHandles;
@@ -361,7 +362,7 @@ QPointF DiagramDrawItem::getDimension()
 void DiagramDrawItem::setStartPoint(const QPointF pt)
 {
     mStartPoint=pt;
-    if(myDiagramType==Pie){
+    if(myDiagramType==Pie || myDiagramType==CirclePie){
         mPainterPath=createPath();
     }
     if(m_partnerItem){
@@ -376,7 +377,7 @@ void DiagramDrawItem::setStartPoint(const QPointF pt)
 void DiagramDrawItem::setEndPoint(const QPointF pt)
 {
     mEndPoint=pt;
-    if(myDiagramType==Pie){
+    if(myDiagramType==Pie || myDiagramType==CirclePie){
         mPainterPath=createPath();
     }
     if(m_partnerItem){
@@ -427,7 +428,7 @@ void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
         painter->setPen(selPen);
         QRectF rect=innerBoundingRect();
         painter->drawRect(rect);
-        if(myDiagramType==Pie){
+        if(myDiagramType==Pie || myDiagramType==CirclePie){
             // extra lines for pie/arc
             painter->drawLine(myPos2/2,mStartPoint+myPos2/2);
             painter->drawLine(myPos2/2,mEndPoint+myPos2/2);
@@ -453,6 +454,26 @@ void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
             }
         }// foreach
     }// if
+}
+
+/*!
+ * \brief handle mouse enter hovering
+ * \param e
+ */
+void DiagramDrawItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
+{
+    if (isSelected()) {
+        QPointF hover_point = e -> pos();
+        QPointF point;
+        int numberOfHandles=getNumberOfHandles();
+        for(myHoverPoint=0;myHoverPoint<numberOfHandles;myHoverPoint++){
+            point=getHandler(myHoverPoint);
+            if(hasClickedOn(hover_point,point)) break;
+        }//for
+        if(myHoverPoint==numberOfHandles) myHoverPoint=-1;
+        else update();
+    }
+    DiagramItem::hoverEnterEvent(e);
 }
 
 void DiagramDrawItem::hoverMoveEvent(QGraphicsSceneHoverEvent *e) {
@@ -522,7 +543,7 @@ QRectF DiagramDrawItem::boundingRect() const
 
     QRectF newRect = innerBoundingRect().adjusted(-extra, -extra, extra, extra);
 
-    if(myDiagramType==Pie){
+    if(myDiagramType==Pie || myDiagramType==CirclePie){
         QRectF helper(mStartPoint+myPos2/2,mEndPoint+myPos2/2);
         newRect=newRect.united(helper);
     }
@@ -536,7 +557,7 @@ QRectF DiagramDrawItem::boundingRect() const
 QRectF DiagramDrawItem::innerBoundingRect() const
 {
     QRectF newRect = path().boundingRect();
-    if(myDiagramType==Pie){
+    if(myDiagramType==Pie || myDiagramType==CirclePie){
         newRect=QRectF(QPointF(0,0),myPos2);
     }
 

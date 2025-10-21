@@ -629,6 +629,7 @@ void MainWindow::createToolBox()
         {tr("Circle"),DiagramDrawItem::Circle},
         {tr("RoundedRect"),DiagramDrawItem::RoundedRect},
         {tr("Arc"),DiagramDrawItem::Pie},
+        {tr("Circle Arc"),DiagramDrawItem::CirclePie},
         {tr("Rhombus"),DiagramDrawItem::Rhombus},
         {tr("Triangle"),DiagramDrawItem::Triangle},
         {tr("DA"),DiagramDrawItem::DA},

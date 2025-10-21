@@ -48,7 +48,7 @@ class DiagramDrawItem : public DiagramItem
 public:
     enum { Type = UserType + 16 };
     enum DiagramType { Ellipse, Rectangle, Circle, RoundedRect,
-                       Rhombus, Triangle, DA , OTA, Note, Pie, MUX, DEMUX, Square};
+                       Rhombus, Triangle, DA , OTA, Note, Pie, MUX, DEMUX, Square, CirclePie};
 
     DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
         QGraphicsItem *parent = 0);
@@ -93,6 +93,7 @@ protected:
     QPainterPath shape() const override;
     QRectF boundingRect() const override;
     QRectF innerBoundingRect() const;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *e) override;
     void hoverMoveEvent(QGraphicsSceneHoverEvent *e) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *e) override;
     void mousePressEvent(QGraphicsSceneMouseEvent *e) override;
