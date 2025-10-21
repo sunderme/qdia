@@ -503,10 +503,10 @@ void DiagramDrawItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
 
 bool DiagramDrawItem::hasClickedOn(QPointF press_point, QPointF point) const {
     return (
-        press_point.x() >= point.x() - myHandlerWidth &&\
-        press_point.x() <  point.x() + myHandlerWidth &&\
-        press_point.y() >= point.y() - myHandlerWidth &&\
-        press_point.y() <  point.y() + myHandlerWidth
+        press_point.x() >= point.x() - 2*myHandlerWidth &&\
+        press_point.x() <  point.x() + 2*myHandlerWidth &&\
+        press_point.y() >= point.y() - 2*myHandlerWidth &&\
+        press_point.y() <  point.y() + 2*myHandlerWidth
     );
 }
 
