@@ -6,7 +6,26 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+/**
+ * @class DiagramElement
+ * @brief Represents a graphical element in a diagram loaded from a JSON file.
+ *
+ * The DiagramElement class inherits from DiagramItem and provides functionality to load
+ * and render vector paths from a JSON file. It supports selection, movement, hover effects,
+ * and serialization/deserialization of element properties.
+ */
 
+/**
+ * @brief Constructs a DiagramElement from a JSON file.
+ * @param fileName Path to JSON file containing path definitions
+ * @param contextMenu Context menu for the item
+ * @param parent Parent graphics item
+ *
+ * Loads paths from the specified JSON file and initializes the element with:
+ * - Movable and selectable flags
+ * - Geometry change notifications
+ * - Hover event acceptance
+ */
 DiagramElement::DiagramElement(const QString fileName, QMenu *contextMenu, QGraphicsItem *parent): DiagramItem(contextMenu,parent)
 {
     mFileName=fileName;
@@ -24,6 +43,17 @@ DiagramElement::DiagramElement(const QString fileName, QMenu *contextMenu, QGrap
     }
 }
 
+/**
+ * @brief Copy constructor.
+ * @param diagram Element to copy from
+ *
+ * Creates a deep copy including:
+ * - File name and element name
+ * - Path data from original file
+ * - Transform properties
+ * - Visual style (pen/brush)
+ * - Position and transformation matrix
+ */
 DiagramElement::DiagramElement(const DiagramElement& diagram)
     : DiagramItem(diagram.myContextMenu,diagram.parentItem())
 {
@@ -45,18 +75,44 @@ DiagramElement::DiagramElement(const DiagramElement& diagram)
     setPos(diagram.pos());
 }
 
+/**
+ * @brief Creates a copy of this element.
+ * @return Pointer to new DiagramItem copy
+ *
+ * @see DiagramElement(const DiagramElement&)
+ */
 DiagramItem* DiagramElement::copy()
 {
     DiagramElement* newDiagramElement=new DiagramElement(*this);
     return dynamic_cast<DiagramItem*>(newDiagramElement);
 }
 
+/**
+ * @brief Serializes element properties to JSON.
+ * @param obj JSON object to write to
+ *
+ * Saves:
+ * - Base class properties (via DiagramItem::write())
+ * - File name (filename)
+ * - Element name (name)
+ */
 void DiagramElement::write(QJsonObject &obj)
 {
     DiagramItem::write(obj);
     obj["filename"]=mFileName;
     obj["name"]=mName;
 }
+
+/**
+ * @brief Generates a preview image of the element.
+ * @return 250x250 pixmap with scaled element representation
+ *
+ * Features:
+ * - Transparent background
+ * - Automatic scaling (max 240px per dimension)
+ * - Centered position
+ * - Path filling according to JSON definitions
+ */
 QPixmap DiagramElement::image() const
 {
     QPixmap pixmap(250, 250);
@@ -87,6 +143,15 @@ QPixmap DiagramElement::image() const
     return pixmap;
 }
 
+/**
+ * @brief Custom painting implementation.
+ * @param painter QPainter to use for drawing
+ *
+ * Handles:
+ * - Path filling based on JSON specifications
+ * - Selection highlight (black dotted border)
+ * - Transformations from path definitions
+ */
 void DiagramElement::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     painter->setPen(pen());
@@ -116,6 +181,10 @@ void DiagramElement::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
     }// if
 }
 
+/**
+ * @brief Calculates the bounding rectangle.
+ * @return Union of all transformed path bounding rectangles
+ */
 QRectF DiagramElement::boundingRect() const
 {
     QRectF rect;
@@ -127,9 +196,11 @@ QRectF DiagramElement::boundingRect() const
     return rect;
 }
 
-/*!
- * \brief change cursor when move is feasible
- * \param e
+/**
+ * @brief Handles hover enter events.
+ * @param e Hover event
+ *
+ * Changes cursor to SizeAllCursor when selected.
  */
 void DiagramElement::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 {
@@ -138,9 +209,12 @@ void DiagramElement::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
     }
     DiagramItem::hoverEnterEvent(e);
 }
-/*!
- * \brief change cursor back to default
- * \param e
+
+/**
+ * @brief Handles hover leave events.
+ * @param e Hover event
+ *
+ * Restores default arrow cursor when selected.
  */
 void DiagramElement::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
 {
@@ -150,6 +224,18 @@ void DiagramElement::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
     DiagramItem::hoverLeaveEvent(e);
 }
 
+/**
+ * @brief Loads path definitions from JSON file.
+ * @param fn File path to load from
+ * @return List of Path objects
+ *
+ * File format requirements:
+ * - Valid JSON structure
+ * - Path array with transformation matrices
+ * - Fill/dontFill boolean flags
+ *
+ * @note Emits qWarning() on file read errors
+ */
 QList<DiagramElement::Path> DiagramElement::importPathFromFile(const QString &fn)
 {
     // open and read in text file
@@ -165,6 +251,33 @@ QList<DiagramElement::Path> DiagramElement::importPathFromFile(const QString &fn
     return createPainterPathFromJSON(loadDoc.object());
 }
 
+/**
+ * @brief Creates a list of DiagramElement::Path objects from a JSON representation.
+ *
+ * This function parses a JSON object to construct a list of painter paths for diagram elements.
+ * It supports various primitive shapes (rect, circle, line), complex paths (polygon, arc, cubic),
+ * text elements, and nested elements from external JSON files.
+ *
+ * @param json JSON object containing the diagram element specification. Expected structure:
+ *             - "name": (string) Element name
+ *             - "filled": (bool) Fill flag for main path
+ *             - "dontFill": (bool) Fill override flag
+ *             - "elements": (array) Array of path components with:
+ *               - "type": (string) Element type (rect|circle|line|polygon|arc|text|element etc.)
+ *               - Type-specific parameters (coordinates, radii, control points, etc.)
+ *
+ * @return QList<DiagramElement::Path> List of complete painter paths with transformations applied.
+ *         The main path is prepended to the list, followed by additional elements like text.
+ *
+ * @note JSON structure requirements:
+ * - Rectangles require x0, y0, x1, y1
+ * - Circles accept either "r" (uniform radius) or "rx"/"ry"
+ * - Text elements create separate paths with font handling
+ * - "element" type imports external JSON files (from ":/libs/") with scaling/rotation
+ * - Coordinate system assumes Y-axis points downward
+ *
+ * @see QPainterPath, QJsonObject, QTransform
+ */
 QList<DiagramElement::Path> DiagramElement::createPainterPathFromJSON(QJsonObject json)
 {
     QString elementName=json["name"].toString();
@@ -330,6 +443,35 @@ QList<DiagramElement::Path> DiagramElement::createPainterPathFromJSON(QJsonObjec
     return result;
 }
 
+/**
+ * @class DiagramElement
+ * @brief A graphical element representing a diagram item constructed from JSON data and file paths.
+ *
+ * This class inherits from DiagramItem and extends its functionality by loading additional path data
+ * from a specified file. The element becomes movable and interactive when valid path data is loaded.
+ */
+
+/**
+ * @brief Constructs a DiagramElement from JSON data and a context menu.
+ *
+ * @param json QJsonObject containing the configuration data with:
+ *             - "filename": String path to the file containing vector path data
+ *             - "name": String identifier for this element
+ * @param contextMenu Pointer to the context menu to use for this item
+ * @throw May throw exceptions related to file I/O operations during path import
+ *
+ * @note The item becomes movable and interactive only if valid path data is successfully loaded.
+ *
+ * The constructor:
+ * 1. Extracts filename and name from JSON input
+ * 2. Imports vector paths from the specified file using importPathFromFile()
+ * 3. If paths are found:
+ *    - Combines all paths into a single QPainterPath
+ *    - Enables item movement capabilities
+ *    - Enables selection highlighting
+ *    - Enables geometry change tracking
+ *    - Activates hover event handling
+ */
 DiagramElement::DiagramElement(const QJsonObject &json, QMenu *contextMenu):DiagramItem(json,contextMenu)
 {
     mFileName=json["filename"].toString();
