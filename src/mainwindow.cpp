@@ -712,6 +712,7 @@ void MainWindow::createToolBox()
                    "phase.json",
                    "phaseVar.json",
                    "circulator.json",
+                   "antenna.json"
     };
     paths<<":/libs/signal/";
     names<<tr("Signal Processing");
