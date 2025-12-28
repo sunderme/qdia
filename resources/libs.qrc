@@ -42,6 +42,9 @@
 <file>libs/rf/hpf.json</file>
 <file>libs/rf/lpf.json</file>
 <file>libs/rf/bpf.json</file>
+<file>libs/rf/phaseVar.json</file>
 <file>libs/rf/mixer.json</file>
+<file>libs/rf/phase.json</file>
+<file>libs/rf/circulator.json</file>
 </qresource>
 </RCC>

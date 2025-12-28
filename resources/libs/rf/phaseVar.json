@@ -1,0 +1,9 @@
+{
+  "name": "phaseVar",
+  "elements":[
+    {"type":"circle","x0":0,"y0":0,"r":20},
+    {"type":"text","text":"φ","size":14,"x":-5,"y":5},
+    {"type":"line","x0":-10,"y0":10,"x1":10,"y1":-10},
+    {"type":"element","x":10,"y":-10,"rotate":45,"scale":0.7,"name":"analog/arrow"}
+  ]
+}

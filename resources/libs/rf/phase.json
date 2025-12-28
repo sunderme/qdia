@@ -1,0 +1,7 @@
+{
+  "name": "phase",
+  "elements":[
+    {"type":"circle","x0":0,"y0":0,"r":20},
+    {"type":"text","text":"φ","size":14,"x":-5,"y":5}
+  ]
+}

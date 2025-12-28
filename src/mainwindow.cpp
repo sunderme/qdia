@@ -708,7 +708,10 @@ void MainWindow::createToolBox()
                    "mixer.json",
                    "lpf.json",
                    "bpf.json",
-                   "hpf.json"
+                   "hpf.json",
+                   "phase.json",
+                   "phaseVar.json",
+                   "circulator.json",
     };
     paths<<":/libs/signal/";
     names<<tr("Signal Processing");
@@ -2486,6 +2489,7 @@ void MainWindow::linePatternChanged()
  * better handlers when zoomed out ?
  * cut line
  * manhattan routing
+ * free rotate (graphical, number)
  * export wider to entail wider lines ?
  * user elements -> order ?
  * fix flip/rotate when moving/dragging several elements
