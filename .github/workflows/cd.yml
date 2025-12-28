@@ -4,7 +4,7 @@ on:
   - pull_request
 
 env:
-  OSX_QT_VERSION: 6.8.0
+  OSX_QT_VERSION: 6.10.1
 
 jobs:
   build-win:
