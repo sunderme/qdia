@@ -866,7 +866,7 @@ void MainWindow::createActions()
     listOfActions.append(makeElementAction);
 
     deleteAction = new QAction(tr("&Delete Item"), this);
-    deleteAction->setShortcut(tr("Delete"));
+    deleteAction->setShortcut(QKeySequence::Delete);
     deleteAction->setStatusTip(tr("Delete item from diagram"));
     connect(deleteAction, &QAction::triggered, this, &MainWindow::deleteItem);
     listOfActions.append(deleteAction);
