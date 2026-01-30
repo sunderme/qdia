@@ -9,7 +9,7 @@ mkdir -p package-zip
 cp qdia.exe package-zip/
 cp -r translation package-zip/translations
 cd package-zip
-windeployqt-qt6 qdia.exe
+windeployqt6 qdia.exe
 ldd qdia.exe | awk '{print $3}'| grep ming | xargs -I{} cp -u {} .
 cd ..
 echo "make installer"
