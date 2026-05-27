@@ -412,7 +412,7 @@ void DiagramScene::getPartneredItem(QGraphicsItem *&item) const
  */
 bool DiagramScene::isItemLocked(QGraphicsItem *item)
 {
-    DiagramItem *diagramItem = qgraphicsitem_cast<DiagramItem*>(item);
+    DiagramItem *diagramItem = dynamic_cast<DiagramItem*>(item);
     if(diagramItem){
         return diagramItem->isLocked();
     }
@@ -1296,7 +1296,7 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
                 this, &DiagramScene::editorReceivedFocus);
         connect(textItem, &DiagramTextItem::selectedChange,
                 this, &DiagramScene::textItemSelected);
-        return qgraphicsitem_cast<QGraphicsItem*>(textItem);
+        return dynamic_cast<QGraphicsItem*>(textItem);
     }
         break;
     case DiagramPathItem::Type:
@@ -1310,12 +1310,12 @@ QGraphicsItem* DiagramScene::copy(QGraphicsItem* item)
                 addedItem->setPos(item_l1->pos());
             }
         }
-        return qgraphicsitem_cast<QGraphicsItem*>(newItem);
+        return dynamic_cast<QGraphicsItem*>(newItem);
         break;
     }
     case DiagramSplineItem::Type:
     {
-        return qgraphicsitem_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramSplineItem*>(item)->copy());
+        return dynamic_cast<QGraphicsItem*>(qgraphicsitem_cast<DiagramSplineItem*>(item)->copy());
         break;
     }
     case QGraphicsItemGroup::Type:

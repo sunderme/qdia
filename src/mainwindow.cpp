@@ -237,9 +237,17 @@ void MainWindow::unlockItem()
     QList<QGraphicsItem *> selectedItems = m_scene->selectedItems();
     for (int i=0;i<selectedItems.length();++i) {
         QGraphicsItem *it=selectedItems[i];
-        DiagramItem *item=qgraphicsitem_cast<DiagramItem *>(it);
+        DiagramItem *item=dynamic_cast<DiagramItem *>(it);
         if(item){
             item->setLocked(false);
+        }
+        DiagramPathItem *pathItem=dynamic_cast<DiagramPathItem *>(it);
+        if(pathItem){
+            pathItem->setLocked(false);
+        }
+        DiagramSplineItem *splineItem=dynamic_cast<DiagramSplineItem *>(it);
+        if(pathItem){
+            splineItem->setLocked(false);
         }
     }
 }
