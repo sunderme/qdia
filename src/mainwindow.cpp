@@ -223,7 +223,7 @@ void MainWindow::lockItem()
             pathItem->setSelected(false);
         }
         DiagramSplineItem *splineItem=dynamic_cast<DiagramSplineItem *>(it);
-        if(pathItem){
+        if(splineItem){
             splineItem->setLocked(true);
             splineItem->setSelected(false);
         }
@@ -246,7 +246,7 @@ void MainWindow::unlockItem()
             pathItem->setLocked(false);
         }
         DiagramSplineItem *splineItem=dynamic_cast<DiagramSplineItem *>(it);
-        if(pathItem){
+        if(splineItem){
             splineItem->setLocked(false);
         }
     }

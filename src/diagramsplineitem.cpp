@@ -353,6 +353,10 @@ void DiagramSplineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         }
         QBrush selBrush=QBrush(Qt::cyan);
         QPen selPen=QPen(Qt::cyan);
+        if(isLocked()){
+            selBrush=QBrush(Qt::darkYellow,Qt::SolidPattern);
+            selPen=QPen(Qt::darkYellow);
+        }
         painter->setBrush(selBrush);
         painter->setPen(selPen);
 

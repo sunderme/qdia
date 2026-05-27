@@ -368,6 +368,11 @@ void DiagramPathItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
         if(m_textMode){
             selBrush=QBrush(Qt::blue);
             selPen=QPen(Qt::blue);
+        }else{
+            if(isLocked()){
+                selBrush=QBrush(Qt::darkYellow,Qt::SolidPattern);
+                selPen=QPen(Qt::darkYellow);
+            }
         }
         painter->setBrush(selBrush);
         painter->setPen(selPen);
