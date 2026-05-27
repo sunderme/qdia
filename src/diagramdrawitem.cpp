@@ -421,8 +421,13 @@ void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
             painter->drawLine(myPos2/2,mEndPoint+myPos2/2);
         }
         // Draghandles
-        selBrush=QBrush(Qt::cyan,Qt::SolidPattern);
-        selPen=QPen(Qt::cyan);
+        if(isLocked()){
+            selBrush=QBrush(Qt::darkYellow,Qt::SolidPattern);
+            selPen=QPen(Qt::darkYellow);
+        }else{
+            selBrush=QBrush(Qt::cyan,Qt::SolidPattern);
+            selPen=QPen(Qt::cyan);
+        }
         painter->setBrush(selBrush);
         painter->setPen(selPen);
         QPointF point;
