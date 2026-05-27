@@ -172,9 +172,8 @@ void DiagramElement::paint(QPainter *painter, const QStyleOptionGraphicsItem *, 
     if(isSelected()){
         // Rect
         QPen selPen=QPen(Qt::DotLine);
-        selPen.setWidth(0);
         selPen.setColor(Qt::black);
-        selPen.setBrush(Qt::white);
+        //selPen.setBrush(Qt::white);
         QBrush selBrush=QBrush(Qt::NoBrush);
         painter->setBrush(selBrush);
         painter->setPen(selPen);
@@ -194,7 +193,10 @@ QRectF DiagramElement::boundingRect() const
         QRectF localRect=path.boundingRect();
         rect=rect.united(localRect);
     }
-    return rect;
+    qreal extra = pen().width() / 2.0 ;
+
+    QRectF newRect = rect.adjusted(-extra, -extra, extra, extra);
+    return newRect;
 }
 
 /**
