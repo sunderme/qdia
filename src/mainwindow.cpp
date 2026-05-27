@@ -875,7 +875,7 @@ void MainWindow::createActions()
     lockAction->setShortcut(tr("L"));
     connect(lockAction, &QAction::triggered, this, &MainWindow::lockItem);
 
-    unlockAction = new QAction(tr("&Lock Item"), this);
+    unlockAction = new QAction(tr("&Unlock Item"), this);
     unlockAction->setShortcut(tr("Shift+L"));
     connect(unlockAction, &QAction::triggered, this, &MainWindow::unlockItem);
 
