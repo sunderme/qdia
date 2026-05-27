@@ -1469,6 +1469,7 @@ void DiagramScene::itemSelectionChangedSlot()
             if(item->type()==DiagramDrawItem::Type){
                 m_blockSelectionChanged=true;
                 DiagramDrawItem *drawItem=qgraphicsitem_cast<DiagramDrawItem*>(item);
+                if(drawItem->isLocked()) return;
                 DiagramDrawItem *newItem=qgraphicsitem_cast<DiagramDrawItem*>(drawItem->copy());
                 m_SelectedItem = newItem;
                 newItem->setZValue(m_maxZ);
@@ -1485,6 +1486,7 @@ void DiagramScene::itemSelectionChangedSlot()
             if(item->type()==DiagramPathItem::Type){
                 m_blockSelectionChanged=true;
                 DiagramPathItem *pathItem=qgraphicsitem_cast<DiagramPathItem*>(item);
+                if(pathItem->isLocked()) return;
                 DiagramPathItem *newItem=qgraphicsitem_cast<DiagramPathItem*>(pathItem->copy());
                 m_SelectedItem = newItem;
                 newItem->setZValue(m_maxZ);
@@ -1501,6 +1503,7 @@ void DiagramScene::itemSelectionChangedSlot()
             if(item->type()==DiagramSplineItem::Type){
                 m_blockSelectionChanged=true;
                 DiagramSplineItem *splineItem=qgraphicsitem_cast<DiagramSplineItem*>(item);
+                if(splineItem->isLocked()) return;
                 DiagramSplineItem *newItem=qgraphicsitem_cast<DiagramSplineItem*>(splineItem->copy());
                 m_SelectedItem = newItem;
                 newItem->setZValue(m_maxZ);
