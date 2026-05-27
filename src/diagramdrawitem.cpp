@@ -1,3 +1,11 @@
+/*!
+ * \file diagramdrawitem.cpp
+ * \brief Implementation of DiagramDrawItem and Rect classes.
+ * \details This file contains the implementation of all methods for drawing
+ * and manipulating various diagram shapes including rectangles, ellipses,
+ * circles, and other geometric figures.
+ */
+
 #include "diagramdrawitem.h"
 
 #include <QtGui>
@@ -8,7 +16,6 @@
 #include "diagramdrawitem.h"
 #include "diagramscene.h"
 
-//! [0]
 DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
              QGraphicsItem *parent)
     : DiagramItem(contextMenu,parent)
@@ -33,6 +40,7 @@ DiagramDrawItem::DiagramDrawItem(DiagramType diagramType, QMenu *contextMenu,
     }
     m_partnerItem=nullptr;
 }
+
 
 DiagramDrawItem::DiagramDrawItem(const DiagramDrawItem& diagram)
     : DiagramItem(diagram.myContextMenu,diagram.parentItem())
@@ -80,7 +88,7 @@ DiagramDrawItem::DiagramDrawItem(const QJsonObject &json, QMenu *contextMenu):Di
     myHandlerWidth=2.0;
     m_partnerItem=nullptr;
 }
-//! [1]
+
 QPainterPath DiagramDrawItem::createPath()
 {
     qreal dx=myPos2.x();
@@ -319,12 +327,7 @@ void DiagramDrawItem::mySetDimension(QPointF newPos)
     }
     else myPos2=newPos;
 }
-/*!
- * \brief return position of the stretch handlers
- * \param i number of handler
- * clock-wise, start left top
- * \return
- */
+
 QPointF DiagramDrawItem::getHandler(int i) const
 {
     QPointF point;
@@ -338,10 +341,8 @@ QPointF DiagramDrawItem::getHandler(int i) const
     if(i==9) point=mEndPoint+myPos2/2;
     return point;
 }
-/*!
- * \brief return number of used handles
- * \return
- */
+
+
 int DiagramDrawItem::getNumberOfHandles() const
 {
     int nHandles=8;
@@ -355,10 +356,7 @@ QPointF DiagramDrawItem::getDimension()
 {
     return myPos2;
 }
-/*!
- * \brief set start point for pie/arc and similar
- * \param pt
- */
+
 void DiagramDrawItem::setStartPoint(const QPointF pt)
 {
     mStartPoint=pt;
@@ -370,10 +368,6 @@ void DiagramDrawItem::setStartPoint(const QPointF pt)
     }
 }
 
-/*!
- * \brief set end point for pie/arc and similar
- * \param pt
- */
 void DiagramDrawItem::setEndPoint(const QPointF pt)
 {
     mEndPoint=pt;
@@ -384,14 +378,7 @@ void DiagramDrawItem::setEndPoint(const QPointF pt)
         m_partnerItem->setEndPoint(pt);
     }
 }
-/*!
- * \brief define partner item
- * The partner item is the same item, but properly placed in scene
- * This item is drawn on top of the scene for visibility to show handlers and covered lines
- * Surfaces are transparent.
- * Changes on this item are propagated to the partner item.
- * \param parterItem
- */
+
 void DiagramDrawItem::setPartnerItem(DiagramDrawItem *parterItem)
 {
     m_partnerItem=parterItem;
@@ -456,10 +443,6 @@ void DiagramDrawItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     }// if
 }
 
-/*!
- * \brief handle mouse enter hovering
- * \param e
- */
 void DiagramDrawItem::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 {
     if (isSelected()) {
@@ -532,11 +515,7 @@ QPainterPath DiagramDrawItem::shape() const {
     }// if
     return myPath;
 }
-/*!
- * \brief return boundrect of actual structure plus helper structures
- * Helperstructure are usually the handles in selected state
- * \return
- */
+
 QRectF DiagramDrawItem::boundingRect() const
 {
     qreal extra = pen().width() / 2.0 + myHandlerWidth;
@@ -550,10 +529,7 @@ QRectF DiagramDrawItem::boundingRect() const
 
     return newRect;
 }
-/*!
- * \brief return raw bounding rect without extra space fopr handlers
- * \return
- */
+
 QRectF DiagramDrawItem::innerBoundingRect() const
 {
     QRectF newRect = path().boundingRect();
@@ -717,11 +693,7 @@ void Rect::setSelPoint(int selPoint)
             break;
     }
 }
-/*!
- * \brief manipulate left side of rect
- * change anchor or point, depending which one is more left
- * \param x
- */
+
 void Rect::setLeft()
 {
     if(m_anchor.x()<m_point.x()){
@@ -732,11 +704,7 @@ void Rect::setLeft()
         m_mvPointX=true;
     }
 }
-/*!
- * \brief manipulate right side of rect
- * change anchor or point, depending which one is more right
- * \param x
- */
+
 void Rect::setRight()
 {
     if(m_anchor.x()>m_point.x()){
@@ -747,11 +715,7 @@ void Rect::setRight()
         m_mvPointX=true;
     }
 }
-/*!
- * \brief manipulate top side of rect
- * change anchor or point, depending which one is more up
- * \param x
- */
+
 void Rect::setTop()
 {
     if(m_anchor.y()<m_point.y()){
@@ -762,11 +726,7 @@ void Rect::setTop()
         m_mvPointY=true;
     }
 }
-/*!
- * \brief manipulate bottom side of rect
- * change anchor or point, depending which one is more down
- * \param x
- */
+
 void Rect::setBottom()
 {
     if(m_anchor.y()>m_point.y()){
@@ -777,46 +737,31 @@ void Rect::setBottom()
         m_mvPointY=true;
     }
 }
-/*!
- * \brief setTopLeft of rectangle
- * \param pt
- */
+
 void Rect::setTopLeft()
 {
     setLeft();
     setTop();
 }
-/*!
- * \brief setTopLeft of rectangle
- * \param pt
- */
+
 void Rect::setTopRight()
 {
     setRight();
     setTop();
 }
-/*!
- * \brief setTopLeft of rectangle
- * \param pt
- */
+
 void Rect::setBottomLeft()
 {
     setLeft();
     setBottom();
 }
-/*!
- * \brief setTopLeft of rectangle
- * \param pt
- */
+
 void Rect::setBottomRight()
 {
     setRight();
     setBottom();
 }
-/*!
- * \brief move pos/anchor depending on sel point
- * \param pt
- */
+
 void Rect::movePoint(QPointF pt)
 {
     if(m_mvPointX){
@@ -833,10 +778,6 @@ void Rect::movePoint(QPointF pt)
     }
 }
 
-/*!
- * \brief translate rect by pt
- * \param pt
- */
 void Rect::translate(QPointF pt)
 {
     m_anchor+=pt;
