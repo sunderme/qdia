@@ -1,3 +1,32 @@
+
+/**
+ * @file diagramimage.cpp
+ * @brief Implementation of the DiagramImage class.
+ *
+ * This file contains the implementation of the DiagramImage class, which represents
+ * an image item within a graphical diagram. It inherits from DiagramItem and extends
+ * its functionality to handle image rendering, scaling, selection, and interaction
+ * via mouse events.
+ *
+ * Key features include:
+ * - Loading images from files or base64-encoded JSON data.
+ * - Scaling images while maintaining aspect ratio during painting.
+ * - Providing 8 drag handles for resizing and transforming the image when selected.
+ * - Snapping movement to a grid via the associated DiagramScene.
+ * - Serialization/deserialization support through JSON objects.
+ * - Visual feedback for hover states and selection outlines.
+ *
+ * The class integrates with Qt's QGraphicsItem framework, enabling it to be part of
+ * a QGraphicsScene. It handles custom painting logic, bounding rect calculations, and
+ * shape definitions to ensure accurate hit testing and rendering.
+ *
+ * Dependencies:
+ * - diagramimage.h (class definition)
+ * - diagramscene.h (for grid snapping and scene context)
+ * - Qt Core and Qt GUI modules (QPainter, QPixmap, QGraphicsItem, etc.)
+ * - Qt JSON support (QJsonDocument, QJsonObject, QJsonArray)
+ */
+
 #include "diagramimage.h"
 #include "diagramscene.h"
 #include <QPainter>
@@ -8,7 +37,7 @@
 #include <qbuffer.h>
 #include <QGraphicsSceneContextMenuEvent>
 
-DiagramImage::DiagramImage(const QString fileName, QMenu *contextMenu, QGraphicsItem *parent): DiagramItem(contextMenu,parent)
+DiagramImage::DiagramImage(const QString &fileName, QMenu *contextMenu, QGraphicsItem *parent): DiagramItem(contextMenu,parent)
 {
     mFileName=fileName;
     mPixmap.load(fileName);
@@ -56,10 +85,6 @@ DiagramItem* DiagramImage::copy()
 {
     return new DiagramImage(*this);
 }
-/*!
- * \brief write image data to json object
- * \param obj
- */
 void DiagramImage::write(QJsonObject &obj)
 {
     DiagramItem::write(obj);
@@ -81,11 +106,7 @@ QPixmap DiagramImage::image() const
     }
     return mPixmap;
 }
-/*!
- * \brief set image from QIMage
- * \param img
- */
-void DiagramImage::setImage(QImage img)
+void DiagramImage::setImage(const QImage &img)
 {
     mPixmap=QPixmap::fromImage(img);
     if(!mPixmap.isNull()){
@@ -161,11 +182,6 @@ void DiagramImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
         }// if
     }// if
 }
-/*!
-* \brief return boundrect of actual structure plus helper structures
-* Helperstructure are usually the handles in selected state
-* \return
-*/
 QRectF DiagramImage::boundingRect() const
 {
     qreal extra = myHandlerWidth;
@@ -226,7 +242,7 @@ void DiagramImage::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
     DiagramItem::hoverLeaveEvent(e);
 }
 
-bool DiagramImage::hasClickedOn(QPointF press_point, QPointF point) const {
+bool DiagramImage::hasClickedOn(const QPointF &press_point, const QPointF &point) const {
     return (
         press_point.x() >= point.x() - myHandlerWidth &&\
                                                             press_point.x() <  point.x() + myHandlerWidth &&\
@@ -236,18 +252,12 @@ bool DiagramImage::hasClickedOn(QPointF press_point, QPointF point) const {
 }
 
 
-QPointF DiagramImage::onGrid(QPointF pos)
+QPointF DiagramImage::onGrid(const QPointF &pos)
 {
     DiagramScene* myScene = dynamic_cast<DiagramScene*>(scene());
     QPointF result = myScene->onGrid(pos);
     return result;
 }
-/*!
- * \brief return position of the stretch handlers
- * \param i number of handler
- * clock-wise, start left top
- * \return
- */
 QPointF DiagramImage::getHandler(int i) const
 {
     QPointF point;
