@@ -1547,22 +1547,23 @@ void MainWindow::pasteFromClipboard()
     QByteArray buffer;
     if (!clipboard->ownsClipboard() && mimeData->hasFormat("application/qdia")) {
         buffer = mimeData->data("application/qdia");
-    }
-    if (!clipboard->ownsClipboard() && mimeData->hasImage()) {
-        QImage image = qvariant_cast<QImage>(mimeData->imageData());
-        m_scene->pasteImage(image);
-        return;
-    }
-    if (!clipboard->ownsClipboard()){
-        // check if mimedata is image file name
-        if (mimeData->hasUrls()) {
-            QList<QUrl> urls = mimeData->urls();
-            if (!urls.isEmpty()) {
-                QString fileName = urls.first().toLocalFile();
-                QImage img=QImage(fileName);
-                if(!img.isNull()){
-                    m_scene->pasteImage(img);
-                    return;
+    } else {
+        if (!clipboard->ownsClipboard() && mimeData->hasImage()) {
+            QImage image = qvariant_cast<QImage>(mimeData->imageData());
+            m_scene->pasteImage(image);
+            return;
+        }
+        if (!clipboard->ownsClipboard()){
+            // check if mimedata is image file name
+            if (mimeData->hasUrls()) {
+                QList<QUrl> urls = mimeData->urls();
+                if (!urls.isEmpty()) {
+                    QString fileName = urls.first().toLocalFile();
+                    QImage img=QImage(fileName);
+                    if(!img.isNull()){
+                        m_scene->pasteImage(img);
+                        return;
+                    }
                 }
             }
         }
@@ -2502,6 +2503,7 @@ void MainWindow::linePatternChanged()
  * color template ? / store custom colors
  * click unselect (shift/? alt)
  * click again to select lower element
+ * click again to change selection mode (e.g. arc boundary/angle)
  * better handlers when zoomed out ?
  * cut line
  * manhattan routing
