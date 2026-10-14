@@ -237,6 +237,7 @@ private:
     int m_undoPos;
 
     QGraphicsItem *m_SelectedItem=nullptr;
+    QGraphicsItem *m_DeleteLaterItem=nullptr;
     bool m_blockSelectionChanged=false;
 };
 

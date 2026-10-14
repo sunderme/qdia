@@ -437,7 +437,7 @@ void DiagramScene::removePartnerItem()
     }
     m_blockSelectionChanged=true;
     this->removeItem(m_SelectedItem);
-    delete m_SelectedItem;
+    m_DeleteLaterItem =  m_SelectedItem; // called within qgraphicsitem mousereleaseevent, leads to crash when directly deleted here
     m_SelectedItem = nullptr;
     m_blockSelectionChanged=false;
 }
@@ -950,6 +950,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         ;
     }
     QGraphicsScene::mousePressEvent(mouseEvent);
+    delete m_DeleteLaterItem;
+    m_DeleteLaterItem=nullptr;
 }
 
 void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -1136,6 +1138,8 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
 
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
+    delete m_DeleteLaterItem;
+    m_DeleteLaterItem=nullptr;
 }
 
 void DiagramScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)

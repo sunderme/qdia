@@ -2500,6 +2500,7 @@ void MainWindow::linePatternChanged()
 }
 
 /* TODO
+ * import file like copy/paste
  * color template ? / store custom colors
  * click unselect (shift/? alt)
  * click again to select lower element
