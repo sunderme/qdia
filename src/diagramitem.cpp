@@ -48,6 +48,17 @@
 **
 ****************************************************************************/
 
+/*!
+    \file diagramitem.cpp
+    \brief Implementation of the DiagramItem class for creating and managing diagram elements in a Qt graphics application.
+
+    This file contains the implementation of the DiagramItem class, which serves as a base class for various diagram elements
+    such as steps, conditions, start/end points, and I/O operations. It provides functionality for creating different shapes,
+    handling context menus, managing item properties like position, size, color, and selection state, and supports serialization
+    to/from JSON format for saving/loading diagrams. The implementation includes constructors for various initialization scenarios,
+    methods for copying items, serialization, and locking functionality, as well as event handling for user interactions.
+*/
+
 #include "diagramitem.h"
 
 #include <QGraphicsScene>
@@ -56,7 +67,6 @@
 #include <QPainter>
 #include <QJsonObject>
 
-//! [0]
 DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
                          QGraphicsItem *parent)
     : QGraphicsPathItem(parent), myContextMenu(contextMenu)
@@ -68,7 +78,7 @@ DiagramItem::DiagramItem(DiagramType diagramType, QMenu *contextMenu,
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 }
-//! [0]
+
 DiagramItem::DiagramItem(const DiagramItem& diagram)
 {
 
@@ -169,10 +179,7 @@ void DiagramItem::setLocked(bool locked)
         setFlag(QGraphicsItem::ItemIsMovable, true);
     }
 }
-/*!
- * \brief return locked state
- * \return
- */
+
 bool DiagramItem::isLocked()
 {
     return m_isLocked;

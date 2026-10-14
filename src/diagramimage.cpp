@@ -1,3 +1,12 @@
+/*!
+ * \file diagramimage.cpp
+ * \brief Implementation file for DiagramImage class
+ *
+ * This file contains the implementation of the DiagramImage class methods.
+ * It provides functionality for creating, copying, serializing, and rendering
+ * image items in a diagram scene with support for selection and resizing.
+ */
+
 #include "diagramimage.h"
 #include "diagramscene.h"
 #include <QPainter>
@@ -56,10 +65,7 @@ DiagramItem* DiagramImage::copy()
 {
     return new DiagramImage(*this);
 }
-/*!
- * \brief write image data to json object
- * \param obj
- */
+
 void DiagramImage::write(QJsonObject &obj)
 {
     DiagramItem::write(obj);
@@ -81,10 +87,7 @@ QPixmap DiagramImage::image() const
     }
     return mPixmap;
 }
-/*!
- * \brief set image from QIMage
- * \param img
- */
+
 void DiagramImage::setImage(QImage img)
 {
     mPixmap=QPixmap::fromImage(img);
@@ -161,11 +164,7 @@ void DiagramImage::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
         }// if
     }// if
 }
-/*!
-* \brief return boundrect of actual structure plus helper structures
-* Helperstructure are usually the handles in selected state
-* \return
-*/
+
 QRectF DiagramImage::boundingRect() const
 {
     qreal extra = myHandlerWidth;
@@ -242,12 +241,7 @@ QPointF DiagramImage::onGrid(QPointF pos)
     QPointF result = myScene->onGrid(pos);
     return result;
 }
-/*!
- * \brief return position of the stretch handlers
- * \param i number of handler
- * clock-wise, start left top
- * \return
- */
+
 QPointF DiagramImage::getHandler(int i) const
 {
     QPointF point;
