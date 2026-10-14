@@ -141,6 +141,8 @@ DiagramTextItem::DiagramTextItem(const QJsonObject &json)
 QVariant DiagramTextItem::itemChange(GraphicsItemChange change,
                      const QVariant &value)
 {
+    if (change == QGraphicsItem::ItemSelectedChange)
+        prepareGeometryChange(); // bounding rect depends on selection
     if (change == QGraphicsItem::ItemSelectedHasChanged)
         emit selectedChange(this);
     return value;
